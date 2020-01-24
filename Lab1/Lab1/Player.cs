@@ -32,7 +32,8 @@ namespace Lab1
         public int Height
         {
             get { return PlayerTexture.Height; }
-        }
+        }
+
 
 
 
@@ -54,7 +55,8 @@ namespace Lab1
             drawPosition.X = Position.X - Width / 2;
             drawPosition.Y = Position.Y - Height / 2;
             spriteBatch.Draw(PlayerTexture, drawPosition, null, Color.White, 0f, Vector2.Zero, 1f,
-                SpriteEffects.None, 0f);
+                SpriteEffects.None, 0f);
+
         }
 
     }
