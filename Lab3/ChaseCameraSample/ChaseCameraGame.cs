@@ -114,7 +114,7 @@ namespace ChaseCameraSample
             commandManager.AddKeyboardBinding(Keys.W, ship.Thrust);
             commandManager.AddKeyboardBinding(Keys.A, ship.TurnLeft);
             commandManager.AddKeyboardBinding(Keys.D, ship.TurnRight);
-           
+            commandManager.AddMouseBinding(MouseButton.LEFT, ship.MouseTurn);
         }
 
 

@@ -24,6 +24,7 @@ namespace ChaseCameraSample
             m_Input.OnKeyDown += this.OnKeyDown;
             m_Input.OnKeyPressed += this.OnKeyPressed;
             m_Input.OnKeyUp += this.OnKeyUp;
+            m_Input.OnMouseButtonDown += OnMouseButtonDown;
         }
 
         public void Update()
@@ -56,6 +57,15 @@ namespace ChaseCameraSample
             if (action != null)
             {
                 action(eButtonState.PRESSED, new Vector2(1.0f));
+            }
+        }
+
+        public void OnMouseButtonDown(object sender,MouseEventArgs e)
+        {
+            var action = m_MouseButtonBindings[e.Button];
+            if (action != null)
+            {
+                action(eButtonState.DOWN, new Vector2(e.CurrentState.X,e.CurrentState.Y));
             }
         }
 

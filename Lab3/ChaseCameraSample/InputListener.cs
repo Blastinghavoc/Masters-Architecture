@@ -13,6 +13,12 @@ namespace ChaseCameraSample
         // Current and previous keyboard states
         private KeyboardState PrevKeyboardState { get; set; }
         private KeyboardState CurrentKeyboardState { get; set; }
+
+        private MouseState PrevMouseState { get; set; }
+        private MouseState CurrentMouseState { get; set; }
+
+
+
         // List of keys to check for
         public HashSet<Keys> KeyList;
 
@@ -27,12 +33,16 @@ namespace ChaseCameraSample
         public event EventHandler<KeyboardEventArgs> OnKeyUp = delegate { };
 
         //Mouse event handlers
+        public event EventHandler<MouseEventArgs> OnMouseButtonDown = delegate { };
 
         public InputListener()
         {
             CurrentKeyboardState = Keyboard.GetState();
             PrevKeyboardState = CurrentKeyboardState;
+            CurrentMouseState = Mouse.GetState();
+            PrevMouseState = CurrentMouseState;
             KeyList = new HashSet<Keys>();
+            MouseButtonList = new HashSet<MouseButton>();
         }
 
         public void AddKey(Keys key)
@@ -49,7 +59,27 @@ namespace ChaseCameraSample
         {
             PrevKeyboardState = CurrentKeyboardState;
             CurrentKeyboardState = Keyboard.GetState();
+            PrevMouseState = CurrentMouseState;
+            CurrentMouseState = Mouse.GetState();
             FireKeyboardEvents();
+            FireMouseEvents();
+        }
+
+        private void FireMouseEvents() {
+            foreach (var button in MouseButtonList)
+            {
+                if (button.Equals(MouseButton.LEFT))
+                {
+                    if (CurrentMouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        if (OnMouseButtonDown != null)
+                        {
+                            OnMouseButtonDown(this, new MouseEventArgs(button, CurrentMouseState, PrevMouseState));
+
+                        }
+                    }
+                }
+            }
         }
 
         private void FireKeyboardEvents()

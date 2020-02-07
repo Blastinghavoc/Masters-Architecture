@@ -213,5 +213,15 @@ namespace ChaseCameraSample
                 RotationAmount.X = -1.0f;
             }
         }
+
+        public void MouseTurn(eButtonState buttonState, Vector2 amount)
+        {
+            if (buttonState==eButtonState.DOWN)
+            {
+                var normalizedX = amount.X / graphicsDevice.Viewport.Width;
+                normalizedX = (normalizedX - 0.5f)*-2;
+                RotationAmount.X = normalizedX;
+            }
+        }
     }
 }
