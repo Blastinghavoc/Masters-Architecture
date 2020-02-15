@@ -287,5 +287,15 @@ namespace ChaseCameraSample
             : base(device)
         {
         }
+
+        public override void OnCollision(Collidable obj)
+        {
+            Ship playerShip = obj as Ship;
+            if (playerShip != null)
+            {
+                Vector3 collisionNormal = Vector3.Normalize(playerShip.BoundingSphere.Center - BoundingSphere.Center);
+                AddPosition(-collisionNormal * 50.0f);
+            }
+        }
     }
 }
