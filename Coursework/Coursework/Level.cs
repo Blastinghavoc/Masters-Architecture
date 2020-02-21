@@ -12,7 +12,7 @@ namespace Coursework
     /// <summary>
     /// Class representing a whole level in the game
     /// </summary>
-    class Level: IContentOwner
+    class Level: IDisposable
     {
         ContentManager content;//The content specific to this level
 
@@ -46,7 +46,7 @@ namespace Coursework
             var visibleArea = camera.VisibleArea;
 
             //Snap to bottom left corner, TODO remove
-            camera.Position= new Vector2(0 * tileSize.X, tiles.GetLength(1) * tileSize.Y);
+            //camera.Position= new Vector2(0 * tileSize.X, tiles.GetLength(1) * tileSize.Y);
 
             var halfWidth = visibleArea.Width / 2f;
             var halfHeight = visibleArea.Height / 2f;
@@ -91,7 +91,7 @@ namespace Coursework
             }
         }
 
-        public void ReleaseContent()
+        public void Dispose()
         {
             content.Unload();
         }

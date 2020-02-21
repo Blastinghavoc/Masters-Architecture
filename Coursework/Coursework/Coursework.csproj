@@ -45,7 +45,10 @@
     <Compile Include="Camera.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameObject.cs" />
-    <Compile Include="IContentOwner.cs" />
+    <Compile Include="Input\InputManager.cs" />
+    <Compile Include="Input\InputState.cs" />
+    <Compile Include="Input\KeybindingManager.cs" />
+    <Compile Include="Input\KeyEventArgs.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />

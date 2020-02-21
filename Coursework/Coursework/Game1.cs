@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Coursework.Input;
 
 namespace Coursework
 {
@@ -17,6 +18,10 @@ namespace Coursework
 
         Player player;
         Level currentLevel;
+
+        KeybindingManager keybindingManager;
+
+        
         
         public Game1()
         {
@@ -37,8 +42,21 @@ namespace Coursework
             currentLevel = new Level(Services, Content.RootDirectory);
             camera = new Camera(graphics.GraphicsDevice.Viewport);
             camera.Position = new Vector2(0, 0);
+            keybindingManager = new KeybindingManager();
 
+
+            InitKeybindings();
             base.Initialize();
+        }
+
+        /// <summary>
+        /// Set up keybindings for game controls
+        /// </summary>
+        private void InitKeybindings() {
+            keybindingManager.BindKeyEvent(Keys.A, InputState.held, player.LeftHeld);
+            keybindingManager.BindKeyEvent(Keys.D, InputState.held, player.RightHeld);
+            keybindingManager.BindKeyEvent(Keys.Space, InputState.down, player.Jump);
+            keybindingManager.BindKeyEvent(Keys.S, InputState.held, player.Descend);
         }
 
         /// <summary>
@@ -61,8 +79,8 @@ namespace Coursework
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
-            player.ReleaseContent();
-            currentLevel.ReleaseContent();
+            player.Dispose();
+            currentLevel.Dispose();
         }
 
         /// <summary>
@@ -76,9 +94,13 @@ namespace Coursework
                 Exit();
 
             // TODO: Add your update logic here
+            keybindingManager.Update();//Update input events
+
             player.Update(gameTime);
+            camera.Position = player.Position;
             currentLevel.Update(camera);
             camera.Update(graphics.GraphicsDevice.Viewport);
+
 
             base.Update(gameTime);
         }
@@ -95,8 +117,7 @@ namespace Coursework
 
             // TODO: Add your drawing code here
             currentLevel.Draw(gameTime, spriteBatch);
-
-            //player.Draw(gameTime, spriteBatch);
+            player.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
             base.Draw(gameTime);
