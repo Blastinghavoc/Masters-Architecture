@@ -43,14 +43,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="CollisionManager.cs" />
+    <Compile Include="Entities\CollidableObject.cs" />
+    <Compile Include="Entities\RectangleExtensions.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="GameObject.cs" />
+    <Compile Include="Entities\GameObject.cs" />
     <Compile Include="Input\InputManager.cs" />
     <Compile Include="Input\InputState.cs" />
     <Compile Include="Input\KeybindingManager.cs" />
     <Compile Include="Input\KeyEventArgs.cs" />
     <Compile Include="Level.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="Entities\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tile.cs" />

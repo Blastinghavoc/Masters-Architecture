@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Coursework
+namespace Coursework.Entities
 {
-    class Player : GameObject, IDisposable
+    class Player : CollidableObject, IDisposable
     {
         private Texture2D texture;
         private readonly Vector2 textureScale = new Vector2(1.0f / 8);

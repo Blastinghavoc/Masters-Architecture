@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Coursework.Input;
+using Coursework.Entities;
 
 namespace Coursework
 {
