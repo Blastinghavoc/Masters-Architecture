@@ -14,8 +14,8 @@ namespace Coursework.Entities
     /// </summary>
     class GameObject//TODO consider making abstract?
     {
-        public Vector2 Position { get; protected set; }
-        public Vector2 Veclocity { get; protected set; }
+        public virtual Vector2 Position { get; protected set; }
+        public Vector2 Velocity { get; protected set; }
 
         public virtual void Update(GameTime gameTime) {
 

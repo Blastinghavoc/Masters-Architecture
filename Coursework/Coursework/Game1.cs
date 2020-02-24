@@ -19,6 +19,7 @@ namespace Coursework
 
         Player player;
         Level currentLevel;
+        CollisionManager collisionManager;
 
         KeybindingManager keybindingManager;
 
@@ -43,6 +44,7 @@ namespace Coursework
             currentLevel = new Level(Services, Content.RootDirectory);
             camera = new Camera(graphics.GraphicsDevice.Viewport);
             camera.Position = new Vector2(0, 0);
+            collisionManager = new CollisionManager();
             keybindingManager = new KeybindingManager();
 
 
@@ -98,10 +100,14 @@ namespace Coursework
             keybindingManager.Update();//Update input events
 
             player.Update(gameTime);
+
+            //Resolve collisions
+            collisionManager.Update(currentLevel,player);
+
+            //Update camera
             camera.Position = player.Position;
             currentLevel.Update(camera);
             camera.Update(graphics.GraphicsDevice.Viewport);
-
 
             base.Update(gameTime);
         }

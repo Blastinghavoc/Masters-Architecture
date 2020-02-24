@@ -10,11 +10,22 @@ namespace Coursework.Entities
 
     class CollidableObject: GameObject
     {
+        //Override property so that setting the position automatically updates the bounds
+        public override Vector2 Position { get => base.Position; protected set { base.Position = value; UpdateBounds(); } }
+
         public Rectangle BoundingBox { get; protected set; }
 
-        public void UpdateBounds()
+        //Move the bounding box to the current position of the object
+        protected void UpdateBounds()
         {
-            //TODO update bounding box as entity moves
+            UpdateBounds(Position,BoundingBox.Width, BoundingBox.Height);
+        }
+
+        //Update the position and size of the bounding box
+        protected void UpdateBounds(Vector2 pos, int width,int height)
+        {
+            Point topLeftCorner = new Point((int)pos.X, (int)pos.Y);
+            BoundingBox = new Rectangle(topLeftCorner, new Point(width,height));
         }
 
         public bool CheckCollision(Rectangle box, out Vector2 penetrationDepth)
@@ -40,20 +51,36 @@ namespace Coursework.Entities
         }
 
         //Collision response to hitting a static object
-        public void OnStaticCollision(Vector2 penetrationDepth)
+        public virtual void OnStaticCollision(Vector2 penetrationDepth)
         {
             var xMag = Math.Abs(penetrationDepth.X);
             var yMag = Math.Abs(penetrationDepth.Y);
             Vector2 adjustment;
 
             //Adjust in direction of minimum overlap
-            if (xMag > yMag)
+            if (yMag > xMag)
             {
-                adjustment = new Vector2(0, penetrationDepth.Y);
+                //Sub-integer correction for very small penetration depth
+                var xAdjustment = penetrationDepth.X;
+                if (xMag ==1)
+                {
+                    xAdjustment =Math.Sign(xAdjustment) *  Position.X % 1;
+                }
+
+                adjustment = new Vector2(xAdjustment, 0);
+                Velocity = new Vector2(0, Velocity.Y);//Arrest velocity in colliding direction
             }
             else
             {
-                adjustment = new Vector2(penetrationDepth.X, 0);
+                //Sub-integer correction for very small penetration depth
+                var yAdjustment = penetrationDepth.Y;
+                if (yMag == 1)
+                {
+                    yAdjustment = Math.Sign(yAdjustment) * Position.Y % 1;
+                }
+
+                adjustment = new Vector2(0, yAdjustment);
+                Velocity = new Vector2(Velocity.X,0);//Arrest velocity in colliding direction
             }
 
             this.Position += adjustment;

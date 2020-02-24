@@ -11,9 +11,10 @@ namespace Coursework
     class CollisionManager
     {
         //TODO collision detection between non-static entities
-
         public void Update(Level currentLevel,Player player)
         {
+
+            UpdatePlayerLevelCollisions(currentLevel, player);
         }
 
         //Deal with collisions between player and level
@@ -24,9 +25,9 @@ namespace Coursework
 
             //Determination of neighbouring tile indices from platformer demo (lab 2)
             int left = (int)Math.Floor(playerBounds.Left / tileDimensions.X);            
-            int right = (int)Math.Ceiling((playerBounds.Right / tileDimensions.X)) - 1;
+            int right = (int)Math.Ceiling((playerBounds.Right / tileDimensions.X));
             int top = (int)Math.Floor(playerBounds.Top / tileDimensions.Y);
-            int bottom = (int)Math.Ceiling((playerBounds.Bottom / tileDimensions.Y)) - 1;
+            int bottom = (int)Math.Ceiling((playerBounds.Bottom / tileDimensions.Y));
 
             for (int i = left; i < right; i++)
             {

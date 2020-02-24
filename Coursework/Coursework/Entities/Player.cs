@@ -16,21 +16,45 @@ namespace Coursework.Entities
         private ContentManager content;//Player currently manages own content, as this persists between levels
 
         private Vector2 inputForce;//"Force" currently being applied to the player by user input
-        private const float inputScale = 50f;//Amount by which to scale input forces
+        private readonly Vector2 inputScale = new Vector2(800,19600);//Amount by which to scale input forces in each axis
+        private readonly Vector2 maxSpeed = new Vector2(500,500);
+        private readonly Vector2 dragFactor = new Vector2(0.9f,1);//No vertical drag
+        private const float gravity = 981f;
 
+        private Vector2 previousPosition;//Position of player before they tried to move each frame
 
         public Player(IServiceProvider provider,string contentRoot) {
+            Position = new Vector2(0, 0);
             content = new ContentManager(provider, contentRoot);
             LoadContent();
+            //Update collision bounds based on visible size
+            UpdateBounds(Position, (int)(texture.Width * textureScale.X), (int)(texture.Height * textureScale.Y));
         }
 
         public override void Update(GameTime gameTime)
         {
+            previousPosition = Position;
 
-            //Basic movement, TODO replace with physics
-            Position += inputScale * inputForce * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            //Reset for next update
+            //Basic physics based movement. TODO extract to physics manager?
+            Vector2 acceleration = inputScale * inputForce;
+            acceleration.Y += gravity;//gravity
+
+            Velocity += acceleration * dt;
+
+            //Apply drag
+            Velocity *= dragFactor;
+
+            //Enforce speed limit
+            var clampedX = MathHelper.Clamp(Velocity.X, -maxSpeed.X, maxSpeed.X);
+            var clampedY = MathHelper.Clamp(Velocity.Y, -maxSpeed.Y, maxSpeed.Y);
+            Velocity = new Vector2(clampedX, clampedY);
+            
+            //update position
+            Position += Velocity * dt;
+
+            //Reset input force for next update
             inputForce = Vector2.Zero;
         }
 
@@ -66,7 +90,7 @@ namespace Coursework.Entities
 
         public void Jump()
         {
-            inputForce -= 3*Vector2.UnitY;//Subtraction because Y axis points down
+            inputForce -= Vector2.UnitY;//Subtraction because Y axis points down
         }
 
         public void Descend()
