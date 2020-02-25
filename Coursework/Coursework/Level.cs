@@ -22,10 +22,12 @@ namespace Coursework
         Dictionary<Color, Texture2D> tileSkins;//Textures for each type of tile
 
         public readonly Vector2 tileSize = new Vector2(32,32);//Tile size in world coordinates
-        readonly float tileResolution = 256.0f;
+        readonly float tileResolution = 70.0f;//Resolution of tile images, TODO configure from file
         readonly Vector2 tileTextureScale;
         readonly Rectangle bounds;//Level bounds in world coordinates
         readonly int levelNumber;
+
+        const string tileFilePath = "PlatformerGraphicsDeluxe/Tiles/";
 
         public Level(IServiceProvider provider, string contentRoot,int levelNum = 0)
         {
@@ -59,7 +61,7 @@ namespace Coursework
 
         private void LoadContent()
         {
-            tileSkins[Color.Black] = content.Load<Texture2D>("Tiles/greyTile");
+            tileSkins[Color.Black] = content.Load<Texture2D>(tileFilePath + "grassMid");
         }
 
         private void InitialiseTiles()
@@ -110,12 +112,12 @@ namespace Coursework
 
         public TileCollisionMode GetCollisionModeAt(int i, int j)
         {
-            if (i<0 || i > (int)tileSize.X)
+            if (i<0 || i >= tiles.GetLength(0))
             {
                 return TileCollisionMode.solid;//Outside bounds left and right are considered solid.
             }
 
-            if (j < 0 || j > (int)tileSize.Y)
+            if (j < 0 || j >= tiles.GetLength(1))
             {
                 return TileCollisionMode.empty;//Outside bounds top and bottom are considered empty
             }

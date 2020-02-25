@@ -64,7 +64,16 @@ namespace Coursework.Entities
                 var xAdjustment = penetrationDepth.X;
                 if (xMag ==1)
                 {
-                    xAdjustment =Math.Sign(xAdjustment) *  Position.X % 1;
+                    var floatRemainder = Position.X % 1;
+                    if (xAdjustment > 0)
+                    {
+                        xAdjustment = 1-  floatRemainder;
+                    }
+                    else
+                    {
+                        xAdjustment = floatRemainder;
+                    }
+                    xAdjustment *= Math.Sign(penetrationDepth.X);
                 }
 
                 adjustment = new Vector2(xAdjustment, 0);
@@ -76,7 +85,16 @@ namespace Coursework.Entities
                 var yAdjustment = penetrationDepth.Y;
                 if (yMag == 1)
                 {
-                    yAdjustment = Math.Sign(yAdjustment) * Position.Y % 1;
+                    var floatRemainder = Position.Y % 1;
+                    if (yAdjustment > 0)
+                    {
+                        yAdjustment = 1 - floatRemainder;
+                    }
+                    else
+                    {
+                        yAdjustment = floatRemainder;
+                    }
+                    yAdjustment *= Math.Sign(penetrationDepth.Y);
                 }
 
                 adjustment = new Vector2(0, yAdjustment);
