@@ -20,7 +20,7 @@ namespace Coursework
         //Deal with collisions between player and level
         private void UpdatePlayerLevelCollisions(Level currentLevel, Player player)
         {
-            var tileDimensions = currentLevel.tileSize;
+            Vector2 tileDimensions = new Vector2(currentLevel.tileSize.X,currentLevel.tileSize.Y);
             Rectangle playerBounds = player.BoundingBox;
 
             //Determination of neighbouring tile indices from platformer demo (lab 2)

@@ -19,22 +19,25 @@ namespace Coursework
 
         Tile[,] tiles;//2D array of tiles
 
-        Dictionary<Color, Texture2D> tileSkins;//Textures for each type of tile
+        Dictionary<Color, Texture2D> tileSkins;//Textures for each type of tile        
 
-        public readonly Vector2 tileSize = new Vector2(32,32);//Tile size in world coordinates
         readonly float tileResolution = 70.0f;//Resolution of tile images, TODO configure from file
         readonly Vector2 tileTextureScale;
         readonly Rectangle bounds;//Level bounds in world coordinates
         readonly int levelNumber;
 
-        const string tileFilePath = "PlatformerGraphicsDeluxe/Tiles/";
+        public readonly Point tileSize;
+
+        readonly string tileFilePath = GameData.GraphicsDirectory+"Tiles/";
 
         public Level(IServiceProvider provider, string contentRoot,int levelNum = 0)
         {
             content = new ContentManager(provider, contentRoot);
             tileSkins = new Dictionary<Color, Texture2D>();
 
-            tileTextureScale = tileSize / tileResolution;
+            tileSize = GameData.tileSize;
+
+            tileTextureScale = new Vector2(tileSize.X/tileResolution,tileSize.Y/tileResolution);
             levelNumber = levelNum;
 
 
@@ -42,7 +45,7 @@ namespace Coursework
             InitialiseTiles();
 
 
-            bounds = new Rectangle(Point.Zero, new Point(tiles.GetLength(0)*(int)tileSize.X, tiles.GetLength(1)*(int)tileSize.Y));
+            bounds = new Rectangle(Point.Zero, new Point(tiles.GetLength(0)* tileSize.X, tiles.GetLength(1)* tileSize.Y));
         }
 
         public void Update(Camera camera)
@@ -130,7 +133,7 @@ namespace Coursework
         /// </summary>
         public Rectangle GetBoundsAt(int i, int j)
         {
-            return new Rectangle(i * (int)tileSize.X, j * (int)tileSize.Y, (int)tileSize.X, (int)tileSize.Y);          
+            return new Rectangle(i * tileSize.X, j * tileSize.Y, tileSize.X, tileSize.Y);          
         }
 
 

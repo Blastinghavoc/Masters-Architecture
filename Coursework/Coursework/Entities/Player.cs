@@ -6,13 +6,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Coursework.Animation;
 
 namespace Coursework.Entities
 {
     class Player : CollidableObject, IDisposable
     {
-        private Texture2D texture;
-        private readonly Vector2 textureScale = new Vector2(1.0f / 8);
+        private AbstractAnimation animation;
+        private readonly int width = GameData.tileSize.Y;//Width in world coords
+        private float texScale = 1;
+
         private ContentManager content;//Player currently manages own content, as this persists between levels
 
         private Vector2 inputForce;//"Force" currently being applied to the player by user input
@@ -28,10 +31,16 @@ namespace Coursework.Entities
             content = new ContentManager(provider, contentRoot);
             LoadContent();
             //Update collision bounds based on visible size
-            UpdateBounds(Position, (int)(texture.Width * textureScale.X), (int)(texture.Height * textureScale.Y));
+            UpdateBounds(Position, width, (int)(animation.FrameHeight * texScale));
         }
 
         public override void Update(GameTime gameTime)
+        {
+            UpdatePhysics(gameTime);
+            animation.Update(gameTime);
+        }
+
+        private void UpdatePhysics(GameTime gameTime)
         {
             previousPosition = Position;
 
@@ -50,7 +59,7 @@ namespace Coursework.Entities
             var clampedX = MathHelper.Clamp(Velocity.X, -maxSpeed.X, maxSpeed.X);
             var clampedY = MathHelper.Clamp(Velocity.Y, -maxSpeed.Y, maxSpeed.Y);
             Velocity = new Vector2(clampedX, clampedY);
-            
+
             //update position
             Position += Velocity * dt;
 
@@ -59,8 +68,19 @@ namespace Coursework.Entities
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {            
-            spriteBatch.Draw(texture, Position, null, Color.White, 0, Vector2.Zero, textureScale, SpriteEffects.None, 0);
+        {
+            animation.Position = Position;
+
+            //TODO animation controller (probably FSM)
+            SpriteEffects effect = SpriteEffects.None;
+            if (Velocity.X < 0)
+            {
+                effect = SpriteEffects.FlipHorizontally;
+            }
+
+            animation.Draw(spriteBatch,effect);
+
+            //spriteBatch.Draw(texture, Position, null, Color.White, 0, Vector2.Zero, textureScale, SpriteEffects.None, 0);
         }
 
         public void SetPosition(Vector2 pos)
@@ -70,7 +90,26 @@ namespace Coursework.Entities
 
         public void LoadContent()
         {
-            texture = content.Load<Texture2D>("Sprites/player");
+            var frameWidth = 72;
+            texScale = width / (float)frameWidth;
+
+            string filePath = GameData.GraphicsDirectory + "Player/p1_walk/PNG/p1_walk";
+            int numFrames = 11;
+            Texture2D[] frames = new Texture2D[11];
+            for (int i = 1; i <= numFrames; i++)
+            {
+                string fileName = filePath;
+                if (i < 10)
+                {
+                    fileName += "0";
+                }
+                fileName += i.ToString();
+                frames[i - 1] = content.Load<Texture2D>(fileName);
+            }
+
+            animation = new MultiImageAnimation(frames, Position, 72, 97, 11, 32, Color.White, texScale, true);
+            //var spriteSheet = content.Load<Texture2D>(GameData.GraphicsDirectory+"Player/p1_walk/p1_walkRegular");
+            //animation = new SpriteSheetAnimation(spriteSheet, Position, 72, 97, 11, 32, Color.White, texScale, true);
         }
 
         public void Dispose()
