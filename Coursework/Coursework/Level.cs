@@ -17,6 +17,8 @@ namespace Coursework
     /// </summary>
     class Level: IDisposable
     {
+        public static Level CurrentLevel;
+
         ContentManager content;//The content specific to this level
 
         Tile[,] tiles;//2D array of tiles
@@ -187,6 +189,11 @@ namespace Coursework
             }
         }
 
+        public TileCollisionMode GetCollisionModeAt(Point p)
+        {
+            return GetCollisionModeAt(p.X, p.Y);
+        }
+
         public TileCollisionMode GetCollisionModeAt(int i, int j)
         {
             if (i<0 || i >= tiles.GetLength(0))
@@ -215,6 +222,19 @@ namespace Coursework
             return new Vector2(i * tileSize.X, j* tileSize.Y);
         }
 
+        public Point GetTileIndices(Vector2 position)
+        {
+            int i = (int)(position.X / tileSize.X);
+            int j = (int)(position.Y / tileSize.Y);
+            return new Point(i, j);
+        }
+
+        public Point GetTileIndices(Point position)
+        {
+            int i = (position.X / tileSize.X);
+            int j = (position.Y / tileSize.Y);
+            return new Point(i, j);
+        }
 
         public void Dispose()
         {

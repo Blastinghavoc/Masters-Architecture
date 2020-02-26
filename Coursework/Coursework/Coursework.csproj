@@ -53,6 +53,10 @@
     <Compile Include="Entities\Enemy.cs" />
     <Compile Include="Entities\Interactable.cs" />
     <Compile Include="Entities\RectangleExtensions.cs" />
+    <Compile Include="StateMachine\AI\Slime.cs" />
+    <Compile Include="StateMachine\FSM.cs" />
+    <Compile Include="StateMachine\State.cs" />
+    <Compile Include="StateMachine\Transition.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Entities\GameObject.cs" />
     <Compile Include="GameData.cs" />

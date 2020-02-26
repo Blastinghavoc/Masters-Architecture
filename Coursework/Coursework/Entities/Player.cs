@@ -81,7 +81,6 @@ namespace Coursework.Entities
 
             animation.Draw(spriteBatch,effect);
 
-            //spriteBatch.Draw(texture, Position, null, Color.White, 0, Vector2.Zero, textureScale, SpriteEffects.None, 0);
         }
 
         //What to do if the player collides with something
