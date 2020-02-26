@@ -42,12 +42,15 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Animation\Animation.cs" />
+    <Compile Include="Animation\AbstractAnimation.cs" />
+    <Compile Include="Animation\Drawable.cs" />
     <Compile Include="Animation\MultiImageAnimation.cs" />
+    <Compile Include="Animation\Sprite.cs" />
     <Compile Include="Animation\SpriteSheetAnimation.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="CollisionManager.cs" />
     <Compile Include="Entities\CollidableObject.cs" />
+    <Compile Include="Entities\Interactable.cs" />
     <Compile Include="Entities\RectangleExtensions.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Entities\GameObject.cs" />

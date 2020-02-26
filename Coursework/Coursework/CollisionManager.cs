@@ -13,8 +13,20 @@ namespace Coursework
         //TODO collision detection between non-static entities
         public void Update(Level currentLevel,Player player)
         {
-
             UpdatePlayerLevelCollisions(currentLevel, player);
+            UpdatePlayerInteractableCollisions(currentLevel, player);
+        }
+
+        private void UpdatePlayerInteractableCollisions(Level currentLevel, Player player)
+        {
+            foreach (var item in currentLevel.Interactables)
+            {
+                Vector2 penDepth;
+                if (player.CheckCollision(item, out penDepth))
+                {
+                    item.OnCollision(player, penDepth);
+                }
+            }
         }
 
         //Deal with collisions between player and level

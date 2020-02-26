@@ -12,9 +12,8 @@ namespace Coursework.Entities
 {
     class Player : CollidableObject, IDisposable
     {
-        private AbstractAnimation animation;
+        private Drawable animation;
         private readonly int width = GameData.tileSize.Y;//Width in world coords
-        private float texScale = 1;
 
         private ContentManager content;//Player currently manages own content, as this persists between levels
 
@@ -26,18 +25,20 @@ namespace Coursework.Entities
 
         private Vector2 previousPosition;//Position of player before they tried to move each frame
 
+        public int Score { get; set; }
+
         public Player(IServiceProvider provider,string contentRoot) {
             Position = new Vector2(0, 0);
             content = new ContentManager(provider, contentRoot);
             LoadContent();
             //Update collision bounds based on visible size
-            UpdateBounds(Position, width, (int)(animation.FrameHeight * texScale));
+            UpdateBounds(Position, width, (int)(animation.Size.Y));
         }
 
         public override void Update(GameTime gameTime)
         {
             UpdatePhysics(gameTime);
-            animation.Update(gameTime);
+            animation.Update(gameTime,Position);
         }
 
         private void UpdatePhysics(GameTime gameTime)
@@ -67,15 +68,12 @@ namespace Coursework.Entities
             inputForce = Vector2.Zero;
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch, SpriteEffects effect = SpriteEffects.None)
         {
-            animation.Position = Position;
-
-            //TODO animation controller (probably FSM)
-            SpriteEffects effect = SpriteEffects.None;
+            //TODO animation controller (probably FSM)            
             if (Velocity.X < 0)
             {
-                effect = SpriteEffects.FlipHorizontally;
+                effect = effect | SpriteEffects.FlipHorizontally;
             }
 
             animation.Draw(spriteBatch,effect);
@@ -91,7 +89,7 @@ namespace Coursework.Entities
         public void LoadContent()
         {
             var frameWidth = 72;
-            texScale = width / (float)frameWidth;
+            var texScale = width / (float)frameWidth;
 
             string filePath = GameData.GraphicsDirectory + "Player/p1_walk/PNG/p1_walk";
             int numFrames = 11;

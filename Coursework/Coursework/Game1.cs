@@ -124,7 +124,7 @@ namespace Coursework
 
             // TODO: Add your drawing code here
             currentLevel.Draw(gameTime, spriteBatch);
-            player.Draw(gameTime, spriteBatch);
+            player.Draw(spriteBatch);
 
             spriteBatch.End();
             base.Draw(gameTime);

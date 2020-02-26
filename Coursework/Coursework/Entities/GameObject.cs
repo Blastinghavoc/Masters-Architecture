@@ -21,7 +21,8 @@ namespace Coursework.Entities
 
         }
 
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch) {
+        public virtual void Draw(SpriteBatch spriteBatch, SpriteEffects effect = SpriteEffects.None)
+        { 
 
         }
 

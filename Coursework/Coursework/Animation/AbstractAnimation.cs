@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics;using Coursework.Animation;
 namespace Coursework.Animation
 {
     /// <summary>
     /// Based on lab 1 animation tutorial
     /// </summary>
-    abstract class AbstractAnimation
+    abstract class AbstractAnimation : Drawable
     {
         protected abstract Texture2D Image { get; set; }
 
@@ -32,7 +32,10 @@ namespace Coursework.Animation
         public bool Looping { get; protected set; }
         public int FrameWidth { get; protected set; }
         public int FrameHeight { get; protected set; }
-        public Vector2 Position { get; set; }
+
+        public Vector2 Size => new Vector2(FrameWidth*scale,FrameHeight*scale);
+
+        protected Vector2 position;
 
         public AbstractAnimation(Vector2 position, int frameWidth, int frameHeight, int
             frameCount, int frametime, Color color, float scale, bool looping)
@@ -44,7 +47,7 @@ namespace Coursework.Animation
             this.frameTime = frametime;
             this.scale = scale;
             Looping = looping;
-            Position = position;
+            this.position = position;
             
 
             // Set the time to zero
@@ -62,11 +65,19 @@ namespace Coursework.Animation
         {
             elapsedTime = 0;
             currentFrameIndex = 0;
+        }        public void SetPosition(Vector2 pos)
+        {
+            position = pos;
         }
+        public void Update(GameTime gameTime, Vector2 position)
+        {
+            this.position = position;
+            Update(gameTime);
+        }
 
         public virtual void Update(GameTime gameTime)
         {
-            // Do not update the game if we are not active
+            // Do not update if we are not active
             if (Active == false) return;
 
             // Update the elapsed time
@@ -89,7 +100,7 @@ namespace Coursework.Animation
                 elapsedTime = 0;
             }
 
-            var scaledWidth = FrameWidth * scale;            var scaledHeight = FrameHeight * scale;            destinationRect = new Rectangle((int)(Position.X), (int)(Position.Y), (int)(scaledWidth), (int)(scaledHeight));
+            var scaledWidth = FrameWidth * scale;            var scaledHeight = FrameHeight * scale;            destinationRect = new Rectangle((int)(this.position.X), (int)(this.position.Y), (int)(scaledWidth), (int)(scaledHeight));
         }
 
         public void Draw(SpriteBatch spriteBatch,SpriteEffects effect = SpriteEffects.None)

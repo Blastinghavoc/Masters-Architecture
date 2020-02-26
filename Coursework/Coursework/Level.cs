@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Coursework.Entities;
+using Coursework.Animation;
 
 namespace Coursework
 {
@@ -20,6 +22,7 @@ namespace Coursework
         Tile[,] tiles;//2D array of tiles
 
         Dictionary<Color, Texture2D> tileSkins;//Textures for each type of tile        
+        Dictionary<Color, Texture2D> pickupSkins;//Textures for each type of pickup  
 
         readonly float tileResolution = 70.0f;//Resolution of tile images, TODO configure from file
         readonly Vector2 tileTextureScale;
@@ -29,21 +32,27 @@ namespace Coursework
         public readonly Point tileSize;
 
         readonly string tileFilePath = GameData.GraphicsDirectory+"Tiles/";
+        readonly string itemFilePath = GameData.GraphicsDirectory + "Items/";
+
+        public List<Interactable> Interactables { get; protected set; }
+        private List<Interactable> killList = new List<Interactable>();//List of interactables to be removed
+
 
         public Level(IServiceProvider provider, string contentRoot,int levelNum = 0)
         {
             content = new ContentManager(provider, contentRoot);
             tileSkins = new Dictionary<Color, Texture2D>();
+            pickupSkins = new Dictionary<Color, Texture2D>();
+            Interactables = new List<Interactable>();
 
             tileSize = GameData.tileSize;
 
             tileTextureScale = new Vector2(tileSize.X/tileResolution,tileSize.Y/tileResolution);
             levelNumber = levelNum;
 
-
             LoadContent();
-            InitialiseTiles();
 
+            InitialiseFromMap();
 
             bounds = new Rectangle(Point.Zero, new Point(tiles.GetLength(0)* tileSize.X, tiles.GetLength(1)* tileSize.Y));
         }
@@ -60,14 +69,22 @@ namespace Coursework
             var adjustedY = MathHelper.Clamp(camera.Position.Y, bounds.Top + halfHeight, bounds.Bottom - halfHeight);
             
             camera.Position = new Vector2(adjustedX, adjustedY);
+
+            //Remove any interactables that were scheduled for deletion
+            foreach (var item in killList)
+            {
+                Interactables.Remove(item);
+            }
+            killList.Clear();
         }
 
         private void LoadContent()
         {
             tileSkins[Color.Black] = content.Load<Texture2D>(tileFilePath + "grassMid");
+            pickupSkins[Color.Yellow] = content.Load<Texture2D>(itemFilePath+"coinGold");
         }
 
-        private void InitialiseTiles()
+        private void InitialiseFromMap()
         {
             Texture2D map = content.Load<Texture2D>("Maps/map"+levelNumber);     
             
@@ -85,10 +102,18 @@ namespace Coursework
                 for (int j = 0; j < height; j++)
                 {
                     var colour= mapColours[i + j* width];
-                    Texture2D tileTexture;
-                    if (tileSkins.TryGetValue(colour,out tileTexture))
+                    Texture2D texture;
+                    if (tileSkins.TryGetValue(colour,out texture))//Tile
                     {
-                        tiles[i, j] = new Tile(tileTexture,TileCollisionMode.solid);
+                        tiles[i, j] = new Tile(texture,TileCollisionMode.solid);
+                    }
+                    else if (pickupSkins.TryGetValue(colour,out texture))//Pickup
+                    {
+                        //Assuming same scale for pickups and tiles
+                        var sprite = new Sprite(texture, tileTextureScale, Color.White);
+                        //Add a pickup that increments score
+                        var newInteractable = new Interactable(sprite,GetWorldPosition(i,j), OnPlayerCoinCollision);
+                        Interactables.Add(newInteractable);
                     }
                 }
             }
@@ -97,6 +122,7 @@ namespace Coursework
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            //Draw all tiles
             for (int i = 0; i < tiles.GetLength(0); i++)
             {
                 for (int j = 0; j < tiles.GetLength(1); j++)
@@ -110,8 +136,20 @@ namespace Coursework
                     }
                 }
             }
+
+            //Draw all interactables
+            foreach (var item in Interactables)
+            {
+                item.Draw(spriteBatch);
+            }
         }
 
+        //Callback for when the player touches a coin
+        private void OnPlayerCoinCollision(Player p, Interactable i)
+        {
+            p.Score += 1;
+            killList.Add(i);//Schedule the coin for deletion
+        }
 
         public TileCollisionMode GetCollisionModeAt(int i, int j)
         {
@@ -134,6 +172,11 @@ namespace Coursework
         public Rectangle GetBoundsAt(int i, int j)
         {
             return new Rectangle(i * tileSize.X, j * tileSize.Y, tileSize.X, tileSize.Y);          
+        }
+
+        public Vector2 GetWorldPosition(int i, int j)
+        {
+            return new Vector2(i * tileSize.X, j* tileSize.Y);
         }
 
 
