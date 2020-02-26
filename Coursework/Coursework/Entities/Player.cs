@@ -25,6 +25,9 @@ namespace Coursework.Entities
 
         private Vector2 previousPosition;//Position of player before they tried to move each frame
 
+        public int Health { get; private set; }
+        public bool IsAlive { get => Health > 0; }
+
         public Player(IServiceProvider provider,string contentRoot) {
             Position = new Vector2(0, 0);
             content = new ContentManager(provider, contentRoot);
@@ -32,7 +35,7 @@ namespace Coursework.Entities
             //Update collision bounds based on visible size
             UpdateBounds(Position, width, (int)(animation.Size.Y));
 
-            GameEventManager.Instance.OnPlayerCollided += OnCollided;
+            GameEventManager.Instance.OnPlayerColliding += OnCollided;
         }
 
         public override void Update(GameTime gameTime)
@@ -93,6 +96,12 @@ namespace Coursework.Entities
             }
         }
 
+        public void TakeDamage(int amount)
+        {
+            Health -= amount;
+            GameEventManager.Instance.PlayerHealthChanged(this,amount);
+        }
+
         public void SetPosition(Vector2 pos)
         {
             Position = pos;
@@ -125,7 +134,7 @@ namespace Coursework.Entities
         public void Dispose()
         {
             content.Unload();
-            GameEventManager.Instance.OnPlayerCollided -= OnCollided;
+            GameEventManager.Instance.OnPlayerColliding -= OnCollided;
         }
 
         public void LeftHeld()

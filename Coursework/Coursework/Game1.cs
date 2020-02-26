@@ -106,6 +106,7 @@ namespace Coursework
             keybindingManager.Update();//Update input events
 
             player.Update(gameTime);
+            currentLevel.Update(gameTime);
 
             //Detect collisions
             collisionManager.Update(currentLevel,player);
@@ -115,7 +116,7 @@ namespace Coursework
 
             //Update camera
             camera.Position = player.Position;
-            currentLevel.Update(camera);
+            currentLevel.ConstrainCamera(camera);
             camera.Update(graphics.GraphicsDevice.Viewport);
 
             //Update HUD

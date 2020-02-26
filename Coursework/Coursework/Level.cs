@@ -21,8 +21,10 @@ namespace Coursework
 
         Tile[,] tiles;//2D array of tiles
 
-        Dictionary<Color, Texture2D> tileSkins;//Textures for each type of tile        
-        Dictionary<Color, Texture2D> pickupSkins;//Textures for each type of pickup  
+        //TODO refactor into proper colour-> entity mapping, with textures loaded as necessary
+        Dictionary<Color, Texture2D> tileSkins = new Dictionary<Color, Texture2D>();//Textures for each type of tile        
+        Dictionary<Color, Texture2D> pickupSkins = new Dictionary<Color, Texture2D>();//Textures for each type of pickup  
+        Dictionary<Color, Texture2D> enemySkins = new Dictionary<Color, Texture2D>();//Enemy textures 
 
         readonly float tileResolution = 70.0f;//Resolution of tile images, TODO configure from file
         readonly Vector2 tileTextureScale;
@@ -33,6 +35,7 @@ namespace Coursework
 
         readonly string tileFilePath = GameData.GraphicsDirectory+"Tiles/";
         readonly string itemFilePath = GameData.GraphicsDirectory + "Items/";
+        readonly string enemyFilePath = GameData.GraphicsDirectory + "Enemies/";
 
         public List<Interactable> Interactables { get; protected set; }
         private List<Interactable> killList = new List<Interactable>();//List of interactables to be removed
@@ -41,8 +44,6 @@ namespace Coursework
         public Level(IServiceProvider provider, string contentRoot,int levelNum = 0)
         {
             content = new ContentManager(provider, contentRoot);
-            tileSkins = new Dictionary<Color, Texture2D>();
-            pickupSkins = new Dictionary<Color, Texture2D>();
             Interactables = new List<Interactable>();
 
             tileSize = GameData.tileSize;
@@ -56,12 +57,29 @@ namespace Coursework
 
             bounds = new Rectangle(Point.Zero, new Point(tiles.GetLength(0)* tileSize.X, tiles.GetLength(1)* tileSize.Y));
 
-            GameEventManager.Instance.OnPlayerCollided += OnPlayerCollision;
+            //Detect when the player starts colliding with level entities
+            GameEventManager.Instance.OnPlayerCollisionEnter += OnPlayerCollisionEnter;
         }
 
-        public void Update(Camera camera)
+        public void Update(GameTime gameTime)
         {
-            //Clamp the camera's position to be within level bounds
+            //Remove any interactables that were scheduled for deletion
+            foreach (var item in killList)
+            {
+                Interactables.Remove(item);
+            }
+            killList.Clear();
+
+            //Update all interactables (note that many of them have nothing to update)
+            foreach (var item in Interactables)
+            {
+                item.Update(gameTime);
+            }
+        }
+
+        //Clamp the camera's position to be within level bounds
+        public void ConstrainCamera(Camera camera)
+        {
             var visibleArea = camera.VisibleArea;
 
             var halfWidth = visibleArea.Width / 2f;
@@ -69,21 +87,15 @@ namespace Coursework
 
             var adjustedX = MathHelper.Clamp(camera.Position.X, bounds.Left + halfWidth, bounds.Right - halfWidth);
             var adjustedY = MathHelper.Clamp(camera.Position.Y, bounds.Top + halfHeight, bounds.Bottom - halfHeight);
-            
-            camera.Position = new Vector2(adjustedX, adjustedY);
 
-            //Remove any interactables that were scheduled for deletion
-            foreach (var item in killList)
-            {
-                Interactables.Remove(item);
-            }
-            killList.Clear();
+            camera.Position = new Vector2(adjustedX, adjustedY);
         }
 
         private void LoadContent()
         {
             tileSkins[Color.Black] = content.Load<Texture2D>(tileFilePath + "grassMid");
             pickupSkins[Color.Yellow] = content.Load<Texture2D>(itemFilePath+"coinGold");
+            enemySkins[Color.Red] = content.Load<Texture2D>(enemyFilePath+"slimeWalk1");
         }
 
         private void InitialiseFromMap()
@@ -113,8 +125,19 @@ namespace Coursework
                     {
                         //Assuming same scale for pickups and tiles
                         var sprite = new Sprite(texture, tileTextureScale, Color.White);
-                        //Add a pickup that increments score
-                        var newInteractable = new Interactable(sprite, GetWorldPosition(i, j));//, OnPlayerCoinCollision);
+                        //Add a pickup
+                        var newInteractable = new Interactable(sprite, GetWorldPosition(i, j));
+                        Interactables.Add(newInteractable);
+                    }
+                    else if (enemySkins.TryGetValue(colour,out texture))
+                    {
+                        var scale = new Vector2(tileSize.Y/ (float)texture.Width);
+                        var sprite = new Sprite(texture, scale, Color.White);
+
+                        //Offset to position the enemy on the ground
+                        var offset = new Vector2(0, tileSize.Y - sprite.Size.Y);
+
+                        var newInteractable = new Enemy(sprite, GetWorldPosition(i, j) + offset, 1,1);
                         Interactables.Add(newInteractable);
                     }
                 }
@@ -146,12 +169,19 @@ namespace Coursework
             }
         }
 
-        private void OnPlayerCollision(object sender, PlayerCollisionEventArgs e)
+        private void OnPlayerCollisionEnter(object sender, PlayerCollisionEventArgs e)
         {
             Interactable interactable = e.colllidedWith as Interactable;
             if (interactable != null)
             {
-                //For now, assuming all interactables are coins
+                Enemy enemy = interactable as Enemy;
+                if (enemy != null)
+                {
+                    e.player.TakeDamage(enemy.Damage);
+                    return;
+                }
+
+                //For now, assuming all other interactables are coins
                 GameEventManager.Instance.AddScore(1);
                 killList.Add(interactable);//Schedule for deletion
             }
@@ -189,7 +219,7 @@ namespace Coursework
         public void Dispose()
         {
             content.Unload();
-            GameEventManager.Instance.OnPlayerCollided -= OnPlayerCollision;
+            GameEventManager.Instance.OnPlayerCollisionEnter -= OnPlayerCollisionEnter;
         }
     }
 }

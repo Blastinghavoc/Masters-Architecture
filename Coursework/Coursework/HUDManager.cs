@@ -30,12 +30,19 @@ namespace Coursework
         SpriteFont font;
 
         HUDElement scoreText;
+        HUDElement healthText;
+
+
         private Vector2 offset;//Offset required to keep text aligned with camera
 
         public HUDManager(SpriteFont font) {
-            scoreText = new HUDElement("Score: 0", new Vector2(0, 0));
             this.font = font;
+
+            scoreText = new HUDElement("Score: 0", new Vector2(0, 0));
+            healthText = new HUDElement("Health: 0", new Vector2(0, 30));
+
             GameEventManager.Instance.OnScoreChanged += OnScoreChanged;
+            GameEventManager.Instance.OnPlayerHealthChanged += OnHealthChanged;
         }
 
         public void Update(GameTime gameTime,Camera camera)
@@ -43,6 +50,11 @@ namespace Coursework
             var viewingArea = camera.VisibleArea;
             var camPos = camera.Position;
             offset = new Vector2(camPos.X - viewingArea.Width/2f, camPos.Y - viewingArea.Height / 2f);
+        }
+
+        public void OnHealthChanged(object sender,PlayerHealthChangedEventArgs e)
+        {
+            healthText.text = "Health: " + e.player.Health.ToString();
         }
 
         public void OnScoreChanged(object sender, ScoreEventArgs e)
@@ -53,6 +65,7 @@ namespace Coursework
         public void Draw(SpriteBatch spriteBatch)
         {
             DrawElement(scoreText, spriteBatch);
+            DrawElement(healthText, spriteBatch);
         }
 
         private void DrawElement(HUDElement element, SpriteBatch spriteBatch) {
@@ -64,6 +77,7 @@ namespace Coursework
         public void Dispose()
         {
             GameEventManager.Instance.OnScoreChanged -= OnScoreChanged;
+            GameEventManager.Instance.OnPlayerHealthChanged -= OnHealthChanged;
         }
     }
 }

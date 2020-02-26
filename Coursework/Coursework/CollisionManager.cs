@@ -10,9 +10,16 @@ namespace Coursework
 {
     class CollisionManager
     {
-        //TODO collision detection between non-static entities
+        private Dictionary<CollidableObject, HashSet<CollidableObject>> collisionsLastFrame = new Dictionary<CollidableObject, HashSet<CollidableObject>>();
+        private Dictionary<CollidableObject, HashSet<CollidableObject>> collisionsThisFrame = new Dictionary<CollidableObject, HashSet<CollidableObject>>();
+
+
         public void Update(Level currentLevel,Player player)
         {
+            //Save last frame's collisions
+            collisionsLastFrame = new Dictionary<CollidableObject, HashSet<CollidableObject>>(collisionsThisFrame);
+            collisionsThisFrame.Clear();
+
             UpdatePlayerLevelCollisions(currentLevel, player);
             UpdatePlayerInteractableCollisions(currentLevel, player);
         }
@@ -24,7 +31,16 @@ namespace Coursework
                 Vector2 penDepth;
                 if (player.CheckCollision(item, out penDepth))
                 {
-                    GameEventManager.Instance.OnPlayerCollision(player,item,penDepth);
+                    RecordCollision(player,item);
+
+                    CollisionType type = CollisionType.stay;
+
+                    if (!wasCollidingWith(player,item))//Weren't colliding before-> collision enter
+                    {
+                        type = CollisionType.enter;
+                    }
+
+                    GameEventManager.Instance.OnPlayerCollision(player,item,penDepth,type);
                 }
             }
         }
@@ -59,12 +75,39 @@ namespace Coursework
                     {
                         if (TileCollisionMode.solid.Equals(collisionMode))
                         {
-                            GameEventManager.Instance.OnPlayerCollision(player, currentLevel,penDepth);                         
+                            GameEventManager.Instance.OnPlayerCollision(player, currentLevel,penDepth);                            
                         }
                     }
                 }
             }
         }
 
+        //Record a collision between object 1 and object 2 (one way only at the moment)
+        private void RecordCollision(CollidableObject o1, CollidableObject o2)
+        {           
+            if (!collisionsThisFrame.ContainsKey(o1))
+            {
+                collisionsThisFrame.Add(o1, new HashSet<CollidableObject>());
+            }
+            collisionsThisFrame[o1].Add(o2);
+        }
+
+        private bool wasCollidingWith(CollidableObject o1, CollidableObject o2)
+        {
+            HashSet<CollidableObject> set;
+            if (collisionsLastFrame.TryGetValue(o1,out set))
+            {
+                return set.Contains(o2);
+            }
+            return false;
+        }
+
+    }
+
+    enum CollisionType
+    {
+        enter,
+        exit,
+        stay
     }
 }

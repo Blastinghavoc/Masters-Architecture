@@ -13,29 +13,55 @@ namespace Coursework
         public static GameEventManager Instance;
 
         public event EventHandler<ScoreEventArgs> OnScoreChanged = delegate { };
-        public event EventHandler<PlayerCollisionEventArgs> OnPlayerCollided = delegate { };
+        public event EventHandler<PlayerCollisionEventArgs> OnPlayerColliding = delegate { };
+        public event EventHandler<PlayerCollisionEventArgs> OnPlayerCollisionEnter = delegate { };
+        public event EventHandler<PlayerHealthChangedEventArgs> OnPlayerHealthChanged = delegate { };
+
 
         private int prevScore;
         private int score;
 
         public void Update(GameTime gameTime)
         {
-            //Only fire score changed event once per frame, as the score could potentially be modified multiple times in one frame
-            if (prevScore != score)
-            {
-                OnScoreChanged?.Invoke(this, new ScoreEventArgs(score, score-prevScore));
-            }
+          
         }
 
         public void AddScore(int amount)
         {
             prevScore = score;
-            score += amount;            
+            score += amount;
+            OnScoreChanged?.Invoke(this, new ScoreEventArgs(score, score - prevScore));
         }
 
-        public void OnPlayerCollision(Player player, Object colllidedWith, Vector2 collisionDepth)
+        public void PlayerHealthChanged(Player player,int amount)
         {
-            OnPlayerCollided?.Invoke(this,new PlayerCollisionEventArgs(player,colllidedWith,collisionDepth));
+            OnPlayerHealthChanged?.Invoke(this,new PlayerHealthChangedEventArgs(player));
+        }
+
+        //Fire player collision events
+        public void OnPlayerCollision(Player player, Object collidedWith, Vector2 collisionDepth,CollisionType collisionType= CollisionType.stay)
+        {
+            //Always fires if there is a collision happening
+            if (collisionType != CollisionType.exit)
+            {
+                OnPlayerColliding?.Invoke(this,new PlayerCollisionEventArgs(player,collidedWith,collisionDepth));
+            }
+
+            //Only fires when a collision first starts happening
+            if (collisionType == CollisionType.enter)
+            {
+                OnPlayerCollisionEnter?.Invoke(this, new PlayerCollisionEventArgs(player, collidedWith, collisionDepth));
+            }
+        }
+    }
+
+    class PlayerHealthChangedEventArgs
+    {
+        public Player player;
+
+        public PlayerHealthChangedEventArgs(Player player)
+        {
+            this.player = player;
         }
     }
 

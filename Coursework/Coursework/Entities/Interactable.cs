@@ -20,6 +20,7 @@ namespace Coursework.Entities
         {
             this.appearance = appearance;
             Position = position;
+            UpdateBounds(Position, (int)appearance.Size.X, (int)appearance.Size.Y);
         }
 
         public override void Draw(SpriteBatch spriteBatch, SpriteEffects effect = SpriteEffects.None)
