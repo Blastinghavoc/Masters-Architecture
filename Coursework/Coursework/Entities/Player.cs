@@ -35,7 +35,8 @@ namespace Coursework.Entities
             //Update collision bounds based on visible size
             UpdateBounds(Position, width, (int)(animation.Size.Y));
 
-            GameEventManager.Instance.OnPlayerColliding += OnCollided;
+            GameEventManager.Instance.OnPlayerColliding += WhileColliding;
+            GameEventManager.Instance.OnPlayerCollisionEnter += OnCollisionEnter;
         }
 
         public override void Update(GameTime gameTime)
@@ -83,15 +84,36 @@ namespace Coursework.Entities
 
         }
 
-        //What to do if the player collides with something
-        public void OnCollided(object sender, PlayerCollisionEventArgs e)
+        //What to do while the player is colliding with something
+        private void WhileColliding(object sender, PlayerCollisionEventArgs e)
         {
             Level level = e.colllidedWith as Level;
-            Interactable interactable = e.colllidedWith as Interactable;
 
             if (level != null)//Resolve collisions with level
             {
                 StaticCollisionResponse(e.collisionDepth);
+                return;
+            }                    
+        }
+
+        //What to do only when the player starts colliding with something
+        private void OnCollisionEnter(object sender, PlayerCollisionEventArgs e)
+        {
+            Enemy enemy = e.colllidedWith as Enemy;
+            if (enemy != null)
+            {
+                var bottom = BoundingBox.GetBottomCenter();
+                var enemyBottom = enemy.BoundingBox.GetBottomCenter();
+                var enemyHeight = enemy.Appearance.Size.Y;
+                //Must be above the enemy by at least half its height to squash it
+                if (bottom.Y <= enemyBottom.Y - enemyHeight / 2)
+                {
+                    enemy.Health = 0;
+                }
+                else
+                {
+                    TakeDamage(enemy.Damage);
+                }
             }
         }
 
@@ -133,7 +155,9 @@ namespace Coursework.Entities
         public void Dispose()
         {
             content.Unload();
-            GameEventManager.Instance.OnPlayerColliding -= OnCollided;
+            //Unsubscribe from events
+            GameEventManager.Instance.OnPlayerColliding -= WhileColliding;
+            GameEventManager.Instance.OnPlayerCollisionEnter -= OnCollisionEnter;
         }
 
         public void LeftHeld()

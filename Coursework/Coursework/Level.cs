@@ -42,6 +42,9 @@ namespace Coursework
         public List<Interactable> Interactables { get; protected set; }
         private List<Interactable> killList = new List<Interactable>();//List of interactables to be removed
 
+        private Dictionary<EnemyType, Texture2D> corpseSkins = new Dictionary<EnemyType, Texture2D>();
+        private List<Decal> corpses = new List<Decal>();
+
 
         public Level(IServiceProvider provider, string contentRoot,int levelNum = 0)
         {
@@ -61,6 +64,8 @@ namespace Coursework
 
             //Detect when the player starts colliding with level entities
             GameEventManager.Instance.OnPlayerCollisionEnter += OnPlayerCollisionEnter;
+            //Detect death of an enemy
+            GameEventManager.Instance.OnEnemyKilled += OnEnemyKilled;
         }
 
         public void Update(GameTime gameTime)
@@ -97,7 +102,8 @@ namespace Coursework
         {
             tileSkins[Color.Black] = content.Load<Texture2D>(tileFilePath + "grassMid");
             pickupSkins[Color.Yellow] = content.Load<Texture2D>(itemFilePath+"coinGold");
-            enemySkins[Color.Red] = content.Load<Texture2D>(enemyFilePath+"slimeWalk1");
+            enemySkins[new Color(255,0,254,255)] = content.Load<Texture2D>(enemyFilePath+"slimeWalk1");
+            corpseSkins[EnemyType.slime] = content.Load<Texture2D>(enemyFilePath+"slimeDead");
         }
 
         private void InitialiseFromMap()
@@ -118,6 +124,11 @@ namespace Coursework
                 for (int j = 0; j < height; j++)
                 {
                     var colour= mapColours[i + j* width];
+                    if (colour == Color.Transparent)
+                    {
+                        continue;
+                    }
+
                     Texture2D texture;
                     if (tileSkins.TryGetValue(colour,out texture))//Tile
                     {
@@ -169,6 +180,11 @@ namespace Coursework
             {
                 item.Draw(spriteBatch);
             }
+
+            foreach (var item in corpses)
+            {
+                item.Draw(spriteBatch);
+            }
         }
 
         private void OnPlayerCollisionEnter(object sender, PlayerCollisionEventArgs e)
@@ -179,13 +195,31 @@ namespace Coursework
                 Enemy enemy = interactable as Enemy;
                 if (enemy != null)
                 {
-                    e.player.TakeDamage(enemy.Damage);
+                    //Ignore enemy collisions, these are handled by the player
                     return;
                 }
 
                 //For now, assuming all other interactables are coins
                 GameEventManager.Instance.AddScore(1);
                 killList.Add(interactable);//Schedule for deletion
+            }
+        }
+
+        private void OnEnemyKilled(object sender,EnemyKilledEventArgs e)
+        {
+            Enemy enemy = e.enemy;
+            killList.Add(enemy);
+            Texture2D corpseTex;
+            if (corpseSkins.TryGetValue(enemy.Type,out corpseTex))
+            {
+                var scale = new Vector2(tileSize.Y / (float)corpseTex.Width);
+
+                Decal corpse = new Decal(corpseTex, scale, Color.White, enemy.DirectionalEffect);
+                var offset = enemy.Appearance.Size - corpse.Size;
+
+                corpse.SetPosition(enemy.Position + offset);
+
+                corpses.Add(corpse);
             }
         }
 
@@ -240,6 +274,7 @@ namespace Coursework
         {
             content.Unload();
             GameEventManager.Instance.OnPlayerCollisionEnter -= OnPlayerCollisionEnter;
+            GameEventManager.Instance.OnEnemyKilled -= OnEnemyKilled;
         }
     }
 }

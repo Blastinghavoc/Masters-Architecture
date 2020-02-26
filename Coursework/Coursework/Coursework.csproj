@@ -43,6 +43,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Animation\AbstractAnimation.cs" />
+    <Compile Include="Animation\Decal.cs" />
     <Compile Include="Animation\Drawable.cs" />
     <Compile Include="Animation\MultiImageAnimation.cs" />
     <Compile Include="Animation\Sprite.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="Entities\Enemy.cs" />
     <Compile Include="Entities\Interactable.cs" />
     <Compile Include="Entities\RectangleExtensions.cs" />
+    <Compile Include="StateMachine\AI\General.cs" />
     <Compile Include="StateMachine\AI\Slime.cs" />
     <Compile Include="StateMachine\FSM.cs" />
     <Compile Include="StateMachine\State.cs" />

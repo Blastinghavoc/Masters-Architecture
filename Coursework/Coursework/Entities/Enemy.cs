@@ -9,6 +9,7 @@ using Coursework.StateMachine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Slime = Coursework.StateMachine.AI.Slime;
+using Coursework.StateMachine.AI;
 
 namespace Coursework.Entities
 {
@@ -64,7 +65,7 @@ namespace Coursework.Entities
                 case EnemyType.slime:
                     {
                         State patrol = new Slime.Patrol();
-                        State dead = new Slime.Dead();
+                        State dead = new Dead();
                         patrol.AddTransition(new Transition(dead, () => { return !this.IsAlive; }));
 
                         brain.AddState(patrol);

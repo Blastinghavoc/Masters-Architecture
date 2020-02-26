@@ -70,28 +70,5 @@ namespace Coursework.StateMachine.AI.Slime
         }
     }
 
-    class Dead : State
-    {
-        public Dead()
-        {
-            Name = "Dead";
-        }
-
-        public override void OnEnter(object owner)
-        {
-            Enemy enemy = owner as Enemy;
-            if (enemy != null)
-            {
-                float f = 4;//TEST
-            }
-        }
-
-        public override void OnExit(object owner)
-        {
-        }
-
-        public override void Update(object owner, GameTime gameTime)
-        {
-        }
-    }
+    
 }

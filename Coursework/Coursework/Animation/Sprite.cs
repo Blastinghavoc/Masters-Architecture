@@ -28,7 +28,7 @@ namespace Coursework.Animation
         }
 
 
-        public void Draw(SpriteBatch spriteBatch, SpriteEffects effect = SpriteEffects.None)
+        public virtual void Draw(SpriteBatch spriteBatch, SpriteEffects effect = SpriteEffects.None)
         {
             spriteBatch.Draw(texture,position: position,color: color,effects: effect,scale: scale);
         }

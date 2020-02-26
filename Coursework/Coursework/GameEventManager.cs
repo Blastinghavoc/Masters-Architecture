@@ -16,6 +16,7 @@ namespace Coursework
         public event EventHandler<PlayerCollisionEventArgs> OnPlayerColliding = delegate { };
         public event EventHandler<PlayerCollisionEventArgs> OnPlayerCollisionEnter = delegate { };
         public event EventHandler<PlayerHealthChangedEventArgs> OnPlayerHealthChanged = delegate { };
+        public event EventHandler<EnemyKilledEventArgs> OnEnemyKilled = delegate { };
 
 
         private int prevScore;
@@ -38,20 +39,35 @@ namespace Coursework
             OnPlayerHealthChanged?.Invoke(this,new PlayerHealthChangedEventArgs(player));
         }
 
+        public void EnemyKilled(Enemy enemy)
+        {
+            OnEnemyKilled?.Invoke(this, new EnemyKilledEventArgs(enemy));
+        }
+
         //Fire player collision events
         public void OnPlayerCollision(Player player, Object collidedWith, Vector2 collisionDepth,CollisionType collisionType= CollisionType.stay)
         {
             //Always fires if there is a collision happening
             if (collisionType != CollisionType.exit)
             {
-                OnPlayerColliding?.Invoke(this,new PlayerCollisionEventArgs(player,collidedWith,collisionDepth));
+                OnPlayerColliding?.Invoke(this,new PlayerCollisionEventArgs(player,collidedWith,collisionDepth,collisionType));
             }
 
             //Only fires when a collision first starts happening
             if (collisionType == CollisionType.enter)
             {
-                OnPlayerCollisionEnter?.Invoke(this, new PlayerCollisionEventArgs(player, collidedWith, collisionDepth));
+                OnPlayerCollisionEnter?.Invoke(this, new PlayerCollisionEventArgs(player, collidedWith, collisionDepth,collisionType));
             }
+        }
+    }
+
+    class EnemyKilledEventArgs
+    {
+        public Enemy enemy;
+
+        public EnemyKilledEventArgs(Enemy enemy)
+        {
+            this.enemy = enemy;
         }
     }
 
@@ -70,12 +86,14 @@ namespace Coursework
         public Player player;
         public Object colllidedWith;
         public Vector2 collisionDepth;
+        public CollisionType collisionType;
 
-        public PlayerCollisionEventArgs(Player player, object colllidedWith, Vector2 collisionDepth)
+        public PlayerCollisionEventArgs(Player player, object colllidedWith, Vector2 collisionDepth, CollisionType collisionType)
         {
             this.player = player;
             this.colllidedWith = colllidedWith;
             this.collisionDepth = collisionDepth;
+            this.collisionType = collisionType;
         }
     }
 
