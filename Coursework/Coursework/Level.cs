@@ -55,6 +55,8 @@ namespace Coursework
             InitialiseFromMap();
 
             bounds = new Rectangle(Point.Zero, new Point(tiles.GetLength(0)* tileSize.X, tiles.GetLength(1)* tileSize.Y));
+
+            GameEventManager.Instance.OnPlayerCollided += OnPlayerCollision;
         }
 
         public void Update(Camera camera)
@@ -112,7 +114,7 @@ namespace Coursework
                         //Assuming same scale for pickups and tiles
                         var sprite = new Sprite(texture, tileTextureScale, Color.White);
                         //Add a pickup that increments score
-                        var newInteractable = new Interactable(sprite,GetWorldPosition(i,j), OnPlayerCoinCollision);
+                        var newInteractable = new Interactable(sprite, GetWorldPosition(i, j));//, OnPlayerCoinCollision);
                         Interactables.Add(newInteractable);
                     }
                 }
@@ -144,11 +146,15 @@ namespace Coursework
             }
         }
 
-        //Callback for when the player touches a coin
-        private void OnPlayerCoinCollision(Player p, Interactable i)
+        private void OnPlayerCollision(object sender, PlayerCollisionEventArgs e)
         {
-            p.Score += 1;
-            killList.Add(i);//Schedule the coin for deletion
+            Interactable interactable = e.colllidedWith as Interactable;
+            if (interactable != null)
+            {
+                //For now, assuming all interactables are coins
+                GameEventManager.Instance.AddScore(1);
+                killList.Add(interactable);//Schedule for deletion
+            }
         }
 
         public TileCollisionMode GetCollisionModeAt(int i, int j)
@@ -183,6 +189,7 @@ namespace Coursework
         public void Dispose()
         {
             content.Unload();
+            GameEventManager.Instance.OnPlayerCollided -= OnPlayerCollision;
         }
     }
 }

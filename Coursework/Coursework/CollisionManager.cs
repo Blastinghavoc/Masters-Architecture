@@ -24,7 +24,7 @@ namespace Coursework
                 Vector2 penDepth;
                 if (player.CheckCollision(item, out penDepth))
                 {
-                    item.OnCollision(player, penDepth);
+                    GameEventManager.Instance.OnPlayerCollision(player,item,penDepth);
                 }
             }
         }
@@ -59,7 +59,7 @@ namespace Coursework
                     {
                         if (TileCollisionMode.solid.Equals(collisionMode))
                         {
-                            player.OnStaticCollision(penDepth);
+                            GameEventManager.Instance.OnPlayerCollision(player, currentLevel,penDepth);                         
                         }
                     }
                 }

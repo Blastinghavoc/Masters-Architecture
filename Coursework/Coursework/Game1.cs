@@ -20,9 +20,9 @@ namespace Coursework
         Player player;
         Level currentLevel;
         CollisionManager collisionManager;
-
         KeybindingManager keybindingManager;
-
+        HUDManager hudManager;
+        GameEventManager eventManager;
         
         
         public Game1()
@@ -40,6 +40,9 @@ namespace Coursework
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            eventManager = new GameEventManager();
+            GameEventManager.Instance = eventManager;
+
             player = new Player(Services,Content.RootDirectory);
             currentLevel = new Level(Services, Content.RootDirectory);
             camera = new Camera(graphics.GraphicsDevice.Viewport);
@@ -73,6 +76,9 @@ namespace Coursework
 
             // TODO: use this.Content to load your game content here
             font = Content.Load<SpriteFont>("Fonts/gamefont");//Same font as used in the labs
+
+            //Initialise hud after font has been loaded
+            hudManager = new HUDManager(font);
         }
 
         /// <summary>
@@ -101,13 +107,19 @@ namespace Coursework
 
             player.Update(gameTime);
 
-            //Resolve collisions
+            //Detect collisions
             collisionManager.Update(currentLevel,player);
+
+            //Update events
+            eventManager.Update(gameTime);
 
             //Update camera
             camera.Position = player.Position;
             currentLevel.Update(camera);
             camera.Update(graphics.GraphicsDevice.Viewport);
+
+            //Update HUD
+            hudManager.Update(gameTime,camera);
 
             base.Update(gameTime);
         }
@@ -122,9 +134,13 @@ namespace Coursework
 
             spriteBatch.Begin(transformMatrix: camera.Transform);
 
-            // TODO: Add your drawing code here
+            //Draw level and all entities managed by it
             currentLevel.Draw(gameTime, spriteBatch);
+            //Draw player
             player.Draw(spriteBatch);
+
+            //Draw hud
+            hudManager.Draw(spriteBatch);
 
             spriteBatch.End();
             base.Draw(gameTime);

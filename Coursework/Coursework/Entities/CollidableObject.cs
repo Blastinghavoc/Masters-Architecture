@@ -44,14 +44,8 @@ namespace Coursework.Entities
             return CheckCollision(obj.BoundingBox, out penetrationDepth);
         }
 
-        //Overriden by derived classes to implement their own collision response to hiting another object
-        public virtual void OnCollision(CollidableObject obj, Vector2 penetrationDepth)
-        {
-
-        }
-
         //Collision response to hitting a static object
-        public virtual void OnStaticCollision(Vector2 penetrationDepth)
+        protected virtual void StaticCollisionResponse(Vector2 penetrationDepth)
         {
             var xMag = Math.Abs(penetrationDepth.X);
             var yMag = Math.Abs(penetrationDepth.Y);

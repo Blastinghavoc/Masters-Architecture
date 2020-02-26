@@ -55,6 +55,8 @@
     <Compile Include="Game1.cs" />
     <Compile Include="Entities\GameObject.cs" />
     <Compile Include="GameData.cs" />
+    <Compile Include="GameEventManager.cs" />
+    <Compile Include="HUDManager.cs" />
     <Compile Include="Input\InputManager.cs" />
     <Compile Include="Input\InputState.cs" />
     <Compile Include="Input\KeybindingManager.cs" />

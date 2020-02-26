@@ -25,14 +25,14 @@ namespace Coursework.Entities
 
         private Vector2 previousPosition;//Position of player before they tried to move each frame
 
-        public int Score { get; set; }
-
         public Player(IServiceProvider provider,string contentRoot) {
             Position = new Vector2(0, 0);
             content = new ContentManager(provider, contentRoot);
             LoadContent();
             //Update collision bounds based on visible size
             UpdateBounds(Position, width, (int)(animation.Size.Y));
+
+            GameEventManager.Instance.OnPlayerCollided += OnCollided;
         }
 
         public override void Update(GameTime gameTime)
@@ -81,6 +81,18 @@ namespace Coursework.Entities
             //spriteBatch.Draw(texture, Position, null, Color.White, 0, Vector2.Zero, textureScale, SpriteEffects.None, 0);
         }
 
+        //What to do if the player collides with something
+        public void OnCollided(object sender, PlayerCollisionEventArgs e)
+        {
+            Level level = e.colllidedWith as Level;
+            Interactable interactable = e.colllidedWith as Interactable;
+
+            if (level != null)//Resolve collisions with level
+            {
+                StaticCollisionResponse(e.collisionDepth);
+            }
+        }
+
         public void SetPosition(Vector2 pos)
         {
             Position = pos;
@@ -113,6 +125,7 @@ namespace Coursework.Entities
         public void Dispose()
         {
             content.Unload();
+            GameEventManager.Instance.OnPlayerCollided -= OnCollided;
         }
 
         public void LeftHeld()

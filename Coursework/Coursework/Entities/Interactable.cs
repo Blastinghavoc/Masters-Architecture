@@ -14,24 +14,12 @@ namespace Coursework.Entities
     class Interactable: CollidableObject
     {
         private Drawable appearance;
-        private Action<Player,Interactable> onCollected;
         public override Vector2 Position { get => base.Position; protected set { base.Position = value; appearance.SetPosition(value); } }
 
-        public Interactable(Drawable appearance,Vector2 position, Action<Player, Interactable> onCollected)
+        public Interactable(Drawable appearance,Vector2 position)
         {
             this.appearance = appearance;
-            this.onCollected = onCollected;
             Position = position;
-        }
-
-        //If an NPC collides with the player, run its action
-        public override void OnCollision(CollidableObject obj, Vector2 penetrationDepth)
-        {
-            Player player = obj as Player;
-            if (player != null)
-            {
-                onCollected(player,this);
-            }
         }
 
         public override void Draw(SpriteBatch spriteBatch, SpriteEffects effect = SpriteEffects.None)
