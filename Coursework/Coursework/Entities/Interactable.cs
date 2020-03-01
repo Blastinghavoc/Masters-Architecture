@@ -13,7 +13,7 @@ namespace Coursework.Entities
     //A collidable object that can interact with the player
     class Interactable: CollidableObject
     {
-        public Drawable Appearance { get; private set; }
+        public Drawable Appearance { get; protected set; }
         public override Vector2 Position { get => base.Position; protected set { base.Position = value; Appearance.SetPosition(value); } }
 
         public Interactable(Drawable appearance,Vector2 position)

@@ -18,5 +18,7 @@ namespace Coursework.Animation
         
         //Display size
         Vector2 Size { get; }
+
+        Drawable Clone();
     }
 }

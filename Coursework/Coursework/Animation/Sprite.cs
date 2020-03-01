@@ -48,5 +48,10 @@ namespace Coursework.Animation
         {
             //Nothing to update
         }
+
+        public virtual Drawable Clone()
+        {
+            return this.MemberwiseClone() as Drawable;
+        }
     }
 }

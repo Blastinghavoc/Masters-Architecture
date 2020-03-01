@@ -11,16 +11,16 @@ namespace Coursework.Animation
     //Sprite with a built-in effect. Used for enemy corpses to retain their orientation
     class Decal : Sprite
     {
-        private SpriteEffects effect;
+        public SpriteEffects Effect { get; set; }
 
         public Decal(Texture2D texture, Vector2 scale, Color color,SpriteEffects effects = SpriteEffects.None) : base(texture, scale, color)
         {
-            this.effect = effects;
+            this.Effect = effects;
         }
 
         public override void Draw(SpriteBatch spriteBatch, SpriteEffects effect = SpriteEffects.None)
         {
-            effect = effect | this.effect;
+            effect = effect | this.Effect;
             base.Draw(spriteBatch, effect);
         }
     }

@@ -45,7 +45,6 @@ namespace Coursework
 
             player = new Player(Services,Content.RootDirectory);
             currentLevel = new Level(Services, Content.RootDirectory);
-            Level.CurrentLevel = currentLevel;
 
             camera = new Camera(graphics.GraphicsDevice.Viewport);
             camera.Position = new Vector2(0, 0);

@@ -21,5 +21,10 @@ namespace Coursework.StateMachine
         {
             Transitions.Add(trans);
         }
+
+        public void AddTransition(State nextState, Func<bool> condition)
+        {
+            Transitions.Add(new Transition(nextState, condition));
+        }
     }
 }

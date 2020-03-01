@@ -54,6 +54,7 @@
     <Compile Include="Entities\Enemy.cs" />
     <Compile Include="Entities\Interactable.cs" />
     <Compile Include="Entities\RectangleExtensions.cs" />
+    <Compile Include="StateMachine\AI\Fly.cs" />
     <Compile Include="StateMachine\AI\General.cs" />
     <Compile Include="StateMachine\AI\Slime.cs" />
     <Compile Include="StateMachine\FSM.cs" />

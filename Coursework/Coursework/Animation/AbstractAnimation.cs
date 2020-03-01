@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;using Coursework.Animation;
+using Microsoft.Xna.Framework.Graphics;
+using Coursework.Animation;
+
 namespace Coursework.Animation
 {
     /// <summary>
@@ -55,20 +57,30 @@ namespace Coursework.Animation
             currentFrameIndex = 0;
             // Set the Animation to active by default
             Active = true;
-        }        public void Pause()
+        }
+
+        public void Pause()
         {
             Active = false;
-        }        public void Play()
+        }
+
+        public void Play()
         {
             Active = true;
-        }        //Reset to initial frame        public void Reset()
+        }
+
+        //Reset to initial frame
+        public void Reset()
         {
             elapsedTime = 0;
             currentFrameIndex = 0;
-        }        public void SetPosition(Vector2 pos)
+        }
+
+        public void SetPosition(Vector2 pos)
         {
             position = pos;
-        }
+        }
+
         public void Update(GameTime gameTime, Vector2 position)
         {
             this.position = position;
@@ -100,7 +112,10 @@ namespace Coursework.Animation
                 elapsedTime = 0;
             }
 
-            var scaledWidth = FrameWidth * scale;            var scaledHeight = FrameHeight * scale;            destinationRect = new Rectangle((int)(this.position.X), (int)(this.position.Y), (int)(scaledWidth), (int)(scaledHeight));
+            var scaledWidth = FrameWidth * scale;
+            var scaledHeight = FrameHeight * scale;
+
+            destinationRect = new Rectangle((int)(this.position.X), (int)(this.position.Y), (int)(scaledWidth), (int)(scaledHeight));
         }
 
         public void Draw(SpriteBatch spriteBatch,SpriteEffects effect = SpriteEffects.None)
@@ -110,6 +125,11 @@ namespace Coursework.Animation
             {
                 spriteBatch.Draw(Image,destinationRectangle: destinationRect,sourceRectangle: sourceRect,color: color,effects: effect);
             }
+        }
+
+        public virtual Drawable Clone()
+        {
+            return this.MemberwiseClone() as Drawable;
         }
     }
 }
