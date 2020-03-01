@@ -40,6 +40,14 @@ namespace Coursework.StateMachine
             states.Add(state);
         }
 
+        public void AddStates(params State[] list)
+        {
+            foreach (var state in list)
+            {
+                states.Add(state);
+            }
+        }
+
         public void Update(GameTime gameTime)
         {
             if (currentState == null)

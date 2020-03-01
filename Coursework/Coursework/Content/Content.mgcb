@@ -32,6 +32,18 @@
 /processorParam:TextureFormat=Color
 /build:Maps/map0.png
 
+#begin Maps/small.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Maps/small.png
+
 #begin PlatformerGraphicsDeluxe/bg.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -691,6 +703,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:PlatformerGraphicsDeluxe/HUD/hud_x.png
+
+#begin PlatformerGraphicsDeluxe/Interactables/coinGold.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlatformerGraphicsDeluxe/Interactables/coinGold.png
+
+#begin PlatformerGraphicsDeluxe/Interactables/door_openMid.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlatformerGraphicsDeluxe/Interactables/door_openMid.png
 
 #begin PlatformerGraphicsDeluxe/Items/bomb.png
 /importer:TextureImporter
@@ -4189,4 +4225,7 @@
 
 #begin XML/Level1.xml
 /copy:XML/Level1.xml
+
+#begin XML/Level2.xml
+/copy:XML/Level2.xml
 

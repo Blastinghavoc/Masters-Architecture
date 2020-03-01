@@ -7,12 +7,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Coursework.Animation;
+using Coursework.StateMachine;
+using Coursework.StateMachine.Player;
 
 namespace Coursework.Entities
 {
     class Player : CollidableObject, IDisposable
     {
-        private Drawable animation;
+        private Drawable currentAnimation;
+        private Drawable[] animations;
+        public SpriteEffects directionalEffect= SpriteEffects.None;
+
         private readonly int width = GameData.Instance.levelConstants.tileSize.Y;//Width in world coords
 
         private ContentManager content;//Player currently manages own content, as this persists between levels
@@ -23,17 +28,26 @@ namespace Coursework.Entities
         private readonly Vector2 dragFactor = new Vector2(0.9f,1);//No vertical drag
         private const float gravity = 981f;
 
+        private bool isJumping = false;
+        private bool isGrounded = false;
+        private bool CanJump { get { return !isJumping && isGrounded; } }
+
         private Vector2 previousPosition;//Position of player before they tried to move each frame
 
-        public int Health { get; private set; }
+        private FSM animator;
+
+        public int Health { get; private set; } = 3;
         public bool IsAlive { get => Health > 0; }
 
         public Player(IServiceProvider provider,string contentRoot) {
             Position = new Vector2(0, 0);
             content = new ContentManager(provider, contentRoot);
+
             LoadContent();
+            InitialiseAnimator();
+
             //Update collision bounds based on visible size
-            UpdateBounds(Position, width, (int)(animation.Size.Y));
+            UpdateBounds(Position, width, (int)(currentAnimation.Size.Y));
 
             GameEventManager.Instance.OnPlayerColliding += WhileColliding;
             GameEventManager.Instance.OnPlayerCollisionEnter += OnCollisionEnter;
@@ -41,8 +55,9 @@ namespace Coursework.Entities
 
         public override void Update(GameTime gameTime)
         {
+            animator.Update(gameTime);
             UpdatePhysics(gameTime);
-            animation.Update(gameTime,Position);
+            currentAnimation.Update(gameTime,Position);
         }
 
         private void UpdatePhysics(GameTime gameTime)
@@ -65,6 +80,11 @@ namespace Coursework.Entities
             var clampedY = MathHelper.Clamp(Velocity.Y, -maxSpeed.Y, maxSpeed.Y);
             Velocity = new Vector2(clampedX, clampedY);
 
+            if (Velocity.Y > 0)
+            {
+                isJumping = false;//Falling
+            }
+
             //update position
             Position += Velocity * dt;
 
@@ -74,14 +94,7 @@ namespace Coursework.Entities
 
         public override void Draw(SpriteBatch spriteBatch, SpriteEffects effect = SpriteEffects.None)
         {
-            //TODO animation controller (probably FSM)            
-            if (Velocity.X < 0)
-            {
-                effect = effect | SpriteEffects.FlipHorizontally;
-            }
-
-            animation.Draw(spriteBatch,effect);
-
+            currentAnimation.Draw(spriteBatch,effect | directionalEffect);
         }
 
         //What to do while the player is colliding with something
@@ -90,7 +103,13 @@ namespace Coursework.Entities
             Level level = e.colllidedWith as Level;
 
             if (level != null)//Resolve collisions with level
-            {
+            {                
+                //Collided from above something
+                if (e.collisionDepth.Y < 0)
+                {
+                    isGrounded = true;
+                }                
+
                 StaticCollisionResponse(e.collisionDepth);
                 return;
             }                    
@@ -114,7 +133,8 @@ namespace Coursework.Entities
                 {
                     TakeDamage(enemy.Damage);
                 }
-            }
+                return;
+            }            
         }
 
         public void TakeDamage(int amount)
@@ -128,14 +148,16 @@ namespace Coursework.Entities
             Position = pos;
         }
 
-        public void LoadContent()
+        private void LoadContent()
         {
-            var frameWidth = 72;
-            var texScale = width / (float)frameWidth;
+            animations = new Drawable[3];//idle, walk, jump
+
+            var frameDimensions = GameData.Instance.playerData.frameDimensions;
+            var texScale = width / (float)frameDimensions.X;
 
             string filePath = GameData.Instance.playerData.walkAnimationPath;
-            int numFrames = 11;
-            Texture2D[] frames = new Texture2D[11];
+            int numFrames = GameData.Instance.playerData.numWalkFrames;
+            Texture2D[] frames = new Texture2D[numFrames];
             for (int i = 1; i <= numFrames; i++)
             {
                 string fileName = filePath;
@@ -147,9 +169,59 @@ namespace Coursework.Entities
                 frames[i - 1] = content.Load<Texture2D>(fileName);
             }
 
-            animation = new MultiImageAnimation(frames, Position, 72, 97, 11, 32, Color.White, texScale, true);
-            //var spriteSheet = content.Load<Texture2D>(GameData.GraphicsDirectory+"Player/p1_walk/p1_walkRegular");
-            //animation = new SpriteSheetAnimation(spriteSheet, Position, 72, 97, 11, 32, Color.White, texScale, true);
+            var frameTime = GameData.Instance.playerData.walkFrameTime;
+
+            var walkAnim = new MultiImageAnimation(frames, Position, frameDimensions.X, frameDimensions.Y,
+                numFrames, frameTime, Color.White, texScale, true);
+
+            animations[1] = walkAnim;
+
+            Texture2D idleTex = content.Load<Texture2D>(GameData.Instance.playerData.idlePath);
+            Sprite idleSprite = new Sprite(idleTex, new Vector2(texScale), Color.White);
+            animations[0] = idleSprite;
+
+            Texture2D jumpTex = content.Load<Texture2D>(GameData.Instance.playerData.jumpPath);
+            Sprite jumpSprite = new Sprite(jumpTex, new Vector2(texScale), Color.White);
+            animations[2] = jumpSprite;
+
+        }
+
+        private void InitialiseAnimator()
+        {
+            animator = new FSM(this);
+            var idle = new Idle(SetCurrentAnimation);
+            var walking = new Walking(SetCurrentAnimation);
+            var jumping = new Jumping(SetCurrentAnimation);
+            var dead = new Dead();
+
+            Func<bool> diedFunc = () => { return !IsAlive; };
+            Func<bool> jumpingFunc = () => { return isJumping; };
+            Func<bool> movingFunc = () => { return inputForce.X != 0; };
+
+            idle.AddTransition(walking, movingFunc);
+            idle.AddTransition(dead, diedFunc );
+            idle.AddTransition(jumping, jumpingFunc);
+
+            walking.AddTransition(idle, () => { return !movingFunc(); });
+            walking.AddTransition(dead, diedFunc);
+            walking.AddTransition(jumping, jumpingFunc);
+
+            jumping.AddTransition(walking, () => { return movingFunc() && !isJumping; });
+            jumping.AddTransition(idle, () => { return !movingFunc() && !isJumping; });
+            jumping.AddTransition(dead, diedFunc);
+
+            animator.AddStates(idle, walking, jumping, dead);
+            animator.Initialise("Idle");
+        }
+
+        private void SetCurrentAnimation(int index)
+        {
+            currentAnimation = animations[index];
+            var anim = currentAnimation as AbstractAnimation;
+            if (anim !=null)
+            {
+                anim.Reset();
+            }
         }
 
         public void Dispose()
@@ -172,7 +244,12 @@ namespace Coursework.Entities
 
         public void Jump()
         {
-            inputForce -= Vector2.UnitY;//Subtraction because Y axis points down
+            if (CanJump)
+            {
+                inputForce -= Vector2.UnitY;//Subtraction because Y axis points down
+                isJumping = true;
+                isGrounded = false;
+            }
         }
 
         public void Descend()

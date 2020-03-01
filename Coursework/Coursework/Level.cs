@@ -34,8 +34,8 @@ namespace Coursework
         readonly Vector2 tileTextureScale;
         readonly Rectangle bounds;//Level bounds in world coordinates
 
-        readonly string levelName;
-        readonly string nextLevelName;
+        public readonly string levelName;
+        public readonly string nextLevelName;
 
         public readonly Point tileSize = GameData.Instance.levelConstants.tileSize;
 
@@ -51,7 +51,7 @@ namespace Coursework
         private List<Decal> corpses = new List<Decal>();
 
 
-        public Level(IServiceProvider provider, string contentRoot, string levelName = "Level1", bool makeCurrent = true)
+        public Level(IServiceProvider provider, string contentRoot, string levelName, bool makeCurrent = true)
         {
             if (makeCurrent)
             {
@@ -139,6 +139,7 @@ namespace Coursework
                             var tex = content.Load<Texture2D>(itemFilePath + interData.textureName);
                             Sprite sprite = new Sprite(tex, scaleForTexture(tex), Color.White);
                             Interactable newInteractable = new Interactable(sprite, Vector2.Zero);
+                            newInteractable.interactableType = interData.interactableType;
                             interactablePrefabs[item.Key] = newInteractable;
                         }
                         break;
@@ -200,7 +201,8 @@ namespace Coursework
                             case LevelEntityType.tile:
                                 {
                                     var tex = tileSkins[colour];
-                                    tiles[i, j] = new Tile(tex, TileCollisionMode.solid);
+                                    var tileData = spec.entityData as TileData;
+                                    tiles[i, j] = new Tile(tex, tileData.collisionMode);
                                 }
                                 break;
                             case LevelEntityType.interactable:
@@ -225,29 +227,6 @@ namespace Coursework
                                 break;
                         }
                     }
-
-                    //if (tileSkins.TryGetValue(colour,out texture))//Tile
-                    //{
-                    //    tiles[i, j] = new Tile(texture,TileCollisionMode.solid);
-                    //}
-                    //else if (interactableSkins.TryGetValue(colour,out texture))//Pickup
-                    //{
-                    //    //Assuming same scale for pickups and tiles
-                    //    var sprite = new Sprite(texture, tileTextureScale, Color.White);
-                    //    //Add a pickup
-                    //    var newInteractable = new Interactable(sprite, GetWorldPosition(i, j));
-                    //    Interactables.Add(newInteractable);
-                    //}
-                    //else if (enemyPrefabs.TryGetValue(colour,out enemy))
-                    //{  
-                    //    //Offset to position the enemy on the ground
-                    //    var offset = new Vector2(0, tileSize.Y - enemy.Appearance.Size.Y);
-
-                    //    var newEnemy = enemy.Clone();
-                    //    newEnemy.SetPosition(GetWorldPosition(i, j) + offset);
-
-                    //    Interactables.Add(newEnemy);
-                    //}
                 }
             }
 
@@ -300,9 +279,9 @@ namespace Coursework
                             //Do nothing, these collisions are handled by the player
                         }
                         break;
-                    case InteractableType.nextLevelButton:
+                    case InteractableType.nextLevel:
                         {
-                            //TODO trigger next level
+                            GameEventManager.Instance.NextLevel();
                         }
                         break;
                     default:

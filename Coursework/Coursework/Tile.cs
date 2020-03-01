@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Coursework
 {
-    enum TileCollisionMode {
+    public enum TileCollisionMode {
         empty,
         solid
     }

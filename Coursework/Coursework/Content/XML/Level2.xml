@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LevelData>
-    <mapName>map0</mapName>
-    <nextLevelName>Level2</nextLevelName>
+    <mapName>small</mapName>
+    <nextLevelName></nextLevelName>
     <bindings>
         <bind>
             <color>
@@ -10,7 +10,7 @@
                 <B>0</B>
                 <A>255</A>
             </color>
-            <entityName>GrassTile</entityName>
+            <entityName>SnowTile</entityName>
         </bind>
         <bind>
             <color>

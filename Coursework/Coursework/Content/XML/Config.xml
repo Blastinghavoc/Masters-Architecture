@@ -2,6 +2,14 @@
 <GameData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <playerData>
       <walkAnimationPath>PlatformerGraphicsDeluxe/Player/p1_walk/PNG/p1_walk</walkAnimationPath>
+      <idlePath>PlatformerGraphicsDeluxe/Player/p1_stand</idlePath>
+      <jumpPath>PlatformerGraphicsDeluxe/Player/p1_jump</jumpPath>
+      <frameDimensions>
+         <X>72</X>
+         <Y>97</Y>
+      </frameDimensions>
+      <numWalkFrames>11</numWalkFrames>
+      <walkFrameTime>100</walkFrameTime>
    </playerData>
    <levelConstants>
       <tileSize>
@@ -10,7 +18,7 @@
       </tileSize> 
       <tileResolution>70</tileResolution>
       <tileFilePath>PlatformerGraphicsDeluxe/Tiles/</tileFilePath>
-      <itemFilePath>PlatformerGraphicsDeluxe/Items/</itemFilePath>
+      <itemFilePath>PlatformerGraphicsDeluxe/Interactables/</itemFilePath>
       <enemyFilePath>PlatformerGraphicsDeluxe/Enemies/</enemyFilePath>
       <mapFilePath>Maps/</mapFilePath>
       <startLevelName>Level1</startLevelName>
@@ -20,6 +28,7 @@
             <entityType>tile</entityType>
             <entityData xsi:type="TileData">
                <textureName>grassMid</textureName>
+               <collisionMode>solid</collisionMode>
             </entityData>
          </spec>
          <spec>
@@ -27,6 +36,15 @@
             <entityType>tile</entityType>
             <entityData xsi:type="TileData">
                <textureName>snowMid</textureName>
+               <collisionMode>solid</collisionMode>
+            </entityData>
+         </spec>
+         <spec>
+            <entityName>DoorTopTile</entityName>
+            <entityType>tile</entityType>
+            <entityData xsi:type="TileData">
+               <textureName>door_openTop</textureName>
+               <collisionMode>empty</collisionMode>
             </entityData>
          </spec>
          <spec>
@@ -35,6 +53,14 @@
             <entityData xsi:type="InteractableData">
                <textureName>coinGold</textureName>
                <interactableType>coin</interactableType>
+            </entityData>
+         </spec>
+         <spec>
+            <entityName>Door</entityName>
+            <entityType>interactable</entityType>
+            <entityData xsi:type="InteractableData">
+               <textureName>door_openMid</textureName>
+               <interactableType>nextLevel</interactableType>
             </entityData>
          </spec>
          <spec>

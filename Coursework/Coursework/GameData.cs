@@ -90,6 +90,11 @@ namespace Coursework
 
     public class PlayerData {
         public string walkAnimationPath;
+        public string idlePath;
+        public string jumpPath;
+        public Point frameDimensions;
+        public int numWalkFrames;
+        public int walkFrameTime;
     }
 
     //Data used by all levels

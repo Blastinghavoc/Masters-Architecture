@@ -17,6 +17,9 @@ namespace Coursework
         public event EventHandler<PlayerCollisionEventArgs> OnPlayerCollisionEnter = delegate { };
         public event EventHandler<PlayerHealthChangedEventArgs> OnPlayerHealthChanged = delegate { };
         public event EventHandler<EnemyKilledEventArgs> OnEnemyKilled = delegate { };
+        public event EventHandler<EventArgs> OnNextLevel = delegate { };
+        public event EventHandler<EventArgs> OnPlayerDied = delegate { };
+        
 
 
         private int prevScore;
@@ -32,6 +35,16 @@ namespace Coursework
             prevScore = score;
             score += amount;
             OnScoreChanged?.Invoke(this, new ScoreEventArgs(score, score - prevScore));
+        }
+
+        public void PlayerDied()
+        {
+            OnPlayerDied?.Invoke(this, new EventArgs());
+        }
+
+        public void NextLevel()
+        {
+            OnNextLevel?.Invoke(this, new EventArgs());
         }
 
         public void PlayerHealthChanged(Player player,int amount)

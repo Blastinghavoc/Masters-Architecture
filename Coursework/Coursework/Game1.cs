@@ -44,6 +44,7 @@ namespace Coursework
 
             eventManager = new GameEventManager();
             GameEventManager.Instance = eventManager;
+            eventManager.OnNextLevel += OnNextLevel;
 
             player = new Player(Services,Content.RootDirectory);
             currentLevel = new Level(Services, Content.RootDirectory,GameData.Instance.levelConstants.startLevelName);
@@ -93,6 +94,7 @@ namespace Coursework
             // TODO: Unload any non ContentManager content here
             player.Dispose();
             currentLevel.Dispose();
+            GameEventManager.Instance.OnNextLevel -= OnNextLevel;
         }
 
         /// <summary>
@@ -148,6 +150,20 @@ namespace Coursework
 
             spriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        private void OnNextLevel(object sender, System.EventArgs e)
+        {
+            var nextLevelName = currentLevel.nextLevelName;
+            if (nextLevelName != "")
+            {
+                currentLevel.Dispose();
+                currentLevel = new Level(Services, Content.RootDirectory, nextLevelName);
+                player.SetPosition(Vector2.Zero);
+            }
+            else {
+                //TODO game over
+            }
         }
     }
 }

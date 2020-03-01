@@ -7,6 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
+/// <summary>
+/// A collection of serialization models
+/// </summary>
 namespace Coursework.Serialization
 {
     public enum LevelEntityType
@@ -33,6 +36,7 @@ namespace Coursework.Serialization
     public class TileData : LevelEntityData
     {
         public string textureName;
+        public TileCollisionMode collisionMode;
     }
 
     public class InteractableData : LevelEntityData
