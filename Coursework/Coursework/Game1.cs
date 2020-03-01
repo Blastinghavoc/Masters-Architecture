@@ -40,11 +40,13 @@ namespace Coursework
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            GameData.Initialise();
+
             eventManager = new GameEventManager();
             GameEventManager.Instance = eventManager;
 
             player = new Player(Services,Content.RootDirectory);
-            currentLevel = new Level(Services, Content.RootDirectory);
+            currentLevel = new Level(Services, Content.RootDirectory,GameData.Instance.levelConstants.startLevelName);
 
             camera = new Camera(graphics.GraphicsDevice.Viewport);
             camera.Position = new Vector2(0, 0);

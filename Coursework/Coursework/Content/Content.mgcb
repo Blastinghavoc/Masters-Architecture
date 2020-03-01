@@ -4184,3 +4184,9 @@
 /processorParam:TextureFormat=Color
 /build:Tiles/greyTile.png
 
+#begin XML/Config.xml
+/copy:XML/Config.xml
+
+#begin XML/Level1.xml
+/copy:XML/Level1.xml
+

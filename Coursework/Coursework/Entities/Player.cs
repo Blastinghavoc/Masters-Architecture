@@ -13,7 +13,7 @@ namespace Coursework.Entities
     class Player : CollidableObject, IDisposable
     {
         private Drawable animation;
-        private readonly int width = GameData.tileSize.Y;//Width in world coords
+        private readonly int width = GameData.Instance.levelConstants.tileSize.Y;//Width in world coords
 
         private ContentManager content;//Player currently manages own content, as this persists between levels
 
@@ -133,7 +133,7 @@ namespace Coursework.Entities
             var frameWidth = 72;
             var texScale = width / (float)frameWidth;
 
-            string filePath = GameData.GraphicsDirectory + "Player/p1_walk/PNG/p1_walk";
+            string filePath = GameData.Instance.playerData.walkAnimationPath;
             int numFrames = 11;
             Texture2D[] frames = new Texture2D[11];
             for (int i = 1; i <= numFrames; i++)

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LevelData>
+    <mapName>map0</mapName>
+    <nextLevelName>Level2</nextLevelName>
+    <bindings>
+        <bind>
+            <color>
+                <R>0</R>
+                <G>0</G>
+                <B>0</B>
+                <A>255</A>
+            </color>
+            <entityName>GrassTile</entityName>
+        </bind>
+        <bind>
+            <color>
+                <R>255</R>
+                <G>255</G>
+                <B>0</B>
+                <A>255</A>
+            </color>
+            <entityName>GoldCoin</entityName>
+        </bind>
+        <bind>
+            <color>
+                <R>255</R>
+                <G>0</G>
+                <B>254</B>
+                <A>255</A>
+            </color>
+            <entityName>Slime</entityName>
+        </bind>
+        <bind>
+            <color>
+                <R>125</R>
+                <G>125</G>
+                <B>125</B>
+                <A>255</A>
+            </color>
+            <entityName>Fly</entityName>
+        </bind>
+    </bindings>
+</LevelData>

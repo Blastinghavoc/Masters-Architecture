@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<GameData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <playerData>
+      <walkAnimationPath>PlatformerGraphicsDeluxe/Player/p1_walk/PNG/p1_walk</walkAnimationPath>
+   </playerData>
+   <levelConstants>
+      <tileSize>
+         <X>32</X>
+         <Y>32</Y>
+      </tileSize> 
+      <tileResolution>70</tileResolution>
+      <tileFilePath>PlatformerGraphicsDeluxe/Tiles/</tileFilePath>
+      <itemFilePath>PlatformerGraphicsDeluxe/Items/</itemFilePath>
+      <enemyFilePath>PlatformerGraphicsDeluxe/Enemies/</enemyFilePath>
+      <mapFilePath>Maps/</mapFilePath>
+      <startLevelName>Level1</startLevelName>
+      <entitySpecifications>
+         <spec>
+            <entityName>GrassTile</entityName>
+            <entityType>tile</entityType>
+            <entityData xsi:type="TileData">
+               <textureName>grassMid</textureName>
+            </entityData>
+         </spec>
+         <spec>
+            <entityName>SnowTile</entityName>
+            <entityType>tile</entityType>
+            <entityData xsi:type="TileData">
+               <textureName>snowMid</textureName>
+            </entityData>
+         </spec>
+         <spec>
+            <entityName>GoldCoin</entityName>
+            <entityType>interactable</entityType>
+            <entityData xsi:type="InteractableData">
+               <textureName>coinGold</textureName>
+               <interactableType>coin</interactableType>
+            </entityData>
+         </spec>
+         <spec>
+            <entityName>Slime</entityName>
+            <entityType>enemy</entityType>
+            <entityData xsi:type="EnemyData">
+               <enemyType>slime</enemyType>
+               <health>1</health>
+               <damage>1</damage>
+               <animationData>
+                  <baseName>slimeWalk</baseName>
+                  <frameDimensions>
+                  <X>51</X>
+                  <Y>28</Y>
+                  </frameDimensions>
+                  <numFrames>2</numFrames>
+                  <frameDuration>500</frameDuration>
+               </animationData>
+               <corpseData>
+                  <textureName>slimeDead</textureName>
+               </corpseData>
+            </entityData>
+         </spec>
+         <spec>
+            <entityName>Fly</entityName>
+            <entityType>enemy</entityType>
+            <entityData xsi:type="EnemyData">
+               <enemyType>fly</enemyType>
+               <health>1</health>
+               <damage>1</damage>
+               <animationData>
+                  <baseName>flyFly</baseName>
+                  <frameDimensions>
+                  <X>75</X>
+                  <Y>36</Y>
+                  </frameDimensions>
+                  <numFrames>2</numFrames>
+                  <frameDuration>100</frameDuration>
+               </animationData>
+               <corpseData>
+                  <textureName>flyDead</textureName>
+               </corpseData>
+            </entityData>
+         </spec>
+      </entitySpecifications>
+   </levelConstants>
+</GameData>

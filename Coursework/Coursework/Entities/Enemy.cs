@@ -14,7 +14,7 @@ using Coursework.StateMachine.AI;
 
 namespace Coursework.Entities
 {
-    enum EnemyType
+    public enum EnemyType
     {
         slime,
         fly
@@ -26,7 +26,7 @@ namespace Coursework.Entities
         public int Damage { get; set; }
         public bool IsAlive { get => Health > 0; }
 
-        public EnemyType Type { get; private set; }
+        public EnemyType enemyType { get; private set; }
 
         private FSM brain;
 
@@ -36,7 +36,8 @@ namespace Coursework.Entities
         {
             Health = health;
             Damage = damage;
-            this.Type = type;
+            this.enemyType = type;
+            interactableType = InteractableType.enemy;
 
             InitialiseBrain();
         }
@@ -59,7 +60,7 @@ namespace Coursework.Entities
             Position = pos;
         }
 
-        public Enemy Clone()
+        public new Enemy Clone()
         {
             var tmp = this.MemberwiseClone() as Enemy;
             tmp.Appearance = Appearance.Clone();
@@ -76,7 +77,7 @@ namespace Coursework.Entities
         {
             brain = new FSM(this);
 
-            switch (Type)
+            switch (enemyType)
             {
                 case EnemyType.slime:
                     {
@@ -93,7 +94,7 @@ namespace Coursework.Entities
                     {
                         var patrol = new Fly.Patrol();
                         var dying = new Fly.Dying();
-                        dying.DyingAppearance = Level.CurrentLevel.CorpseSkins[Type].Clone() as Decal;
+                        dying.DyingAppearance = Level.CurrentLevel.CorpseSkins[enemyType].Clone() as Decal;
                         var dead = new Dead();
 
                         patrol.AddTransition(dying, () => { return !this.IsAlive; });
