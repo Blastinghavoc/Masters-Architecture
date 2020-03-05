@@ -18,7 +18,7 @@ namespace Coursework
     /// </summary>
     class Level: IDisposable
     {
-        public static Level CurrentLevel;
+        public static Level CurrentLevel;//The currently active level. NOTE not a singleton class, but only one level can be active at once
 
         ContentManager content;//The content specific to this level
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,5 +26,20 @@ namespace Coursework
             this.collisionMode = collisionMode;
         }
 
+    }
+
+    class TileDescriptor {
+        public TileCollisionMode collisionMode;
+        public Vector2 worldPosition;
+        public Point levelIndices;
+        public Rectangle bounds;
+
+        public TileDescriptor(TileCollisionMode collisionMode, Vector2 worldPosition, Point levelIndices, Rectangle bounds)
+        {
+            this.collisionMode = collisionMode;
+            this.worldPosition = worldPosition;
+            this.levelIndices = levelIndices;
+            this.bounds = bounds;
+        }
     }
 }

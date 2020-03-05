@@ -75,7 +75,9 @@ namespace Coursework
                     {
                         if (TileCollisionMode.solid.Equals(collisionMode))
                         {
-                            GameEventManager.Instance.OnPlayerCollision(player, currentLevel,penDepth);                            
+                            TileDescriptor tileDescriptor = new TileDescriptor(collisionMode, currentLevel.GetWorldPosition(i, j), new Point(i, j),tileBounds);
+
+                            GameEventManager.Instance.OnPlayerCollision(player, tileDescriptor, penDepth);                            
                         }
                     }
                 }

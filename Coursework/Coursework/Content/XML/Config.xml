@@ -10,6 +10,20 @@
       </frameDimensions>
       <numWalkFrames>11</numWalkFrames>
       <walkFrameTime>100</walkFrameTime>
+      <inputScale>
+         <X>800</X>
+         <Y>19600</Y>
+      </inputScale>
+      <maxSpeed>
+         <X>500</X>
+         <Y>500</Y>
+      </maxSpeed>      
+      <dragFactor>
+         <X>0.9</X>
+         <Y>1</Y>
+      </dragFactor> 
+      <gravity>981</gravity>
+      <startHealth>3</startHealth>
    </playerData>
    <levelConstants>
       <tileSize>

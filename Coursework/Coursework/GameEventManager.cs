@@ -47,7 +47,7 @@ namespace Coursework
             OnNextLevel?.Invoke(this, new EventArgs());
         }
 
-        public void PlayerHealthChanged(Player player,int amount)
+        public void PlayerHealthChanged(Player player)
         {
             OnPlayerHealthChanged?.Invoke(this,new PlayerHealthChangedEventArgs(player));
         }

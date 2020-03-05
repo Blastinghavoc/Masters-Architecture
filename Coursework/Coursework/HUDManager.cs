@@ -39,7 +39,7 @@ namespace Coursework
             this.font = font;
 
             scoreText = new HUDElement("Score: 0", new Vector2(0, 0));
-            healthText = new HUDElement("Health: 0", new Vector2(0, 30));
+            healthText = new HUDElement("Health: "+ GameData.Instance.playerData.startHealth.ToString(), new Vector2(0, 30));
 
             GameEventManager.Instance.OnScoreChanged += OnScoreChanged;
             GameEventManager.Instance.OnPlayerHealthChanged += OnHealthChanged;

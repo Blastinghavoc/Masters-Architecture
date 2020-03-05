@@ -95,6 +95,13 @@ namespace Coursework
         public Point frameDimensions;
         public int numWalkFrames;
         public int walkFrameTime;
+
+        public Vector2 inputScale;
+        public Vector2 maxSpeed;
+        public Vector2 dragFactor;
+        public float gravity;
+
+        public int startHealth;
     }
 
     //Data used by all levels

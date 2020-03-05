@@ -23,8 +23,8 @@ namespace Coursework
         KeybindingManager keybindingManager;
         HUDManager hudManager;
         GameEventManager eventManager;
-        
-        
+
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -46,8 +46,9 @@ namespace Coursework
             GameEventManager.Instance = eventManager;
             eventManager.OnNextLevel += OnNextLevel;
 
-            player = new Player(Services,Content.RootDirectory);
-            currentLevel = new Level(Services, Content.RootDirectory,GameData.Instance.levelConstants.startLevelName);
+            player = new Player(Services, Content.RootDirectory);
+            eventManager.OnPlayerDied += OnPlayerDied;
+            currentLevel = new Level(Services, Content.RootDirectory, GameData.Instance.levelConstants.startLevelName);
 
             camera = new Camera(graphics.GraphicsDevice.Viewport);
             camera.Position = new Vector2(0, 0);
@@ -95,6 +96,7 @@ namespace Coursework
             player.Dispose();
             currentLevel.Dispose();
             GameEventManager.Instance.OnNextLevel -= OnNextLevel;
+            GameEventManager.Instance.OnPlayerDied -= OnPlayerDied;
         }
 
         /// <summary>
@@ -114,7 +116,7 @@ namespace Coursework
             currentLevel.Update(gameTime);
 
             //Detect collisions
-            collisionManager.Update(currentLevel,player);
+            collisionManager.Update(currentLevel, player);
 
             //Update events
             eventManager.Update(gameTime);
@@ -125,7 +127,7 @@ namespace Coursework
             camera.Update(graphics.GraphicsDevice.Viewport);
 
             //Update HUD
-            hudManager.Update(gameTime,camera);
+            hudManager.Update(gameTime, camera);
 
             base.Update(gameTime);
         }
@@ -152,18 +154,30 @@ namespace Coursework
             base.Draw(gameTime);
         }
 
+        private void OnPlayerDied(object sender, System.EventArgs e)
+        {
+            //TODO game over screen
+            player.HardReset();
+            SwitchToLevel(GameData.Instance.levelConstants.startLevelName);
+        }
+
         private void OnNextLevel(object sender, System.EventArgs e)
         {
             var nextLevelName = currentLevel.nextLevelName;
             if (nextLevelName != "")
             {
-                currentLevel.Dispose();
-                currentLevel = new Level(Services, Content.RootDirectory, nextLevelName);
-                player.SetPosition(Vector2.Zero);
+                SwitchToLevel(nextLevelName);
             }
             else {
                 //TODO game over
             }
+        }
+
+        private void SwitchToLevel(string levelName) 
+        {
+            currentLevel.Dispose();
+            currentLevel = new Level(Services, Content.RootDirectory, levelName);
+            player.SetPosition(Vector2.Zero);
         }
     }
 }

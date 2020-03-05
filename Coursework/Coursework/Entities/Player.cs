@@ -23,20 +23,22 @@ namespace Coursework.Entities
         private ContentManager content;//Player currently manages own content, as this persists between levels
 
         private Vector2 inputForce;//"Force" currently being applied to the player by user input
-        private readonly Vector2 inputScale = new Vector2(800,19600);//Amount by which to scale input forces in each axis
-        private readonly Vector2 maxSpeed = new Vector2(500,500);
-        private readonly Vector2 dragFactor = new Vector2(0.9f,1);//No vertical drag
-        private const float gravity = 981f;
+        private readonly Vector2 inputScale = GameData.Instance.playerData.inputScale;//Amount by which to scale input forces in each axis
+        private readonly Vector2 maxSpeed = GameData.Instance.playerData.maxSpeed;
+        private readonly Vector2 dragFactor = GameData.Instance.playerData.dragFactor;//No vertical drag
+        private readonly float gravity = GameData.Instance.playerData.gravity;
 
         private bool isJumping = false;
         private bool isGrounded = false;
+        //Based on variable of same name in platformer example, this is used to detect when the player is grounded
+        private int bottomAtLastUpdate = 0;
         private bool CanJump { get { return !isJumping && isGrounded; } }
 
         private Vector2 previousPosition;//Position of player before they tried to move each frame
 
         private FSM animator;
 
-        public int Health { get; private set; } = 3;
+        public int Health { get; private set; } = GameData.Instance.playerData.startHealth;
         public bool IsAlive { get => Health > 0; }
 
         public Player(IServiceProvider provider,string contentRoot) {
@@ -53,11 +55,32 @@ namespace Coursework.Entities
             GameEventManager.Instance.OnPlayerCollisionEnter += OnCollisionEnter;
         }
 
+        //Completely resets the player, health, position, velocity etc
+        public void HardReset() 
+        {
+            Position = new Vector2(0, 0);
+            InitialiseAnimator();
+            Health = GameData.Instance.playerData.startHealth;
+            GameEventManager.Instance.PlayerHealthChanged(this);
+            isJumping = false;
+            isGrounded = false;
+            Velocity = Vector2.Zero;
+            directionalEffect = SpriteEffects.None;
+        }
+
         public override void Update(GameTime gameTime)
         {
             animator.Update(gameTime);
             UpdatePhysics(gameTime);
             currentAnimation.Update(gameTime,Position);
+
+            if (!IsAlive)
+            {
+                //Notify the event manager of the player's death
+                GameEventManager.Instance.PlayerDied();
+            }
+
+            bottomAtLastUpdate = BoundingBox.Bottom;
         }
 
         private void UpdatePhysics(GameTime gameTime)
@@ -100,12 +123,16 @@ namespace Coursework.Entities
         //What to do while the player is colliding with something
         private void WhileColliding(object sender, PlayerCollisionEventArgs e)
         {
-            Level level = e.colllidedWith as Level;
+            TileDescriptor tile = e.colllidedWith as TileDescriptor;
 
-            if (level != null)//Resolve collisions with level
-            {                
+            if (tile != null)//Resolve collisions with level tile
+            {
+
+                var absCollY = Math.Abs(e.collisionDepth.Y);
+                var absCollX = Math.Abs(e.collisionDepth.X);
+
                 //Collided from above something
-                if (e.collisionDepth.Y < 0)
+                if (absCollY < absCollX && e.collisionDepth.Y < 0 && bottomAtLastUpdate >= tile.bounds.Top)
                 {
                     isGrounded = true;
                 }                
@@ -140,7 +167,7 @@ namespace Coursework.Entities
         public void TakeDamage(int amount)
         {
             Health -= amount;
-            GameEventManager.Instance.PlayerHealthChanged(this,amount);
+            GameEventManager.Instance.PlayerHealthChanged(this);
         }
 
         public void SetPosition(Vector2 pos)
