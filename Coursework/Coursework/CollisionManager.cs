@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Coursework.Entities;
+using Coursework.Projectiles;
 using Microsoft.Xna.Framework;
 
 namespace Coursework
@@ -14,42 +15,89 @@ namespace Coursework
         private Dictionary<CollidableObject, HashSet<CollidableObject>> collisionsThisFrame = new Dictionary<CollidableObject, HashSet<CollidableObject>>();
 
 
-        public void Update(Level currentLevel,Player player)
+        public void Update(Level currentLevel,Player player,ProjectileManager projectileManager)
         {
             //Save last frame's collisions
             collisionsLastFrame = new Dictionary<CollidableObject, HashSet<CollidableObject>>(collisionsThisFrame);
             collisionsThisFrame.Clear();
 
-            UpdatePlayerLevelCollisions(currentLevel, player);
-            UpdatePlayerInteractableCollisions(currentLevel, player);
-        }
+            //Update player/level collisions
+            UpdateObjectLevelCollisions(currentLevel, player);
 
-        private void UpdatePlayerInteractableCollisions(Level currentLevel, Player player)
-        {
+            List<Interactable> enemyProjectiles = new List<Interactable>();
+            List<Interactable> allyProjectiles = new List<Interactable>();
+            //Update projectile/level collisions
+            foreach (var item in projectileManager.ActiveProjectiles)
+            {
+                UpdateObjectLevelCollisions(currentLevel, item);
+                if (item.IsEnemy)
+                {
+                    enemyProjectiles.Add(item);
+                }
+                else
+                {
+                    allyProjectiles.Add(item);
+                }
+            }
+
+            //Get a combined list of all interactables, including projectiles
+            List<Interactable> combinedInteractables = new List<Interactable>(currentLevel.Interactables);
+            combinedInteractables.AddRange(enemyProjectiles);
+
+            //Update player collisions with all interactables (level managed ones, and projectiles)
+            UpdateObjectInteractableCollisions(combinedInteractables, player);
+
+            //Get list of enemies
+            List<Interactable> enemies = new List<Interactable>();
             foreach (var item in currentLevel.Interactables)
             {
-                Vector2 penDepth;
-                if (player.CheckCollision(item, out penDepth))
+                if (item.interactableType == InteractableType.enemy)
                 {
-                    RecordCollision(player,item);
+                    enemies.Add(item);
+                }
+            }
+
+            //Update allied projectile collisions with all enemies (projectiles do not collide with non-enemy interactables)
+            foreach (var proj in allyProjectiles)
+            {
+                UpdateObjectInteractableCollisions(enemies, proj);
+            }
+        }
+
+        private void UpdateObjectInteractableCollisions(List<Interactable> interactables, CollidableObject obj)
+        {
+            foreach (var item in interactables)
+            {
+                Vector2 penDepth;
+                if (obj.CheckCollision(item, out penDepth))
+                {
+                    RecordCollision(obj,item);
 
                     CollisionType type = CollisionType.stay;
 
-                    if (!wasCollidingWith(player,item))//Weren't colliding before-> collision enter
+                    if (!wasCollidingWith(obj,item))//Weren't colliding before-> collision enter
                     {
                         type = CollisionType.enter;
                     }
 
-                    GameEventManager.Instance.OnPlayerCollision(player,item,penDepth,type);
+                    Player player = obj as Player;
+                    if (player != null)
+                    {
+                        GameEventManager.Instance.PlayerCollision(player, item,penDepth,type);
+                    }
+                    else
+                    {
+                        GameEventManager.Instance.NonPlayerCollision(obj, item, penDepth);
+                    }
                 }
             }
         }
 
         //Deal with collisions between player and level
-        private void UpdatePlayerLevelCollisions(Level currentLevel, Player player)
+        private void UpdateObjectLevelCollisions(Level currentLevel, CollidableObject obj)
         {
             Vector2 tileDimensions = new Vector2(currentLevel.tileSize.X,currentLevel.tileSize.Y);
-            Rectangle playerBounds = player.BoundingBox;
+            Rectangle playerBounds = obj.BoundingBox;
 
             //Determination of neighbouring tile indices from platformer demo (lab 2)
             int left = (int)Math.Floor(playerBounds.Left / tileDimensions.X);            
@@ -71,13 +119,20 @@ namespace Coursework
                     var tileBounds = currentLevel.GetBoundsAt(i, j);
 
                     Vector2 penDepth;
-                    if (player.CheckCollision(tileBounds,out penDepth))
+                    if (obj.CheckCollision(tileBounds,out penDepth))
                     {
                         if (TileCollisionMode.solid.Equals(collisionMode))
                         {
                             TileDescriptor tileDescriptor = new TileDescriptor(collisionMode, currentLevel.GetWorldPosition(i, j), new Point(i, j),tileBounds);
 
-                            GameEventManager.Instance.OnPlayerCollision(player, tileDescriptor, penDepth);                            
+                            Player player = obj as Player;
+                            if (player != null)
+                            {
+                                GameEventManager.Instance.PlayerCollision(player, tileDescriptor, penDepth);
+                            }
+                            else {
+                                GameEventManager.Instance.NonPlayerCollision(obj, tileDescriptor, penDepth);
+                            }
                         }
                     }
                 }

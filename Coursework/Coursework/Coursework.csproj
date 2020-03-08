@@ -69,12 +69,17 @@
     <Compile Include="Entities\Enemy.cs" />
     <Compile Include="Entities\Interactable.cs" />
     <Compile Include="Entities\RectangleExtensions.cs" />
+    <Compile Include="Input\MouseEventArgs.cs" />
+    <Compile Include="Projectiles\Projectile.cs" />
+    <Compile Include="Projectiles\ProjectileManager.cs" />
     <Compile Include="Serialization\SerializationData.cs" />
     <Compile Include="StateMachine\AI\Fly.cs" />
     <Compile Include="StateMachine\AI\General.cs" />
     <Compile Include="StateMachine\AI\Slime.cs" />
     <Compile Include="StateMachine\FSM.cs" />
     <Compile Include="StateMachine\Player\PlayerStates.cs" />
+    <Compile Include="StateMachine\Projectile\Fireball.cs" />
+    <Compile Include="StateMachine\Projectile\General.cs" />
     <Compile Include="StateMachine\State.cs" />
     <Compile Include="StateMachine\Transition.cs" />
     <Compile Include="Game1.cs" />

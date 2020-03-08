@@ -284,6 +284,11 @@ namespace Coursework
                             GameEventManager.Instance.NextLevel();
                         }
                         break;
+                    case InteractableType.powerup_fireball:
+                        {
+                            killList.Add(interactable);//Schedule for deletion
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -308,12 +313,12 @@ namespace Coursework
             }
         }
 
-        private Vector2 scaleForTexture(Texture2D t)
+        public Vector2 scaleForTexture(Texture2D t)
         {
             return new Vector2(tileSize.X / (float)t.Width);
         }
 
-        private Vector2 scaleForTexture(float textureWidth)
+        public Vector2 scaleForTexture(float textureWidth)
         {
             return new Vector2(tileSize.X / textureWidth);
         }

@@ -13,6 +13,10 @@ namespace Coursework
     /// </summary>
     class Camera
     {
+        //Not singleton (there could in principle be multiple cameras), but this is the main one.
+        //Currently, there is no need for more than one camera anyway.
+        public static Camera mainCamera;
+
         public float Zoom { get; set; }
         public Vector2 Position { get; set; }
         public Rectangle Bounds { get; protected set; }
@@ -70,6 +74,10 @@ namespace Coursework
         {
             Bounds = bounds.Bounds;
             UpdateMatrix();          
+        }
+
+        public Point ScreenToWorldPoint(Point screenPoint) {
+            return screenPoint + new Point(VisibleArea.Left, VisibleArea.Top);
         }
     }
 }

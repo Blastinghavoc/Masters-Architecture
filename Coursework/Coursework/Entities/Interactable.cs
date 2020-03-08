@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Coursework.Entities
 {
-    //A collidable object that can interact with the player and has a visual representation
+    //A non-player collidable object with a visual appearance
     class Interactable: CollidableObject
     {
         public Drawable Appearance { get; protected set; }
@@ -47,6 +47,8 @@ namespace Coursework.Entities
     {
        coin,
        enemy,
-       nextLevel
+       nextLevel,
+       powerup_fireball,
+       projectile
     }
 }

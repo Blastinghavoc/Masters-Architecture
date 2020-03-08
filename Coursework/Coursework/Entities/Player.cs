@@ -38,6 +38,8 @@ namespace Coursework.Entities
 
         private FSM animator;
 
+        private PowerupManager powerupManager = new PowerupManager();
+
         public int Health { get; private set; } = GameData.Instance.playerData.startHealth;
         public bool IsAlive { get => Health > 0; }
 
@@ -66,13 +68,15 @@ namespace Coursework.Entities
             isGrounded = false;
             Velocity = Vector2.Zero;
             directionalEffect = SpriteEffects.None;
+            powerupManager.Reset();
         }
 
         public override void Update(GameTime gameTime)
-        {
+        {            
             animator.Update(gameTime);
             UpdatePhysics(gameTime);
             currentAnimation.Update(gameTime,Position);
+            powerupManager.Update(gameTime);
 
             if (!IsAlive)
             {
@@ -117,7 +121,16 @@ namespace Coursework.Entities
 
         public override void Draw(SpriteBatch spriteBatch, SpriteEffects effect = SpriteEffects.None)
         {
+            var defaultColor = currentAnimation.color;
+            //Apply special effect color
+            if (powerupManager.IsPowerupActive(PowerupManager.powerUpType.fireball))
+            {
+                currentAnimation.color = Color.Orange;
+            }
+
             currentAnimation.Draw(spriteBatch,effect | directionalEffect);
+
+            currentAnimation.color = defaultColor;
         }
 
         //What to do while the player is colliding with something
@@ -161,7 +174,17 @@ namespace Coursework.Entities
                     TakeDamage(enemy.Damage);
                 }
                 return;
-            }            
+            }
+
+            Interactable interact = e.colllidedWith as Interactable;
+            if (interact != null)
+            {
+                if (interact.interactableType == InteractableType.powerup_fireball)
+                {
+                    powerupManager.AddPowerup(PowerupManager.powerUpType.fireball, 10);
+                }
+                return;
+            }
         }
 
         public void TakeDamage(int amount)
@@ -279,9 +302,60 @@ namespace Coursework.Entities
             }
         }
 
-        public void Descend()
+        public void Crouch()
         {
-            inputForce += Vector2.UnitY;
+            //Currently does nothing, TODO implement platforms that you crouch to go down through?
+        }
+
+        //When the mouse button is clicked, shoot a fireball if the player has the appropriate powerup
+        public void OnMouseButtonDown(Point location)
+        {
+            if (powerupManager.IsPowerupActive(PowerupManager.powerUpType.fireball))
+            {
+                var worldPoint = Camera.mainCamera.ScreenToWorldPoint(location);
+                GameEventManager.Instance.LaunchProjectile(Projectiles.ProjectileType.fireball,Position, worldPoint, false);
+            }
+        }
+
+
+        private class PowerupManager {
+            public enum powerUpType {
+                fireball
+            }
+
+            //Active powerups, and their remaining time
+            private Dictionary<powerUpType, float> activePowerups = new Dictionary<powerUpType, float>();
+
+            public void Update(GameTime gameTime) {
+                float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
+
+                List<powerUpType> keys = new List<powerUpType>(activePowerups.Keys);
+                //Update time remaining for each powerup
+                foreach (var key in keys)
+                {
+                    var timeLeft = activePowerups[key];
+                    timeLeft -= dt;
+                    if (timeLeft <= 0)
+                    {
+                        activePowerups.Remove(key);
+                    }
+                    else {
+                        activePowerups[key] = timeLeft;
+                    }
+                }
+            }
+
+            public void AddPowerup(powerUpType type, float duration = 5) {
+                activePowerups[type] = duration;
+            }
+
+            public bool IsPowerupActive(powerUpType type) {
+                return activePowerups.ContainsKey(type);
+            }
+
+            public void Reset() {
+                activePowerups.Clear();
+            }
         }
     }
 }

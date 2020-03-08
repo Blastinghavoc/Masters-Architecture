@@ -57,5 +57,14 @@
             </color>
             <entityName>DoorTopTile</entityName>
         </bind>
+        <bind>
+            <color>
+                <R>255</R>
+                <G>100</G>
+                <B>0</B>
+                <A>255</A>
+            </color>
+            <entityName>FireballPickup</entityName>
+        </bind>
     </bindings>
 </LevelData>

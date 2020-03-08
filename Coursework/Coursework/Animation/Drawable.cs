@@ -16,6 +16,12 @@ namespace Coursework.Animation
         void SetPosition(Vector2 pos);
         void Draw(SpriteBatch spriteBatch, SpriteEffects effect = SpriteEffects.None);
         
+        float Rotation { get; set; }
+        Vector2 RotationOrigin { get; set; }
+        Vector2 PositionOffset { get;}
+
+        Color color { get; set; }
+        
         //Display size
         Vector2 Size { get; }
 

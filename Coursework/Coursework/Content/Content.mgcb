@@ -704,6 +704,18 @@
 /processorParam:TextureFormat=Color
 /build:PlatformerGraphicsDeluxe/HUD/hud_x.png
 
+#begin PlatformerGraphicsDeluxe/Interactables/boxItem.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlatformerGraphicsDeluxe/Interactables/boxItem.png
+
 #begin PlatformerGraphicsDeluxe/Interactables/coinGold.png
 /importer:TextureImporter
 /processor:TextureProcessor

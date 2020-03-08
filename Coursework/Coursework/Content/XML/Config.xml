@@ -78,6 +78,14 @@
             </entityData>
          </spec>
          <spec>
+            <entityName>FireballPickup</entityName>
+            <entityType>interactable</entityType>
+            <entityData xsi:type="InteractableData">
+               <textureName>boxItem</textureName>
+               <interactableType>powerup_fireball</interactableType>
+            </entityData>
+         </spec>
+         <spec>
             <entityName>Slime</entityName>
             <entityType>enemy</entityType>
             <entityData xsi:type="EnemyData">

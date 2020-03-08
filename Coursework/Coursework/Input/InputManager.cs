@@ -19,7 +19,9 @@ namespace Coursework.Input
         private MouseState CurrentMouseState { get; set; }
 
         // List of keys to check for
-        private HashSet<Keys> KeySet;           
+        private HashSet<Keys> KeySet = new HashSet<Keys>();
+        //List of mouse buttons to check for
+        private HashSet<MouseButton> ButtonSet = new HashSet<MouseButton>();
 
         //Keyboard event handlers
         //key was up and is now down
@@ -29,10 +31,16 @@ namespace Coursework.Input
         //key was down and is now up
         public event EventHandler<KeyEventArgs> OnKeyUp = delegate { };
 
+        //Mouse event handlers
+        public event EventHandler<MouseEventArgs> OnMouseButtonDown = delegate { };
+        public event EventHandler<MouseEventArgs> OnMouseButtonHeld = delegate { };
+        public event EventHandler<MouseEventArgs> OnMouseButtonUp = delegate { };
+
         public InputManager() {
-            KeySet = new HashSet<Keys>();
             PrevKeyboardState = Keyboard.GetState();
             CurrentKeyboardState = PrevKeyboardState;
+            PrevMouseState = Mouse.GetState();
+            CurrentMouseState = PrevMouseState;
         }
 
         public void Update()
@@ -40,6 +48,9 @@ namespace Coursework.Input
             //Update keyboard states
             PrevKeyboardState = CurrentKeyboardState;
             CurrentKeyboardState = Keyboard.GetState();
+            //Update mouse states
+            PrevMouseState = CurrentMouseState;
+            CurrentMouseState = Mouse.GetState();
 
             foreach (var key in KeySet)
             {
@@ -63,6 +74,48 @@ namespace Coursework.Input
                     }
                 }
             }
+
+            foreach (var button in ButtonSet)
+            {
+                bool isDown = false;
+                bool wasDown = false;
+
+                switch (button)
+                {
+                    case MouseButton.left:
+                        {
+                            isDown = CurrentMouseState.LeftButton == ButtonState.Pressed;
+                            wasDown = PrevMouseState.LeftButton == ButtonState.Pressed;
+                        }
+                        break;
+                    case MouseButton.right:
+                        {
+                            isDown = CurrentMouseState.RightButton == ButtonState.Pressed;
+                            wasDown = PrevMouseState.RightButton == ButtonState.Pressed;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                if (isDown)//Button is down
+                {
+                    OnMouseButtonHeld?.Invoke(this, new MouseEventArgs(button,CurrentMouseState));
+
+                    if (!wasDown)//Button has just been pressed
+                    {
+                        OnMouseButtonDown?.Invoke(this, new MouseEventArgs(button,CurrentMouseState));
+                    }
+                }
+                else
+                {//Button is not down
+                    if (wasDown)//Button has just been released
+                    {
+                        OnMouseButtonUp?.Invoke(this, new MouseEventArgs(button,CurrentMouseState));
+                    }
+                }
+
+            }
         }
 
         //Start listening for the given key
@@ -71,7 +124,11 @@ namespace Coursework.Input
             KeySet.Add(key);
         }
 
+        public void ListenFor(MouseButton button) {
+            ButtonSet.Add(button);
+        }
+
     }
 
-    
+
 }

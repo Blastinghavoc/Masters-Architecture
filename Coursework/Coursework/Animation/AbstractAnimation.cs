@@ -28,7 +28,7 @@ namespace Coursework.Animation
         protected int frameCount;
         protected int currentFrameIndex;
 
-        protected Color color;
+        public Color color { get; set; }
 
         public bool Active { get; protected set; }
         public bool Looping { get; protected set; }
@@ -36,6 +36,12 @@ namespace Coursework.Animation
         public int FrameHeight { get; protected set; }
 
         public Vector2 Size => new Vector2(FrameWidth*scale,FrameHeight*scale);
+
+        public float Rotation { get; set; } = 0;
+
+        private Vector2 rotationOrigin;
+        public Vector2 RotationOrigin { get => rotationOrigin; set { rotationOrigin = value; PositionOffset = RotationOrigin * scale; } }
+        public Vector2 PositionOffset { get; private set; }
 
         protected Vector2 position;
 
@@ -50,7 +56,8 @@ namespace Coursework.Animation
             this.scale = scale;
             Looping = looping;
             this.position = position;
-            
+
+            RotationOrigin = Size/2;
 
             // Set the time to zero
             elapsedTime = 0;
@@ -115,15 +122,18 @@ namespace Coursework.Animation
             var scaledWidth = FrameWidth * scale;
             var scaledHeight = FrameHeight * scale;
 
-            destinationRect = new Rectangle((int)(this.position.X), (int)(this.position.Y), (int)(scaledWidth), (int)(scaledHeight));
+            //Account for potentially alterred rotation origin
+            var drawPosition = position + PositionOffset;
+
+            destinationRect = new Rectangle((int)(drawPosition.X), (int)(drawPosition.Y), (int)(scaledWidth), (int)(scaledHeight));
         }
 
         public void Draw(SpriteBatch spriteBatch,SpriteEffects effect = SpriteEffects.None)
         {
             // Only draw the animation when we are active
             if (Active)
-            {
-                spriteBatch.Draw(Image,destinationRectangle: destinationRect,sourceRectangle: sourceRect,color: color,effects: effect);
+            {                
+                spriteBatch.Draw(Image, destinationRectangle: destinationRect, sourceRectangle: sourceRect, color: color, effects: effect,origin: RotationOrigin,rotation: Rotation);
             }
         }
 
@@ -131,5 +141,6 @@ namespace Coursework.Animation
         {
             return this.MemberwiseClone() as Drawable;
         }
+
     }
 }

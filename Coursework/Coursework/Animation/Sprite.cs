@@ -15,22 +15,30 @@ namespace Coursework.Animation
     {
         private Texture2D texture;
         private Vector2 scale;
-        private Color color;
+        public Color color { get; set; }
         private Vector2 position;
 
+        private Vector2 rotationOrigin;
+        public Vector2 RotationOrigin { get => rotationOrigin; set {rotationOrigin = value; PositionOffset = RotationOrigin * scale; } }
+        public Vector2 PositionOffset { get; private set; }
+
         public Vector2 Size => new Vector2(texture.Width * scale.X, texture.Height * scale.Y);
+
+        public float Rotation { get; set; } = 0;
 
         public Sprite(Texture2D texture, Vector2 scale,Color color)
         {
             this.texture = texture;
             this.scale = scale;
             this.color = color;
+            RotationOrigin = texture.Bounds.Center.ToVector2();
         }
 
 
         public virtual void Draw(SpriteBatch spriteBatch, SpriteEffects effect = SpriteEffects.None)
         {
-            spriteBatch.Draw(texture,position: position,color: color,effects: effect,scale: scale);
+            var drawPosition = position + PositionOffset;
+            spriteBatch.Draw(texture,position: drawPosition, color: color,effects: effect,scale: scale,origin: RotationOrigin, rotation: Rotation);
         }
 
 
@@ -53,5 +61,6 @@ namespace Coursework.Animation
         {
             return this.MemberwiseClone() as Drawable;
         }
+
     }
 }

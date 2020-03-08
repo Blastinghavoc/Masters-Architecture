@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Coursework.Input;
 using Coursework.Entities;
+using Coursework.Projectiles;
 
 namespace Coursework
 {
@@ -23,6 +24,7 @@ namespace Coursework
         KeybindingManager keybindingManager;
         HUDManager hudManager;
         GameEventManager eventManager;
+        ProjectileManager projectileManager;
 
 
         public Game1()
@@ -39,7 +41,8 @@ namespace Coursework
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            this.IsMouseVisible = true;
+
             GameData.Initialise();
 
             eventManager = new GameEventManager();
@@ -50,8 +53,11 @@ namespace Coursework
             eventManager.OnPlayerDied += OnPlayerDied;
             currentLevel = new Level(Services, Content.RootDirectory, GameData.Instance.levelConstants.startLevelName);
 
+            projectileManager = new ProjectileManager(Services, Content.RootDirectory);
+
             camera = new Camera(graphics.GraphicsDevice.Viewport);
             camera.Position = new Vector2(0, 0);
+            Camera.mainCamera = camera;
             collisionManager = new CollisionManager();
             keybindingManager = new KeybindingManager();
 
@@ -67,7 +73,9 @@ namespace Coursework
             keybindingManager.BindKeyEvent(Keys.A, InputState.held, player.LeftHeld);
             keybindingManager.BindKeyEvent(Keys.D, InputState.held, player.RightHeld);
             keybindingManager.BindKeyEvent(Keys.Space, InputState.down, player.Jump);
-            keybindingManager.BindKeyEvent(Keys.S, InputState.held, player.Descend);
+            keybindingManager.BindKeyEvent(Keys.S, InputState.held, player.Crouch);
+
+            keybindingManager.BindPointerEvent(MouseButton.left, InputState.down, player.OnMouseButtonDown);
         }
 
         /// <summary>
@@ -114,12 +122,11 @@ namespace Coursework
 
             player.Update(gameTime);
             currentLevel.Update(gameTime);
+            projectileManager.Update(gameTime);
 
             //Detect collisions
-            collisionManager.Update(currentLevel, player);
+            collisionManager.Update(currentLevel, player,projectileManager);
 
-            //Update events
-            eventManager.Update(gameTime);
 
             //Update camera
             camera.Position = player.Position;
@@ -144,6 +151,10 @@ namespace Coursework
 
             //Draw level and all entities managed by it
             currentLevel.Draw(gameTime, spriteBatch);
+
+            //Draw projectiles
+            projectileManager.Draw(spriteBatch);
+
             //Draw player
             player.Draw(spriteBatch);
 

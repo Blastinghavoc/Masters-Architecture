@@ -1,4 +1,5 @@
 ﻿using Coursework.Entities;
+using Coursework.Projectiles;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -19,16 +20,19 @@ namespace Coursework
         public event EventHandler<EnemyKilledEventArgs> OnEnemyKilled = delegate { };
         public event EventHandler<EventArgs> OnNextLevel = delegate { };
         public event EventHandler<EventArgs> OnPlayerDied = delegate { };
+        public event EventHandler<ProjectileLaunchEventArgs> OnLaunchProjectile = delegate { };
+        public event EventHandler<ProjectileKilledEventArgs> OnProjectileKilled = delegate { };
+
+        //Anything other than the player collides with something (i.e, neither entity involved in the collision was the player)
+        public event EventHandler<NonPlayerCollisionEventArgs> OnNonPlayerCollision = delegate { };
+        //As above, but specifically when a projectile collides with something
+        public event EventHandler<NonPlayerCollisionEventArgs> OnProjectileNonPlayerCollision = delegate { };
+        
         
 
 
         private int prevScore;
         private int score;
-
-        public void Update(GameTime gameTime)
-        {
-          
-        }
 
         public void AddScore(int amount)
         {
@@ -57,8 +61,17 @@ namespace Coursework
             OnEnemyKilled?.Invoke(this, new EnemyKilledEventArgs(enemy));
         }
 
+        public void LaunchProjectile(ProjectileType type, Vector2 launchPosition, Point target,bool isEnemy)
+        {
+            OnLaunchProjectile?.Invoke(this, new ProjectileLaunchEventArgs(type, launchPosition, target,isEnemy));
+        }
+
+        public void KilledProjectile(Projectile p) {
+            OnProjectileKilled?.Invoke(this, new ProjectileKilledEventArgs(p));
+        }
+
         //Fire player collision events
-        public void OnPlayerCollision(Player player, Object collidedWith, Vector2 collisionDepth,CollisionType collisionType= CollisionType.stay)
+        public void PlayerCollision(Player player, Object collidedWith, Vector2 collisionDepth,CollisionType collisionType= CollisionType.stay)
         {
             //Always fires if there is a collision happening
             if (collisionType != CollisionType.exit)
@@ -71,6 +84,67 @@ namespace Coursework
             {
                 OnPlayerCollisionEnter?.Invoke(this, new PlayerCollisionEventArgs(player, collidedWith, collisionDepth,collisionType));
             }
+
+            //TODO collision exit if necessary
+        }
+
+        public void NonPlayerCollision(CollidableObject obj, Object collidedWith, Vector2 collisionDepth, CollisionType collisionType = CollisionType.stay)
+        {
+            //Always fires if there is a collision happening
+            if (collisionType != CollisionType.exit)
+            {
+                Projectile proj = obj as Projectile;
+                if (proj != null)
+                {
+                    OnProjectileNonPlayerCollision?.Invoke(this, new NonPlayerCollisionEventArgs(obj, collidedWith, collisionDepth, collisionType));
+                }
+                else {
+                    //NOTE currently unused
+                    OnNonPlayerCollision?.Invoke(this, new NonPlayerCollisionEventArgs(obj, collidedWith, collisionDepth, collisionType));
+                }
+            }
+
+            //TODO collision enter/exit if necessary
+        }
+    }
+
+    class NonPlayerCollisionEventArgs
+    {
+        public CollidableObject collider;
+        public Object colllidedWith;
+        public Vector2 collisionDepth;
+        public CollisionType collisionType;
+
+        public NonPlayerCollisionEventArgs(CollidableObject collider, object colllidedWith, Vector2 collisionDepth, CollisionType collisionType)
+        {
+            this.collider = collider;
+            this.colllidedWith = colllidedWith;
+            this.collisionDepth = collisionDepth;
+            this.collisionType = collisionType;
+        }
+    }
+
+    class ProjectileKilledEventArgs {
+        public Projectile projectile;
+
+        public ProjectileKilledEventArgs(Projectile projectile)
+        {
+            this.projectile = projectile;
+        }
+    }
+
+    class ProjectileLaunchEventArgs {
+        public ProjectileType projectileType;
+        public Vector2 launchPosition;
+        public Point worldPointTarget;
+        public bool isEnemy;
+
+        public ProjectileLaunchEventArgs(ProjectileType projectileType, Vector2 launchPosition, Point worldPointTarget, bool isEnemy)
+        {
+            this.projectileType = projectileType;
+            this.launchPosition = launchPosition;
+            this.worldPointTarget = worldPointTarget;
+            this.isEnemy = isEnemy;
         }
     }
 

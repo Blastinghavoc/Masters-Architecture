@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Coursework.Input
 {
+    public delegate void PointerAction(Point pointerLocation);
 
     public class KeybindingManager
     {
@@ -22,21 +24,40 @@ namespace Coursework.Input
             }
         }
 
-        private InputManager inputManager;
+        private struct MouseBinding
+        {
+            MouseButton button;
+            InputState state;
+
+            public MouseBinding(MouseButton button, InputState state)
+            {
+                this.button = button;
+                this.state = state;
+            }
+        }
+
+        private InputManager inputManager = new InputManager();
 
         /*Rather than passing any event arguments, clients simpy declare an Action for each and 
          * only the key events they care about. E.g, void OnLeftDown()
          */
-        private Dictionary<KeyBinding, Action> keyBindings;
+        private Dictionary<KeyBinding, Action> keyBindings = new Dictionary<KeyBinding, Action>();
+
+        /*
+         Clients of mouse events declare a pointer action for any events they
+         care about. This passes the position of the pointer/cursor.
+        */
+        private Dictionary<MouseBinding, PointerAction> mouseBindings = new Dictionary<MouseBinding, PointerAction>();
 
         public KeybindingManager()
         {
-            inputManager = new InputManager();
-            keyBindings = new Dictionary<KeyBinding, Action>();
-
             inputManager.OnKeyDown += OnKeyDown;
             inputManager.OnKeyHeld += OnKeyHeld;
             inputManager.OnKeyUp += OnKeyUp;
+
+            inputManager.OnMouseButtonDown += OnMouseButtonDown;
+            inputManager.OnMouseButtonHeld += OnMouseButtonHeld;
+            inputManager.OnMouseButtonUp += OnMouseButtonUp;
         }
 
         public void Update()
@@ -48,6 +69,12 @@ namespace Coursework.Input
         {
             keyBindings.Add(new KeyBinding(key, inputState), action);
             inputManager.ListenFor(key);
+        }
+
+        public void BindPointerEvent(MouseButton button,InputState inputState,PointerAction action)
+        {
+            mouseBindings.Add(new MouseBinding(button, inputState), action);
+            inputManager.ListenFor(button);
         }
 
         void OnKeyDown(object sender,KeyEventArgs e) {
@@ -77,6 +104,43 @@ namespace Coursework.Input
                 action?.Invoke();
             }
         }
+
+        void OnMouseButtonDown(object sender, MouseEventArgs e)
+        {
+            PointerAction action = null;
+
+            Point pointerPosition = e.currentState.Position;
+
+            if (mouseBindings.TryGetValue(new MouseBinding(e.button, InputState.down), out action))
+            {
+                action?.Invoke(pointerPosition);
+            }
+        }
+
+        void OnMouseButtonUp(object sender, MouseEventArgs e)
+        {
+            PointerAction action = null;
+
+            Point pointerPosition = e.currentState.Position;
+
+            if (mouseBindings.TryGetValue(new MouseBinding(e.button, InputState.up), out action))
+            {
+                action?.Invoke(pointerPosition);
+            }
+        }
+
+        void OnMouseButtonHeld(object sender, MouseEventArgs e)
+        {
+            PointerAction action = null;
+
+            Point pointerPosition = e.currentState.Position;
+
+            if (mouseBindings.TryGetValue(new MouseBinding(e.button, InputState.held), out action))
+            {
+                action?.Invoke(pointerPosition);
+            }
+        }
+
 
     }
     
