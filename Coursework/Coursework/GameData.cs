@@ -100,6 +100,7 @@ namespace Coursework
         public Vector2 maxSpeed;
         public Vector2 dragFactor;
         public float gravity;
+        public int maxJumps;
 
         public int startHealth;
     }

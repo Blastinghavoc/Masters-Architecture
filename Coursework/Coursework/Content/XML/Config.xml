@@ -24,6 +24,7 @@
       </dragFactor> 
       <gravity>981</gravity>
       <startHealth>3</startHealth>
+      <maxJumps>2</maxJumps>
    </playerData>
    <levelConstants>
       <tileSize>

@@ -28,11 +28,13 @@ namespace Coursework.Entities
         private readonly Vector2 dragFactor = GameData.Instance.playerData.dragFactor;//No vertical drag
         private readonly float gravity = GameData.Instance.playerData.gravity;
 
-        private bool isJumping = false;
+        private bool isJumping = false;//Used for animation purposes
+        private readonly int maxJumps = GameData.Instance.playerData.maxJumps;
+        private int jumpsRemaining = GameData.Instance.playerData.maxJumps;
         private bool isGrounded = false;
         //Based on variable of same name in platformer example, this is used to detect when the player is grounded
         private int bottomAtLastUpdate = 0;
-        private bool CanJump { get { return !isJumping && isGrounded; } }
+        private bool CanJump { get { return jumpsRemaining > 0; } }
 
         private Vector2 previousPosition;//Position of player before they tried to move each frame
 
@@ -65,6 +67,7 @@ namespace Coursework.Entities
             Health = GameData.Instance.playerData.startHealth;
             GameEventManager.Instance.PlayerHealthChanged(this);
             isJumping = false;
+            jumpsRemaining = maxJumps; 
             isGrounded = false;
             Velocity = Vector2.Zero;
             directionalEffect = SpriteEffects.None;
@@ -148,6 +151,7 @@ namespace Coursework.Entities
                 if (absCollY < absCollX && e.collisionDepth.Y < 0 && bottomAtLastUpdate >= tile.bounds.Top)
                 {
                     isGrounded = true;
+                    jumpsRemaining = maxJumps;
                 }                
 
                 StaticCollisionResponse(e.collisionDepth);
@@ -299,6 +303,7 @@ namespace Coursework.Entities
                 inputForce -= Vector2.UnitY;//Subtraction because Y axis points down
                 isJumping = true;
                 isGrounded = false;
+                --jumpsRemaining;
             }
         }
 
