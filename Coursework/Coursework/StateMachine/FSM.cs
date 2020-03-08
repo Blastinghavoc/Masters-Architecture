@@ -15,7 +15,7 @@ namespace Coursework.StateMachine
         private object owner = null;
         private List<State> states = new List<State>();
 
-        private State currentState = null;
+        public State CurrentState { get; private set; } = null;
 
         public FSM(object owner = null)
         {
@@ -24,10 +24,10 @@ namespace Coursework.StateMachine
 
         public void Initialise(string startStateName)
         {
-            currentState = states.Find(state => state.Name.Equals(startStateName));
-            if (currentState != null)
+            CurrentState = states.Find(state => state.Name.Equals(startStateName));
+            if (CurrentState != null)
             {
-                currentState.OnEnter(owner);
+                CurrentState.OnEnter(owner);
             }
             else
             {
@@ -50,25 +50,26 @@ namespace Coursework.StateMachine
 
         public void Update(GameTime gameTime)
         {
-            if (currentState == null)
+            if (CurrentState == null)
             {
                 return;
             }
 
             //Check transitions
-            foreach (var transition in currentState.Transitions)
+            foreach (var transition in CurrentState.Transitions)
             {
                 if (transition.Condition())
                 {
-                    currentState.OnExit(owner);
-                    currentState = transition.NextState;
-                    currentState.OnEnter(owner);
+                    CurrentState.OnExit(owner);
+                    CurrentState = transition.NextState;
+                    CurrentState.OnEnter(owner);
                     break;
                 }
             }
 
             //Update current state
-            currentState.Update(owner, gameTime);
+            CurrentState.Update(owner, gameTime);
         }
+
     }
 }

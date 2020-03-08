@@ -27,12 +27,14 @@ namespace Coursework
         public event EventHandler<NonPlayerCollisionEventArgs> OnNonPlayerCollision = delegate { };
         //As above, but specifically when a projectile collides with something
         public event EventHandler<NonPlayerCollisionEventArgs> OnProjectileNonPlayerCollision = delegate { };
-        
-        
 
+        private int prevScore = 0;
+        private int score = 0;
 
-        private int prevScore;
-        private int score;
+        public void ResetScore() {
+            prevScore = 0;
+            score = 0;
+        }
 
         public void AddScore(int amount)
         {

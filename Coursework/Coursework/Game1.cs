@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Input;
 using Coursework.Input;
 using Coursework.Entities;
 using Coursework.Projectiles;
+using Coursework.StateMachine;
+using Coursework.StateMachine.GameState;
 
 namespace Coursework
 {
@@ -13,18 +15,20 @@ namespace Coursework
     /// </summary>
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
+        public GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        SpriteFont font;
-        Camera camera;
+        public SpriteFont font;
+        public Camera camera;
 
-        Player player;
-        Level currentLevel;
-        CollisionManager collisionManager;
-        KeybindingManager keybindingManager;
-        HUDManager hudManager;
+        //Player player;
+        //Level currentLevel;
+        //CollisionManager collisionManager;
+        //KeybindingManager keybindingManager;
+        //HUDManager hudManager;
         GameEventManager eventManager;
-        ProjectileManager projectileManager;
+        //ProjectileManager projectileManager;
+
+        FSM GameStateMachine;
 
 
         public Game1()
@@ -47,22 +51,21 @@ namespace Coursework
 
             eventManager = new GameEventManager();
             GameEventManager.Instance = eventManager;
-            eventManager.OnNextLevel += OnNextLevel;
 
-            player = new Player(Services, Content.RootDirectory);
-            eventManager.OnPlayerDied += OnPlayerDied;
-            currentLevel = new Level(Services, Content.RootDirectory, GameData.Instance.levelConstants.startLevelName);
-
-            projectileManager = new ProjectileManager(Services, Content.RootDirectory);
+            //eventManager.OnNextLevel += OnNextLevel;
+            
+            //eventManager.OnPlayerDied += OnPlayerDied;                       
 
             camera = new Camera(graphics.GraphicsDevice.Viewport);
             camera.Position = new Vector2(0, 0);
             Camera.mainCamera = camera;
-            collisionManager = new CollisionManager();
-            keybindingManager = new KeybindingManager();
+            //collisionManager = new CollisionManager();            
 
+            GameStateMachine = new FSM();
+            PlayGame playGameState = new PlayGame(this);
 
-            InitKeybindings();
+            GameStateMachine.AddState(playGameState);            
+
             base.Initialize();
         }
 
@@ -70,12 +73,13 @@ namespace Coursework
         /// Set up keybindings for game controls
         /// </summary>
         private void InitKeybindings() {
-            keybindingManager.BindKeyEvent(Keys.A, InputState.held, player.LeftHeld);
-            keybindingManager.BindKeyEvent(Keys.D, InputState.held, player.RightHeld);
-            keybindingManager.BindKeyEvent(Keys.Space, InputState.down, player.Jump);
-            keybindingManager.BindKeyEvent(Keys.S, InputState.held, player.Crouch);
+            //keybindingManager = new KeybindingManager();
+            //keybindingManager.BindKeyEvent(Keys.A, InputState.held, player.LeftHeld);
+            //keybindingManager.BindKeyEvent(Keys.D, InputState.held, player.RightHeld);
+            //keybindingManager.BindKeyEvent(Keys.Space, InputState.down, player.Jump);
+            //keybindingManager.BindKeyEvent(Keys.S, InputState.held, player.Crouch);
 
-            keybindingManager.BindPointerEvent(MouseButton.left, InputState.down, player.OnMouseButtonDown);
+            //keybindingManager.BindPointerEvent(MouseButton.left, InputState.down, player.OnMouseButtonDown);
         }
 
         /// <summary>
@@ -87,11 +91,21 @@ namespace Coursework
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
             font = Content.Load<SpriteFont>("Fonts/gamefont");//Same font as used in the labs
 
-            //Initialise hud after font has been loaded
-            hudManager = new HUDManager(font);
+            //player = new Player(Services, Content.RootDirectory);
+
+            //currentLevel = new Level(Services, Content.RootDirectory, GameData.Instance.levelConstants.startLevelName);
+
+            //projectileManager = new ProjectileManager(Services, Content.RootDirectory);
+
+            ////Initialise hud after font has been loaded
+            //hudManager = new HUDManager(font);
+
+
+            //InitKeybindings();
+
+            GameStateMachine.Initialise("PlayGame");
         }
 
         /// <summary>
@@ -101,10 +115,12 @@ namespace Coursework
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
-            player.Dispose();
-            currentLevel.Dispose();
-            GameEventManager.Instance.OnNextLevel -= OnNextLevel;
-            GameEventManager.Instance.OnPlayerDied -= OnPlayerDied;
+            //player.Dispose();
+            //currentLevel.Dispose();
+            //projectileManager.Dispose();
+            //hudManager.Dispose();
+            //GameEventManager.Instance.OnNextLevel -= OnNextLevel;
+            //GameEventManager.Instance.OnPlayerDied -= OnPlayerDied;
         }
 
         /// <summary>
@@ -118,23 +134,26 @@ namespace Coursework
                 Exit();
 
             // TODO: Add your update logic here
-            keybindingManager.Update();//Update input events
+            //keybindingManager.Update();//Update input events
 
-            player.Update(gameTime);
-            currentLevel.Update(gameTime);
-            projectileManager.Update(gameTime);
+            //player.Update(gameTime);
+            //currentLevel.Update(gameTime);
+            //projectileManager.Update(gameTime);
 
-            //Detect collisions
-            collisionManager.Update(currentLevel, player,projectileManager);
+            ////Detect collisions
+            //collisionManager.Update(currentLevel, player,projectileManager);
 
 
-            //Update camera
-            camera.Position = player.Position;
-            currentLevel.ConstrainCamera(camera);
-            camera.Update(graphics.GraphicsDevice.Viewport);
+            ////Update camera
+            //camera.Position = player.Position;
+            //currentLevel.ConstrainCamera(camera);
 
-            //Update HUD
-            hudManager.Update(gameTime, camera);
+            //camera.Update(graphics.GraphicsDevice.Viewport);
+
+            ////Update HUD
+            //hudManager.Update(gameTime, camera);
+
+            GameStateMachine.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -149,46 +168,52 @@ namespace Coursework
 
             spriteBatch.Begin(transformMatrix: camera.Transform);
 
-            //Draw level and all entities managed by it
-            currentLevel.Draw(gameTime, spriteBatch);
+            ////Draw level and all entities managed by it
+            //currentLevel.Draw(gameTime, spriteBatch);
 
-            //Draw projectiles
-            projectileManager.Draw(spriteBatch);
+            ////Draw projectiles
+            //projectileManager.Draw(spriteBatch);
 
-            //Draw player
-            player.Draw(spriteBatch);
+            ////Draw player
+            //player.Draw(spriteBatch);
 
-            //Draw hud
-            hudManager.Draw(spriteBatch);
+            ////Draw hud
+            //hudManager.Draw(spriteBatch);
+
+            var gameState = GameStateMachine.CurrentState as GameState;
+            if (gameState != null)
+            {
+                gameState.Draw(gameTime, spriteBatch);
+            }
 
             spriteBatch.End();
             base.Draw(gameTime);
         }
 
-        private void OnPlayerDied(object sender, System.EventArgs e)
-        {
-            //TODO game over screen
-            player.HardReset();
-            SwitchToLevel(GameData.Instance.levelConstants.startLevelName);
-        }
+        //private void OnPlayerDied(object sender, System.EventArgs e)
+        //{
+        //    //TODO game over screen
+        //    player.HardReset();
+        //    SwitchToLevel(GameData.Instance.levelConstants.startLevelName);
+        //}
 
-        private void OnNextLevel(object sender, System.EventArgs e)
-        {
-            var nextLevelName = currentLevel.nextLevelName;
-            if (nextLevelName != "")
-            {
-                SwitchToLevel(nextLevelName);
-            }
-            else {
-                //TODO game over
-            }
-        }
+        //private void OnNextLevel(object sender, System.EventArgs e)
+        //{
+        //    var nextLevelName = currentLevel.nextLevelName;
+        //    if (nextLevelName != "")
+        //    {
+        //        SwitchToLevel(nextLevelName);
+        //    }
+        //    else {
+        //        //TODO game over
+        //    }
+        //}
 
-        private void SwitchToLevel(string levelName) 
-        {
-            currentLevel.Dispose();
-            currentLevel = new Level(Services, Content.RootDirectory, levelName);
-            player.SetPosition(Vector2.Zero);
-        }
+        //private void SwitchToLevel(string levelName) 
+        //{
+        //    currentLevel.Dispose();
+        //    currentLevel = new Level(Services, Content.RootDirectory, levelName);
+        //    player.SetPosition(Vector2.Zero);
+        //}
     }
 }

@@ -11,7 +11,7 @@ namespace Coursework
     /// <summary>
     /// Camera class based on example found here: http://community.monogame.net/t/simple-2d-camera/9135    /// 
     /// </summary>
-    class Camera
+    public class Camera
     {
         //Not singleton (there could in principle be multiple cameras), but this is the main one.
         //Currently, there is no need for more than one camera anyway.
