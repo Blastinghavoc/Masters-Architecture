@@ -50,36 +50,21 @@ namespace Coursework
             GameData.Initialise();
 
             eventManager = new GameEventManager();
-            GameEventManager.Instance = eventManager;
-
-            //eventManager.OnNextLevel += OnNextLevel;
-            
-            //eventManager.OnPlayerDied += OnPlayerDied;                       
+            GameEventManager.Instance = eventManager;                    
 
             camera = new Camera(graphics.GraphicsDevice.Viewport);
             camera.Position = new Vector2(0, 0);
-            Camera.mainCamera = camera;
-            //collisionManager = new CollisionManager();            
+            Camera.mainCamera = camera;          
 
             GameStateMachine = new FSM();
+            StartScreen startScreenState = new StartScreen(this);
             PlayGame playGameState = new PlayGame(this);
 
-            GameStateMachine.AddState(playGameState);            
+            startScreenState.AddTransition(playGameState, () => { return startScreenState.goToGame; });
+
+            GameStateMachine.AddStates(startScreenState,playGameState);            
 
             base.Initialize();
-        }
-
-        /// <summary>
-        /// Set up keybindings for game controls
-        /// </summary>
-        private void InitKeybindings() {
-            //keybindingManager = new KeybindingManager();
-            //keybindingManager.BindKeyEvent(Keys.A, InputState.held, player.LeftHeld);
-            //keybindingManager.BindKeyEvent(Keys.D, InputState.held, player.RightHeld);
-            //keybindingManager.BindKeyEvent(Keys.Space, InputState.down, player.Jump);
-            //keybindingManager.BindKeyEvent(Keys.S, InputState.held, player.Crouch);
-
-            //keybindingManager.BindPointerEvent(MouseButton.left, InputState.down, player.OnMouseButtonDown);
         }
 
         /// <summary>
@@ -93,19 +78,7 @@ namespace Coursework
 
             font = Content.Load<SpriteFont>("Fonts/gamefont");//Same font as used in the labs
 
-            //player = new Player(Services, Content.RootDirectory);
-
-            //currentLevel = new Level(Services, Content.RootDirectory, GameData.Instance.levelConstants.startLevelName);
-
-            //projectileManager = new ProjectileManager(Services, Content.RootDirectory);
-
-            ////Initialise hud after font has been loaded
-            //hudManager = new HUDManager(font);
-
-
-            //InitKeybindings();
-
-            GameStateMachine.Initialise("PlayGame");
+            GameStateMachine.Initialise("StartScreen");
         }
 
         /// <summary>
@@ -114,13 +87,6 @@ namespace Coursework
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
-            //player.Dispose();
-            //currentLevel.Dispose();
-            //projectileManager.Dispose();
-            //hudManager.Dispose();
-            //GameEventManager.Instance.OnNextLevel -= OnNextLevel;
-            //GameEventManager.Instance.OnPlayerDied -= OnPlayerDied;
         }
 
         /// <summary>
@@ -132,26 +98,6 @@ namespace Coursework
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            // TODO: Add your update logic here
-            //keybindingManager.Update();//Update input events
-
-            //player.Update(gameTime);
-            //currentLevel.Update(gameTime);
-            //projectileManager.Update(gameTime);
-
-            ////Detect collisions
-            //collisionManager.Update(currentLevel, player,projectileManager);
-
-
-            ////Update camera
-            //camera.Position = player.Position;
-            //currentLevel.ConstrainCamera(camera);
-
-            //camera.Update(graphics.GraphicsDevice.Viewport);
-
-            ////Update HUD
-            //hudManager.Update(gameTime, camera);
 
             GameStateMachine.Update(gameTime);
 
@@ -168,18 +114,6 @@ namespace Coursework
 
             spriteBatch.Begin(transformMatrix: camera.Transform);
 
-            ////Draw level and all entities managed by it
-            //currentLevel.Draw(gameTime, spriteBatch);
-
-            ////Draw projectiles
-            //projectileManager.Draw(spriteBatch);
-
-            ////Draw player
-            //player.Draw(spriteBatch);
-
-            ////Draw hud
-            //hudManager.Draw(spriteBatch);
-
             var gameState = GameStateMachine.CurrentState as GameState;
             if (gameState != null)
             {
@@ -189,31 +123,5 @@ namespace Coursework
             spriteBatch.End();
             base.Draw(gameTime);
         }
-
-        //private void OnPlayerDied(object sender, System.EventArgs e)
-        //{
-        //    //TODO game over screen
-        //    player.HardReset();
-        //    SwitchToLevel(GameData.Instance.levelConstants.startLevelName);
-        //}
-
-        //private void OnNextLevel(object sender, System.EventArgs e)
-        //{
-        //    var nextLevelName = currentLevel.nextLevelName;
-        //    if (nextLevelName != "")
-        //    {
-        //        SwitchToLevel(nextLevelName);
-        //    }
-        //    else {
-        //        //TODO game over
-        //    }
-        //}
-
-        //private void SwitchToLevel(string levelName) 
-        //{
-        //    currentLevel.Dispose();
-        //    currentLevel = new Level(Services, Content.RootDirectory, levelName);
-        //    player.SetPosition(Vector2.Zero);
-        //}
     }
 }

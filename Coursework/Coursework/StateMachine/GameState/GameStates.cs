@@ -27,7 +27,7 @@ namespace Coursework.StateMachine.GameState
             LoadContent();
         }
 
-        public virtual void Draw(GameTime gameTime,SpriteBatch spriteBatch)
+        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             //Draw hud
             hudManager.Draw(spriteBatch);
@@ -58,7 +58,6 @@ namespace Coursework.StateMachine.GameState
         }
 
         public virtual void UnloadContent() {
-            hudManager.Dispose();
             UnbindEvents();
         }
 
@@ -83,6 +82,57 @@ namespace Coursework.StateMachine.GameState
         //Equivalent to Game.Update
         public abstract void Update(GameTime gameTime);
 
+    }
+
+    class StartScreen : GameState
+    {
+        public StartScreen(Game1 owner) : base(owner)
+        {
+            Name = "StartScreen";
+        }
+
+        public bool goToGame = false;
+
+        HUDElement titleText;
+
+        public override void InitHUD()
+        {
+            base.InitHUD();
+            titleText = new HUDElement("Hello World!",new Vector2(0,0));
+            titleText.relativeAnchor = new Vector2(0.5f, 0.5f);
+            hudManager.AddElement(titleText);
+        }
+
+        public override void OnEnter(object owner)
+        {
+            base.OnEnter(owner);
+            goToGame = false;
+        }
+
+        public override void InitKeybindings()
+        {
+            base.InitKeybindings();
+            keybindingManager.BindKeyEvent(Microsoft.Xna.Framework.Input.Keys.Enter,InputState.down, GoToGame);
+        }
+
+        public override void BindEvents()
+        {
+            
+        }
+
+        public override void UnbindEvents()
+        {
+            
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            
+        }
+
+        private void GoToGame() {
+            goToGame = true;
+        }
     }
 
 

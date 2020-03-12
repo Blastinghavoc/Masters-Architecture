@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-
 namespace Coursework.StateMachine.GameState
 {
     //The actual gameplay state
@@ -19,6 +18,10 @@ namespace Coursework.StateMachine.GameState
         Level currentLevel;
         ProjectileManager projectileManager;
         CollisionManager collisionManager;
+
+        //HUD
+        HUDElement scoreText;
+        HUDElement healthText;
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
@@ -36,6 +39,12 @@ namespace Coursework.StateMachine.GameState
         public override void InitHUD()
         {
             base.InitHUD();
+
+            scoreText = new HUDElement("Score: 0", new Vector2(0, 0));
+            healthText = new HUDElement("Health: " + GameData.Instance.playerData.startHealth.ToString(), new Vector2(0, 30));
+
+            hudManager.AddElement(scoreText);
+            hudManager.AddElement(healthText);
         }
 
         public override void InitKeybindings()
@@ -99,19 +108,23 @@ namespace Coursework.StateMachine.GameState
         {
             eventManager.OnNextLevel += OnNextLevel;
             eventManager.OnPlayerDied += OnPlayerDied;
+            eventManager.OnScoreChanged += OnScoreChanged;
+            eventManager.OnPlayerHealthChanged += OnHealthChanged;
         }
 
         public override void UnbindEvents()
         {
             eventManager.OnNextLevel -= OnNextLevel;
             eventManager.OnPlayerDied -= OnPlayerDied;
+            eventManager.OnScoreChanged -= OnScoreChanged;
+            eventManager.OnPlayerHealthChanged -= OnHealthChanged;
         }
 
         private void OnPlayerDied(object sender, System.EventArgs e)
         {
             //TODO transition to game over screen
             player.HardReset();
-            GameEventManager.Instance.ResetScore();
+            eventManager.ResetScore();
             SwitchToLevel(GameData.Instance.levelConstants.startLevelName);
         }
 
@@ -126,6 +139,16 @@ namespace Coursework.StateMachine.GameState
             {
                 //TODO game over
             }
+        }
+
+        public void OnHealthChanged(object sender, PlayerHealthChangedEventArgs e)
+        {
+            healthText.text = "Health: " + e.player.Health.ToString();
+        }
+
+        public void OnScoreChanged(object sender, ScoreEventArgs e)
+        {
+            scoreText.text = "Score: " + e.newScore.ToString();
         }
     }
 }
