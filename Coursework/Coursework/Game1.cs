@@ -57,12 +57,25 @@ namespace Coursework
             Camera.mainCamera = camera;          
 
             GameStateMachine = new FSM();
-            StartScreen startScreenState = new StartScreen(this);
+            //NOTE spacing doesn't seem to scale correctly, so tabs are used.
+            TextScreen startScreenState = new TextScreen(this,"Explorer","press    enter    to    continue",Keys.Enter);
+            startScreenState.Name = "Start";
+
             PlayGame playGameState = new PlayGame(this);
 
-            startScreenState.AddTransition(playGameState, () => { return startScreenState.goToGame; });
+            TextScreen loseScreenState = new TextScreen(this, "YOU    LOSE", "press    enter    to    continue", Keys.Enter);
+            loseScreenState.Name = "Lose";
 
-            GameStateMachine.AddStates(startScreenState,playGameState);            
+            TextScreen winScreenState = new TextScreen(this, "YOU    WIN", "press    enter    to    continue", Keys.Enter);
+            winScreenState.Name = "Win";
+
+            startScreenState.AddTransition(playGameState, () => { return startScreenState.done; });
+            loseScreenState.AddTransition(startScreenState, () => { return loseScreenState.done; });
+            winScreenState.AddTransition(startScreenState, () => { return winScreenState.done; });
+            playGameState.AddTransition(loseScreenState, () => { return playGameState.GameLost; });
+            playGameState.AddTransition(winScreenState, () => { return playGameState.GameWon; });
+
+            GameStateMachine.AddStates(startScreenState,playGameState,loseScreenState,winScreenState);            
 
             base.Initialize();
         }
@@ -78,7 +91,7 @@ namespace Coursework
 
             font = Content.Load<SpriteFont>("Fonts/gamefont");//Same font as used in the labs
 
-            GameStateMachine.Initialise("StartScreen");
+            GameStateMachine.Initialise("Start");
         }
 
         /// <summary>

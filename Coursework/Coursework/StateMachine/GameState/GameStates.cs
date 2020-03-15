@@ -84,14 +84,20 @@ namespace Coursework.StateMachine.GameState
 
     }
 
-    class StartScreen : GameState
-    {
-        public StartScreen(Game1 owner) : base(owner)
+    //A text-only screen with a single transition out of it
+    class TextScreen : GameState {
+        public TextScreen(Game1 owner,string title, string subtitle, Microsoft.Xna.Framework.Input.Keys transitionKey) : base(owner)
         {
-            Name = "StartScreen";
+            this.title = title;
+            this.subtitle = subtitle;
+            this.transitionKey = transitionKey;
         }
 
-        public bool goToGame = false;
+        public bool done { get; protected set; } = false;
+
+        string title;
+        string subtitle;
+        Microsoft.Xna.Framework.Input.Keys transitionKey;
 
         HUDElement titleText;
         HUDElement subtitleText;
@@ -99,13 +105,12 @@ namespace Coursework.StateMachine.GameState
         public override void InitHUD()
         {
             base.InitHUD();
-            titleText = new HUDElement("Explorer",new Vector2(0,-30));
+            titleText = new HUDElement(title, new Vector2(0, -30));
             titleText.relativeAnchor = new Vector2(0.5f, 0.5f);//Center of screen
             titleText.alignment = new Vector2(0.5f, 0.5f);//Center text
             titleText.scale = 2.0f;
 
-            //NOTE: for some reason spaces do not seem to get scaled correctly, so tabs are used instead
-            subtitleText = new HUDElement("press    enter    to   continue", new Vector2(0, 40));
+            subtitleText = new HUDElement(subtitle, new Vector2(0, 45));
             subtitleText.relativeAnchor = new Vector2(0.5f, 0.5f);//Center of screen
             subtitleText.alignment = new Vector2(0.5f, 0.5f);//Center text
             subtitleText.scale = 1.0f;
@@ -117,34 +122,30 @@ namespace Coursework.StateMachine.GameState
         public override void OnEnter(object owner)
         {
             base.OnEnter(owner);
-            goToGame = false;
+            done = false;
         }
 
         public override void InitKeybindings()
         {
             base.InitKeybindings();
-            keybindingManager.BindKeyEvent(Microsoft.Xna.Framework.Input.Keys.Enter,InputState.down, GoToGame);
+            keybindingManager.BindKeyEvent(transitionKey, InputState.down, Done);
+        }
+
+        private void Done()
+        {
+            done = true;
         }
 
         public override void BindEvents()
         {
-            
         }
 
         public override void UnbindEvents()
         {
-            
         }
 
         public override void Update(GameTime gameTime)
         {
-            
-        }
-
-        private void GoToGame() {
-            goToGame = true;
         }
     }
-
-
 }

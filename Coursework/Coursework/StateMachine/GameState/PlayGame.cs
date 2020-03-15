@@ -23,6 +23,16 @@ namespace Coursework.StateMachine.GameState
         HUDElement scoreText;
         HUDElement healthText;
 
+        public bool GameWon { get; private set; } = false;
+        public bool GameLost { get; private set; } = false;
+
+        public override void OnEnter(object owner)
+        {
+            base.OnEnter(owner);
+            GameWon = false;
+            GameLost = false;
+        }
+
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             //Draw level and all entities managed by it
@@ -122,10 +132,7 @@ namespace Coursework.StateMachine.GameState
 
         private void OnPlayerDied(object sender, System.EventArgs e)
         {
-            //TODO transition to game over screen
-            player.HardReset();
-            eventManager.ResetScore();
-            SwitchToLevel(GameData.Instance.levelConstants.startLevelName);
+            GameLost = true;
         }
 
         private void OnNextLevel(object sender, System.EventArgs e)
@@ -137,7 +144,7 @@ namespace Coursework.StateMachine.GameState
             }
             else
             {
-                //TODO game over
+                GameWon = true;
             }
         }
 
