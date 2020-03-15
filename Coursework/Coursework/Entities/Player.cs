@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Coursework.Animation;
 using Coursework.StateMachine;
 using Coursework.StateMachine.Player;
+using Coursework.Serialization;
 
 namespace Coursework.Entities
 {

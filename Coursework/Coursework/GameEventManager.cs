@@ -29,7 +29,7 @@ namespace Coursework
         public event EventHandler<NonPlayerCollisionEventArgs> OnProjectileNonPlayerCollision = delegate { };
 
         private int prevScore = 0;
-        private int score = 0;
+        public int score { get; private set; } = 0;
 
         public void ResetScore() {
             prevScore = 0;

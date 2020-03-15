@@ -6,6 +6,7 @@ using Coursework.Entities;
 using Coursework.Projectiles;
 using Coursework.StateMachine;
 using Coursework.StateMachine.GameState;
+using Coursework.Serialization;
 
 namespace Coursework
 {
@@ -58,15 +59,15 @@ namespace Coursework
 
             GameStateMachine = new FSM();
             //NOTE spacing doesn't seem to scale correctly, so tabs are used.
-            TextScreen startScreenState = new TextScreen(this,"Explorer","press    enter    to    continue",Keys.Enter);
+            TextScreen startScreenState = new TextScreen(this,"Explorer","Press    enter    to    continue",Keys.Enter);
             startScreenState.Name = "Start";
 
             PlayGame playGameState = new PlayGame(this);
 
-            TextScreen loseScreenState = new TextScreen(this, "YOU    LOSE", "press    enter    to    continue", Keys.Enter);
+            TextScreen loseScreenState = new EndScreen(this, "YOU    LOSE", "Press    enter    to    continue", Keys.Enter);
             loseScreenState.Name = "Lose";
 
-            TextScreen winScreenState = new TextScreen(this, "YOU    WIN", "press    enter    to    continue", Keys.Enter);
+            TextScreen winScreenState = new EndScreen(this, "YOU    WIN", "Press    enter    to    continue", Keys.Enter);
             winScreenState.Name = "Win";
 
             startScreenState.AddTransition(playGameState, () => { return startScreenState.done; });

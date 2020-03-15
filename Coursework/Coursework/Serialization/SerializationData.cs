@@ -12,6 +12,54 @@ using System.Xml.Serialization;
 /// </summary>
 namespace Coursework.Serialization
 {
+    //Data used by the player
+    public class PlayerData
+    {
+        public string walkAnimationPath;
+        public string idlePath;
+        public string jumpPath;
+        public Point frameDimensions;
+        public int numWalkFrames;
+        public int walkFrameTime;
+
+        public Vector2 inputScale;
+        public Vector2 maxSpeed;
+        public Vector2 dragFactor;
+        public float gravity;
+        public int maxJumps;
+
+        public int startHealth;
+    }
+
+    //Data used by all levels
+    public class ConstantLevelData
+    {
+        public Point tileSize;
+        public float tileResolution;
+        public string tileFilePath;
+        public string itemFilePath;
+        public string enemyFilePath;
+        public string mapFilePath;
+        public string startLevelName;
+        [XmlArrayItem("spec")]
+        public LevelEntitySpecification[] entitySpecifications;
+    }
+
+    //Data specific to a level
+    public class LevelData
+    {
+        public string mapName;
+        public string nextLevelName;
+        [XmlArrayItem("bind")]
+        public ColorBinding[] bindings;
+    }
+
+    public class ColorBinding
+    {
+        public Color color;
+        public string entityName;
+    }
+
     public enum LevelEntityType
     {
         tile,
