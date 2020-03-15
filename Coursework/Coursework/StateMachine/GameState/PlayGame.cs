@@ -40,8 +40,8 @@ namespace Coursework.StateMachine.GameState
         {
             base.InitHUD();
 
-            scoreText = new HUDElement("Score: 0", new Vector2(0, 0));
-            healthText = new HUDElement("Health: " + GameData.Instance.playerData.startHealth.ToString(), new Vector2(0, 30));
+            scoreText = new HUDElement("Score:    0", new Vector2(0, 0));
+            healthText = new HUDElement("Health:    " + GameData.Instance.playerData.startHealth.ToString(), new Vector2(0, 30));
 
             hudManager.AddElement(scoreText);
             hudManager.AddElement(healthText);
@@ -143,12 +143,12 @@ namespace Coursework.StateMachine.GameState
 
         public void OnHealthChanged(object sender, PlayerHealthChangedEventArgs e)
         {
-            healthText.text = "Health: " + e.player.Health.ToString();
+            healthText.text = "Health:    " + e.player.Health.ToString();
         }
 
         public void OnScoreChanged(object sender, ScoreEventArgs e)
         {
-            scoreText.text = "Score: " + e.newScore.ToString();
+            scoreText.text = "Score:    " + e.newScore.ToString();
         }
     }
 }

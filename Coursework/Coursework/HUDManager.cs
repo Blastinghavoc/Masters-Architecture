@@ -17,6 +17,7 @@ namespace Coursework
 
         private Vector2 offset;//Offset required to keep text aligned with camera
         private Vector2 viewDimensions;//Current viewport dimensions
+        private Matrix transformMatrix;//Current camera matrix
 
         public HUDManager(SpriteFont font) {
             this.font = font;
@@ -28,6 +29,7 @@ namespace Coursework
             var camPos = camera.Position;
             viewDimensions = new Vector2(viewingArea.Width, viewingArea.Height);
             offset = new Vector2(camPos.X - viewingArea.Width/2f, camPos.Y - viewingArea.Height / 2f);
+            transformMatrix = camera.Transform;
         }
 
         public void AddElement(HUDElement element) {
@@ -36,28 +38,29 @@ namespace Coursework
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            //Use a separate sprite batch with Point sampling to avoid blurry text.
+            //Based on advice from http://community.monogame.net/t/how-to-change-spritefont-sizes-without-anit-aliasing/9514
+            spriteBatch.End();
+            spriteBatch.Begin(transformMatrix: transformMatrix, samplerState: SamplerState.PointWrap);
+            
             foreach (var item in elements)
             {
-                DrawElement(item, spriteBatch);
+                item.Draw(spriteBatch, offset, viewDimensions, font);
             }
-        }
 
-        private void DrawElement(HUDElement element, SpriteBatch spriteBatch) {
-            var elemOff = offset;
-
-            elemOff += element.relativeAnchor * viewDimensions;
-            //TODO see https://stackoverflow.com/questions/10263734/how-to-align-text-drawn-by-spritebatch-drawstring
-            var position = new Vector2(element.relativePosition.X + elemOff.X, element.relativePosition.Y + elemOff.Y);
-            spriteBatch.DrawString(font, element.text,position,element.color,0,Vector2.Zero,element.scale,SpriteEffects.None,0);
-        }
+            spriteBatch.End();//Restore original spritebatch state
+            spriteBatch.Begin(transformMatrix: transformMatrix);
+        }       
     }
 
     public class HUDElement {
         public string text="";
         public Vector2 relativePosition;
         public Color color = Color.White;
-        public Vector2 relativeAnchor;
-        public float scale;
+        public Vector2 relativeAnchor = Vector2.Zero;
+        private const float defaultScale = 0.5f;//Base scaling applied
+        public float scale = 1.0f;
+        public Vector2 alignment = Vector2.Zero;
 
         public HUDElement()
         {
@@ -74,6 +77,21 @@ namespace Coursework
             this.color = color;
             this.relativeAnchor = relativeAnchor;
             this.scale = scale;
+        }
+
+        public void Draw(SpriteBatch spriteBatch, Vector2 offset, Vector2 viewDimensions,SpriteFont font) {
+            var elemOff = offset;
+
+            //Where to position text on screen
+            elemOff += relativeAnchor * viewDimensions;
+            var position = relativePosition + elemOff;//new Vector2(relativePosition.X + elemOff.X, relativePosition.Y + elemOff.Y);
+
+            var textDimensions = font.MeasureString(text);
+            var relativeOrigin = textDimensions * alignment;//Allow text to be centered, or aligned left/right etc
+
+            var finalScale = scale * defaultScale;
+
+            spriteBatch.DrawString(font, text, position, color, 0, relativeOrigin, finalScale, SpriteEffects.None, 0);
         }
     }
 }

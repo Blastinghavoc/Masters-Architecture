@@ -94,13 +94,24 @@ namespace Coursework.StateMachine.GameState
         public bool goToGame = false;
 
         HUDElement titleText;
+        HUDElement subtitleText;
 
         public override void InitHUD()
         {
             base.InitHUD();
-            titleText = new HUDElement("Hello World!",new Vector2(0,0));
-            titleText.relativeAnchor = new Vector2(0.5f, 0.5f);
+            titleText = new HUDElement("Explorer",new Vector2(0,-30));
+            titleText.relativeAnchor = new Vector2(0.5f, 0.5f);//Center of screen
+            titleText.alignment = new Vector2(0.5f, 0.5f);//Center text
+            titleText.scale = 2.0f;
+
+            //NOTE: for some reason spaces do not seem to get scaled correctly, so tabs are used instead
+            subtitleText = new HUDElement("press    enter    to   continue", new Vector2(0, 40));
+            subtitleText.relativeAnchor = new Vector2(0.5f, 0.5f);//Center of screen
+            subtitleText.alignment = new Vector2(0.5f, 0.5f);//Center text
+            subtitleText.scale = 1.0f;
+
             hudManager.AddElement(titleText);
+            hudManager.AddElement(subtitleText);
         }
 
         public override void OnEnter(object owner)
