@@ -207,15 +207,18 @@ namespace Coursework.Entities
         {
             animations = new Drawable[3];//idle, walk, jump
 
-            var frameDimensions = GameData.Instance.playerData.frameDimensions;
+            var animationData = GameData.Instance.playerData.walkAnimation;
+
+            var frameDimensions = animationData.frameDimensions;
             var texScale = width / (float)frameDimensions.X;
 
             string filePath = GameData.Instance.playerData.walkAnimationPath;
-            int numFrames = GameData.Instance.playerData.numWalkFrames;
+            int numFrames = animationData.numFrames;
             Texture2D[] frames = new Texture2D[numFrames];
+            string basePath = filePath + animationData.baseName;
             for (int i = 1; i <= numFrames; i++)
             {
-                string fileName = filePath;
+                string fileName = basePath;
                 if (i < 10)
                 {
                     fileName += "0";
@@ -224,7 +227,7 @@ namespace Coursework.Entities
                 frames[i - 1] = content.Load<Texture2D>(fileName);
             }
 
-            var frameTime = GameData.Instance.playerData.walkFrameTime;
+            var frameTime = animationData.frameDuration;
 
             var walkAnim = new MultiImageAnimation(frames, Position, frameDimensions.X, frameDimensions.Y,
                 numFrames, frameTime, Color.White, texScale, true);

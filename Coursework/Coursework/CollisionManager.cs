@@ -93,7 +93,7 @@ namespace Coursework
             }
         }
 
-        //Deal with collisions between player and level
+        //Deal with collisions between an object and level (based on Lab 2)
         private void UpdateObjectLevelCollisions(Level currentLevel, CollidableObject obj)
         {
             Vector2 tileDimensions = new Vector2(currentLevel.tileSize.X,currentLevel.tileSize.Y);

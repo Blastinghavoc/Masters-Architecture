@@ -85,7 +85,8 @@ namespace Coursework.Projectiles
         public void OnProjectileNonPlayerCollision(object sender, NonPlayerCollisionEventArgs e)
         {
             Projectile proj = e.collider as Projectile;
-            //TODO replace with firing projectile killed event if anything other than the projectile manager cares about projectile killed events
+
+            //NOTE: replace with firing projectile killed event if anything other than the projectile manager cares about projectile killed events
             killList.Add(proj);//Assuming all projectiles die on collision with anything
 
             Enemy enemy = e.colllidedWith as Enemy;

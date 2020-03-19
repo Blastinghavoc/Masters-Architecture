@@ -15,12 +15,10 @@ namespace Coursework.Serialization
     //Data used by the player
     public class PlayerData
     {
-        public string walkAnimationPath;
         public string idlePath;
         public string jumpPath;
-        public Point frameDimensions;
-        public int numWalkFrames;
-        public int walkFrameTime;
+        public string walkAnimationPath;
+        public AnimationData walkAnimation;
 
         public Vector2 inputScale;
         public Vector2 maxSpeed;
@@ -41,11 +39,12 @@ namespace Coursework.Serialization
         public string enemyFilePath;
         public string mapFilePath;
         public string startLevelName;
+        public int coinValue;
         [XmlArrayItem("spec")]
         public LevelEntitySpecification[] entitySpecifications;
     }
 
-    //Data specific to a level
+    //Data specific to a single level
     public class LevelData
     {
         public string mapName;
@@ -58,19 +57,11 @@ namespace Coursework.Serialization
     {
         public Color color;
         public string entityName;
-    }
-
-    public enum LevelEntityType
-    {
-        tile,
-        interactable,
-        enemy
-    }
+    }    
 
     public class LevelEntitySpecification
     {
         public string entityName;
-        public LevelEntityType entityType;
         public LevelEntityData entityData;
     }
 
@@ -99,12 +90,7 @@ namespace Coursework.Serialization
         public int health;
         public int damage;
         public AnimationData animationData;
-        public AppearanceData corpseData;
-    }
-
-    public class AppearanceData
-    {        
-        public string textureName;
+        public string corpseTextureName;
     }
 
     public class AnimationData

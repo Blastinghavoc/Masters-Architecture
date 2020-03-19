@@ -22,29 +22,20 @@ namespace Coursework
 
         ContentManager content;//The content specific to this level
 
-        Tile[,] tiles;//2D array of tiles
+        Tile[,] tiles;//2D array of tiles            
 
-        Dictionary<Color, Texture2D> tileSkins = new Dictionary<Color, Texture2D>();//Textures for each type of tile        
-        Dictionary<Color, Interactable> interactablePrefabs = new Dictionary<Color, Interactable>();//Prefabs for all non-enemy interactables
-        Dictionary<Color, Enemy> enemyPrefabs = new Dictionary<Color, Enemy>();//Enemies
-
-        Dictionary<Color, LevelEntitySpecification> colourBindings = new Dictionary<Color, LevelEntitySpecification>();
-
-        readonly float tileResolution = GameData.Instance.levelConstants.tileResolution;//Resolution of tile images
         readonly Vector2 tileTextureScale;
-        readonly Rectangle bounds;//Level bounds in world coordinates
+        public readonly Rectangle LevelBounds;//Level bounds in world coordinates
 
         public readonly string levelName;
         public readonly string nextLevelName;
 
-        public readonly Point tileSize = GameData.Instance.levelConstants.tileSize;
+        public readonly Point tileSize = GameData.Instance.levelConstants.tileSize;        
 
-        readonly string tileFilePath = GameData.Instance.levelConstants.tileFilePath;
-        readonly string itemFilePath = GameData.Instance.levelConstants.itemFilePath;
-        readonly string enemyFilePath = GameData.Instance.levelConstants.enemyFilePath;
-        readonly string mapFilePath = GameData.Instance.levelConstants.mapFilePath;
+        readonly int coinValue = GameData.Instance.levelConstants.coinValue;
 
-        public List<Interactable> Interactables { get; protected set; }
+        //List of all interactable objects in the level, including enemies
+        public List<Interactable> Interactables { get; protected set; } = new List<Interactable>();
         private List<Interactable> killList = new List<Interactable>();//List of interactables to be removed
 
         public Dictionary<EnemyType, Decal> CorpseSkins { get; private set; } = new Dictionary<EnemyType, Decal>();
@@ -53,31 +44,36 @@ namespace Coursework
 
         public Level(IServiceProvider provider, string contentRoot, string levelName, bool makeCurrent = true)
         {
+            //By default creating a new level makes it the current level.
             if (makeCurrent)
             {
-                Level.CurrentLevel = this;
+                CurrentLevel = this;
             }
 
             content = new ContentManager(provider, contentRoot);
-            Interactables = new List<Interactable>();
 
-            tileTextureScale = new Vector2(tileSize.X/tileResolution,tileSize.Y/tileResolution);
+            float tileResolution = GameData.Instance.levelConstants.tileResolution;//Resolution of tile images
+            tileTextureScale = tileSize.ToVector2() / tileResolution;
+
             this.levelName = levelName;
 
             var levelData = GameData.GetLevelData(levelName);
+
             nextLevelName = levelData.nextLevelName;
-            
+
+            Dictionary<Color, LevelEntitySpecification> colourBindings = new Dictionary<Color, LevelEntitySpecification>();
+
             //Initialise binding of colours to entity specifications for this level
             foreach (var item in levelData.bindings)
             {
                 colourBindings.Add(item.color, GameData.Instance.entitySpecificationMap[item.entityName]);
             }
 
-            LoadContent();
+            //Load all the relevant content to initialise the level
+            LoadContent(levelData.mapName,colourBindings);            
 
-            InitialiseFromMap(levelData.mapName);
-
-            bounds = new Rectangle(Point.Zero, new Point(tiles.GetLength(0)* tileSize.X, tiles.GetLength(1)* tileSize.Y));
+            //Initialise the level bounds
+            LevelBounds = new Rectangle(Point.Zero, new Point(tiles.GetLength(0)* tileSize.X, tiles.GetLength(1)* tileSize.Y));
 
             //Detect when the player starts colliding with level entities
             GameEventManager.Instance.OnPlayerCollisionEnter += OnPlayerCollisionEnter;
@@ -94,48 +90,45 @@ namespace Coursework
             }
             killList.Clear();
 
-            //Update all interactables (note that many of them have nothing to update)
+            //Update all interactables (note that for many of them this does nothing)
             foreach (var item in Interactables)
             {
                 item.Update(gameTime);
             }
         }
 
-        //Clamp the camera's position to be within level bounds
-        public void ConstrainCamera(Camera camera)
-        {
-            var visibleArea = camera.VisibleArea;
-
-            var halfWidth = visibleArea.Width / 2f;
-            var halfHeight = visibleArea.Height / 2f;
-
-            var adjustedX = MathHelper.Clamp(camera.Position.X, bounds.Left + halfWidth, bounds.Right - halfWidth);
-            var adjustedY = MathHelper.Clamp(camera.Position.Y, bounds.Top + halfHeight, bounds.Bottom - halfHeight);
-
-            camera.Position = new Vector2(adjustedX, adjustedY);
-        }
-
         /// <summary>
         /// Loads only the content that is actually used by this level, based on the colorbindings
         /// defined for this level in the relevant XML file
         /// </summary>
-        private void LoadContent()
+        private void LoadContent(string mapName,Dictionary<Color, LevelEntitySpecification> colourBindings)
         {
-            //Load resources based on colour bindings
+            //Create prefab dictionaries
+            Dictionary<Color, Tile> tilePrefabs = new Dictionary<Color, Tile>();//Prefabs for each type of tile     
+            Dictionary<Color, Interactable> interactablePrefabs = new Dictionary<Color, Interactable>();//Prefabs for all non-enemy interactables
+            Dictionary<Color, Enemy> enemyPrefabs = new Dictionary<Color, Enemy>();//Enemies
+
+            //Obtain file paths
+            string tileFilePath = GameData.Instance.levelConstants.tileFilePath;
+            string itemFilePath = GameData.Instance.levelConstants.itemFilePath;
+            string enemyFilePath = GameData.Instance.levelConstants.enemyFilePath;
+            string mapFilePath = GameData.Instance.levelConstants.mapFilePath;
+
+            //Load resources based on colour bindings to populate the prefabs
             foreach (var item in colourBindings)
             {
                 var spec = item.Value;
-                switch (spec.entityType)
+                switch (spec.entityData)
                 {
-                    case LevelEntityType.tile:
+                    case TileData t:
                         {
-                            var tileData = spec.entityData as TileData;
-                            tileSkins[item.Key] = content.Load<Texture2D>(tileFilePath + tileData.textureName);
+                            var tileData = t;
+                            tilePrefabs[item.Key] = new Tile(content.Load<Texture2D>(tileFilePath + tileData.textureName),tileData.collisionMode);
                         }
                         break;
-                    case LevelEntityType.interactable:
+                    case InteractableData i when i.interactableType != InteractableType.enemy:
                         {
-                            var interData = spec.entityData as InteractableData;
+                            var interData = i;
                             var tex = content.Load<Texture2D>(itemFilePath + interData.textureName);
                             Sprite sprite = new Sprite(tex, scaleForTexture(tex), Color.White);
                             Interactable newInteractable = new Interactable(sprite, Vector2.Zero);
@@ -143,10 +136,10 @@ namespace Coursework
                             interactablePrefabs[item.Key] = newInteractable;
                         }
                         break;
-                    case LevelEntityType.enemy:
+                    case EnemyData e:
                         {
-                            var enemyData = spec.entityData as EnemyData;
-                            var deadTex = content.Load<Texture2D>(enemyFilePath + enemyData.corpseData.textureName);
+                            var enemyData = e;
+                            var deadTex = content.Load<Texture2D>(enemyFilePath + enemyData.corpseTextureName);
                             CorpseSkins[enemyData.enemyType] = new Decal(deadTex, scaleForTexture(deadTex), Color.White);
 
                             var animData = enemyData.animationData;
@@ -168,12 +161,10 @@ namespace Coursework
                         break;
                 }
             }
-        }
 
-        private void InitialiseFromMap(string mapName)
-        {
-            Texture2D map = content.Load<Texture2D>(mapFilePath+mapName);     
-            
+            //Now that the prefabs are loaded, populate the level from the map file
+
+            Texture2D map = content.Load<Texture2D>(mapFilePath + mapName);
 
             int width = map.Width;
             int height = map.Height;
@@ -187,40 +178,40 @@ namespace Coursework
             {
                 for (int j = 0; j < height; j++)
                 {
-                    var colour= mapColours[i + j* width];
+                    var colour = mapColours[i + j * width];
                     if (colour == Color.Transparent)
                     {
                         continue;
                     }
 
                     LevelEntitySpecification spec;
-                    if (colourBindings.TryGetValue(colour,out spec))
+                    if (colourBindings.TryGetValue(colour, out spec))
                     {
-                        switch (spec.entityType)
+                        //Instantiate relevant prefab based on type of entity
+                        switch (spec.entityData)
                         {
-                            case LevelEntityType.tile:
+                            case TileData d:
                                 {
-                                    var tex = tileSkins[colour];
-                                    var tileData = spec.entityData as TileData;
-                                    tiles[i, j] = new Tile(tex, tileData.collisionMode);
+                                    var tile = tilePrefabs[colour];
+                                    tiles[i, j] = tile;
                                 }
                                 break;
-                            case LevelEntityType.interactable:
-                                {
-                                    var inter = interactablePrefabs[colour].Clone();
-                                    inter.SetPosition(GetWorldPosition(i, j));
-                                    Interactables.Add(inter);
-                                }
-                                break;
-                            case LevelEntityType.enemy:
+                            case EnemyData d:
                                 {
                                     var enemy = enemyPrefabs[colour];
                                     var offset = new Vector2(0, tileSize.Y - enemy.Appearance.Size.Y);
 
-                                    var newEnemy = enemy.Clone();
+                                    var newEnemy = enemy.Clone();//Prototype pattern
                                     newEnemy.SetPosition(GetWorldPosition(i, j) + offset);
 
                                     Interactables.Add(newEnemy);
+                                }
+                                break;
+                            case InteractableData d:
+                                {
+                                    var inter = interactablePrefabs[colour].Clone();//Prototype pattern
+                                    inter.SetPosition(GetWorldPosition(i, j));
+                                    Interactables.Add(inter);
                                 }
                                 break;
                             default:
@@ -229,7 +220,6 @@ namespace Coursework
                     }
                 }
             }
-
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -270,13 +260,8 @@ namespace Coursework
                 {
                     case InteractableType.coin:
                         {
-                            GameEventManager.Instance.AddScore(1);
+                            GameEventManager.Instance.AddScore(coinValue);//Picking up coins gains you score
                             killList.Add(interactable);//Schedule for deletion
-                        }
-                        break;
-                    case InteractableType.enemy:
-                        {
-                            //Do nothing, these collisions are handled by the player
                         }
                         break;
                     case InteractableType.nextLevel:
@@ -296,6 +281,7 @@ namespace Coursework
             }
         }
 
+        //When an enemy is killed, delete it and replace it with its corpse
         private void OnEnemyKilled(object sender,EnemyKilledEventArgs e)
         {
             Enemy enemy = e.enemy;
@@ -303,7 +289,7 @@ namespace Coursework
             Decal corpse;
             if (CorpseSkins.TryGetValue(enemy.enemyType,out corpse))
             {
-                corpse = corpse.Clone() as Decal;//New instance
+                corpse = corpse.Clone() as Decal;//New instance of the corpse decal
                 corpse.Effect = enemy.DirectionalEffect;
                 var offset = enemy.Appearance.Size - corpse.Size;
 

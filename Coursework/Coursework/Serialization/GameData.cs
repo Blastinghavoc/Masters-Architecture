@@ -18,6 +18,11 @@ namespace Coursework.Serialization
         public Dictionary<string, LevelEntitySpecification> entitySpecificationMap = new Dictionary<string, LevelEntitySpecification>();
 
         public static void Initialise() {
+            if (Instance != null)
+            {
+                throw new InvalidOperationException("Cannot initialise GameData, it is already initialised");
+            }
+
             StreamReader reader = new StreamReader("Content/XML/Config.xml");
             try
             {

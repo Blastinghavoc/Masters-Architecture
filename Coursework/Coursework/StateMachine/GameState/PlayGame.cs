@@ -105,7 +105,7 @@ namespace Coursework.StateMachine.GameState
 
             //Update camera
             owner.camera.Position = player.Position;
-            currentLevel.ConstrainCamera(owner.camera);
+            owner.camera.ConstrainToArea(currentLevel.LevelBounds);
         }
 
         private void SwitchToLevel(string levelName)

@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <GameData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <playerData>
-      <walkAnimationPath>PlatformerGraphicsDeluxe/Player/p1_walk/PNG/p1_walk</walkAnimationPath>
       <idlePath>PlatformerGraphicsDeluxe/Player/p1_stand</idlePath>
       <jumpPath>PlatformerGraphicsDeluxe/Player/p1_jump</jumpPath>
-      <frameDimensions>
-         <X>72</X>
-         <Y>97</Y>
-      </frameDimensions>
-      <numWalkFrames>11</numWalkFrames>
-      <walkFrameTime>100</walkFrameTime>
+      <walkAnimationPath>PlatformerGraphicsDeluxe/Player/p1_walk/PNG/</walkAnimationPath>
+      <walkAnimation>
+         <baseName>p1_walk</baseName>
+         <frameDimensions>
+            <X>72</X>
+            <Y>97</Y>
+         </frameDimensions>
+         <numFrames>11</numFrames>
+         <frameDuration>100</frameDuration>
+      </walkAnimation>
       <inputScale>
          <X>800</X>
          <Y>19600</Y>
@@ -37,10 +40,10 @@
       <enemyFilePath>PlatformerGraphicsDeluxe/Enemies/</enemyFilePath>
       <mapFilePath>Maps/</mapFilePath>
       <startLevelName>Level1</startLevelName>
+      <coinValue>1</coinValue>
       <entitySpecifications>
          <spec>
             <entityName>GrassTile</entityName>
-            <entityType>tile</entityType>
             <entityData xsi:type="TileData">
                <textureName>grassMid</textureName>
                <collisionMode>solid</collisionMode>
@@ -48,7 +51,6 @@
          </spec>
          <spec>
             <entityName>SnowTile</entityName>
-            <entityType>tile</entityType>
             <entityData xsi:type="TileData">
                <textureName>snowMid</textureName>
                <collisionMode>solid</collisionMode>
@@ -56,7 +58,6 @@
          </spec>
          <spec>
             <entityName>DoorTopTile</entityName>
-            <entityType>tile</entityType>
             <entityData xsi:type="TileData">
                <textureName>door_openTop</textureName>
                <collisionMode>empty</collisionMode>
@@ -64,7 +65,6 @@
          </spec>
          <spec>
             <entityName>GoldCoin</entityName>
-            <entityType>interactable</entityType>
             <entityData xsi:type="InteractableData">
                <textureName>coinGold</textureName>
                <interactableType>coin</interactableType>
@@ -72,7 +72,6 @@
          </spec>
          <spec>
             <entityName>Door</entityName>
-            <entityType>interactable</entityType>
             <entityData xsi:type="InteractableData">
                <textureName>door_openMid</textureName>
                <interactableType>nextLevel</interactableType>
@@ -80,7 +79,6 @@
          </spec>
          <spec>
             <entityName>FireballPickup</entityName>
-            <entityType>interactable</entityType>
             <entityData xsi:type="InteractableData">
                <textureName>boxItem</textureName>
                <interactableType>powerup_fireball</interactableType>
@@ -88,7 +86,6 @@
          </spec>
          <spec>
             <entityName>Slime</entityName>
-            <entityType>enemy</entityType>
             <entityData xsi:type="EnemyData">
                <enemyType>slime</enemyType>
                <health>1</health>
@@ -102,14 +99,11 @@
                   <numFrames>2</numFrames>
                   <frameDuration>500</frameDuration>
                </animationData>
-               <corpseData>
-                  <textureName>slimeDead</textureName>
-               </corpseData>
+               <corpseTextureName>slimeDead</corpseTextureName>
             </entityData>
          </spec>
          <spec>
             <entityName>Fly</entityName>
-            <entityType>enemy</entityType>
             <entityData xsi:type="EnemyData">
                <enemyType>fly</enemyType>
                <health>1</health>
@@ -123,9 +117,7 @@
                   <numFrames>2</numFrames>
                   <frameDuration>100</frameDuration>
                </animationData>
-               <corpseData>
-                  <textureName>flyDead</textureName>
-               </corpseData>
+               <corpseTextureName>flyDead</corpseTextureName>
             </entityData>
          </spec>
       </entitySpecifications>

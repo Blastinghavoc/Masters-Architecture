@@ -59,7 +59,7 @@ namespace Coursework
 
             GameStateMachine = new FSM();
             //NOTE spacing doesn't seem to scale correctly, so tabs are used.
-            TextScreen startScreenState = new TextScreen(this,"Explorer","Press    enter    to    continue",Keys.Enter);
+            TextScreen startScreenState = new StartScreen(this,"Explorer","Press    enter    to    continue",Keys.Enter);
             startScreenState.Name = "Start";
 
             PlayGame playGameState = new PlayGame(this);

@@ -79,5 +79,16 @@ namespace Coursework
         public Point ScreenToWorldPoint(Point screenPoint) {
             return screenPoint + new Point(VisibleArea.Left, VisibleArea.Top);
         }
+
+        //Clamps the camera's view to be within the given bounds
+        public void ConstrainToArea(Rectangle bounds) {
+            var halfWidth = VisibleArea.Width / 2f;
+            var halfHeight = VisibleArea.Height / 2f;
+
+            var adjustedX = MathHelper.Clamp(Position.X, bounds.Left + halfWidth, bounds.Right - halfWidth);
+            var adjustedY = MathHelper.Clamp(Position.Y, bounds.Top + halfHeight, bounds.Bottom - halfHeight);
+
+            Position = new Vector2(adjustedX, adjustedY);
+        }
     }
 }

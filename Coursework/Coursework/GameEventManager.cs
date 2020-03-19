@@ -73,7 +73,7 @@ namespace Coursework
         }
 
         //Fire player collision events
-        public void PlayerCollision(Player player, Object collidedWith, Vector2 collisionDepth,CollisionType collisionType= CollisionType.stay)
+        public void PlayerCollision(Player player, object collidedWith, Vector2 collisionDepth,CollisionType collisionType= CollisionType.stay)
         {
             //Always fires if there is a collision happening
             if (collisionType != CollisionType.exit)
@@ -90,7 +90,8 @@ namespace Coursework
             //TODO collision exit if necessary
         }
 
-        public void NonPlayerCollision(CollidableObject obj, Object collidedWith, Vector2 collisionDepth, CollisionType collisionType = CollisionType.stay)
+        //A collision event between two non-player entities has occured
+        public void NonPlayerCollision(CollidableObject obj, object collidedWith, Vector2 collisionDepth, CollisionType collisionType = CollisionType.stay)
         {
             //Always fires if there is a collision happening
             if (collisionType != CollisionType.exit)
