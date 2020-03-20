@@ -22,11 +22,12 @@ namespace Coursework
         public event EventHandler<EventArgs> OnPlayerDied = delegate { };
         public event EventHandler<ProjectileLaunchEventArgs> OnLaunchProjectile = delegate { };
         public event EventHandler<ProjectileKilledEventArgs> OnProjectileKilled = delegate { };
-
         //Anything other than the player collides with something (i.e, neither entity involved in the collision was the player)
         public event EventHandler<NonPlayerCollisionEventArgs> OnNonPlayerCollision = delegate { };
         //As above, but specifically when a projectile collides with something
         public event EventHandler<NonPlayerCollisionEventArgs> OnProjectileNonPlayerCollision = delegate { };
+
+        public event EventHandler<PlayerUseWeaponEventArgs>OnPlayerAttemptToUseWeapon = delegate { };
 
         private int prevScore = 0;
         public int score { get; private set; } = 0;
@@ -63,13 +64,17 @@ namespace Coursework
             OnEnemyKilled?.Invoke(this, new EnemyKilledEventArgs(enemy));
         }
 
-        public void LaunchProjectile(ProjectileType type, Vector2 launchPosition, Point target,bool isEnemy)
+        public void LaunchProjectile(ProjectileType type, Vector2 launchPosition, Vector2 target,bool isEnemy)
         {
             OnLaunchProjectile?.Invoke(this, new ProjectileLaunchEventArgs(type, launchPosition, target,isEnemy));
         }
 
         public void KilledProjectile(Projectile p) {
             OnProjectileKilled?.Invoke(this, new ProjectileKilledEventArgs(p));
+        }
+
+        public void PlayerAttemptToFireWeapon(Player player, Vector2 targetLocation) {
+            OnPlayerAttemptToUseWeapon?.Invoke(this, new PlayerUseWeaponEventArgs(targetLocation, player));
         }
 
         //Fire player collision events
@@ -111,6 +116,17 @@ namespace Coursework
         }
     }
 
+    class PlayerUseWeaponEventArgs {
+        public Vector2 targetWorldPosition;
+        public Player player;
+
+        public PlayerUseWeaponEventArgs(Vector2 targetWorldPosition, Player player)
+        {
+            this.targetWorldPosition = targetWorldPosition;
+            this.player = player;
+        }
+    }
+
     class NonPlayerCollisionEventArgs
     {
         public CollidableObject collider;
@@ -139,10 +155,10 @@ namespace Coursework
     class ProjectileLaunchEventArgs {
         public ProjectileType projectileType;
         public Vector2 launchPosition;
-        public Point worldPointTarget;
+        public Vector2 worldPointTarget;
         public bool isEnemy;
 
-        public ProjectileLaunchEventArgs(ProjectileType projectileType, Vector2 launchPosition, Point worldPointTarget, bool isEnemy)
+        public ProjectileLaunchEventArgs(ProjectileType projectileType, Vector2 launchPosition, Vector2 worldPointTarget, bool isEnemy)
         {
             this.projectileType = projectileType;
             this.launchPosition = launchPosition;

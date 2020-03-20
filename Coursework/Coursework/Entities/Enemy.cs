@@ -55,11 +55,6 @@ namespace Coursework.Entities
             base.Draw(spriteBatch, effect);
         }
 
-        public void SetPosition(Vector2 pos)
-        {
-            Position = pos;
-        }
-
         public new Enemy Clone()
         {
             var tmp = this.MemberwiseClone() as Enemy;

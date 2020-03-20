@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Coursework.Entities
 {
 
-    class CollidableObject: GameObject
+    public class CollidableObject: GameObject
     {
         //Override property so that setting the position automatically updates the bounds
         public override Vector2 Position { get => base.Position; protected set { base.Position = value; UpdateBounds(); } }

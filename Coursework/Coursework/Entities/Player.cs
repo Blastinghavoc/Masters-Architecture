@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,10 +9,11 @@ using Coursework.Graphics;
 using Coursework.StateMachine;
 using Coursework.StateMachine.Player;
 using Coursework.Serialization;
+using Coursework.Powerups;
 
 namespace Coursework.Entities
 {
-    class Player : PhysicsObject, IDisposable
+    public class Player : PhysicsObject, EventSubscriber
     {
         private Drawable currentAnimation;
         private Drawable[] animations;
@@ -29,7 +29,6 @@ namespace Coursework.Entities
         private bool isJumping = false;//Used for animation purposes
         private readonly int maxJumps = GameData.Instance.playerData.maxJumps;
         private int jumpsRemaining = GameData.Instance.playerData.maxJumps;
-        private bool isGrounded = false;
         //Based on variable of same name in platformer example, this is used to detect when the player is grounded
         private int bottomAtLastUpdate = 0;
         private bool CanJump { get { return jumpsRemaining > 0; } }
@@ -37,7 +36,7 @@ namespace Coursework.Entities
         //FSM based animation control
         private FSM animator;
 
-        //Manages the lifetime of powerups on the player
+        //Manages the lifetime and effect of powerups on the player
         private PowerupManager powerupManager = new PowerupManager();
 
         public int Health { get; private set; } = GameData.Instance.playerData.startHealth;
@@ -58,8 +57,7 @@ namespace Coursework.Entities
             //Update collision bounds based on visible size
             UpdateBounds(Position, width, (int)(currentAnimation.Size.Y));
 
-            GameEventManager.Instance.OnPlayerColliding += WhileColliding;
-            GameEventManager.Instance.OnPlayerCollisionEnter += OnCollisionEnter;
+            BindEvents();
         }
 
         //Completely resets the player, health, position, velocity etc
@@ -71,7 +69,6 @@ namespace Coursework.Entities
             GameEventManager.Instance.PlayerHealthChanged(this);
             isJumping = false;
             jumpsRemaining = maxJumps; 
-            isGrounded = false;
             Velocity = Vector2.Zero;
             directionalEffect = SpriteEffects.None;
             powerupManager.Reset();
@@ -104,11 +101,9 @@ namespace Coursework.Entities
         public override void Draw(SpriteBatch spriteBatch, SpriteEffects effect = SpriteEffects.None)
         {
             var defaultColor = currentAnimation.color;
+
             //Apply special effect color
-            if (powerupManager.IsPowerupActive(PowerupManager.powerUpType.fireball))
-            {
-                currentAnimation.color = Color.Orange;
-            }
+            currentAnimation.color = powerupManager.GetCumulativeEffectColour();
 
             currentAnimation.Draw(spriteBatch,effect | directionalEffect);
 
@@ -129,7 +124,6 @@ namespace Coursework.Entities
                 //Collided from above something
                 if (absCollY < absCollX && e.collisionDepth.Y < 0 && bottomAtLastUpdate >= tile.bounds.Top)
                 {
-                    isGrounded = true;
                     jumpsRemaining = maxJumps;
                 }                
 
@@ -156,18 +150,13 @@ namespace Coursework.Entities
                 {
                     TakeDamage(enemy.Damage);
                 }
-                return;
             }
+        }
 
-            Interactable interact = e.colllidedWith as Interactable;
-            if (interact != null)
-            {
-                if (interact.interactableType == InteractableType.powerup_fireball)
-                {
-                    powerupManager.AddPowerup(PowerupManager.powerUpType.fireball, 10);
-                }
-                return;
-            }
+        //Attempt to use weapon(s). Actual weapon code is decoupled from player
+        public void AttemptToUseWeapon(Point location) {
+            var worldPoint = Camera.mainCamera.ScreenToWorldPoint(location);
+            GameEventManager.Instance.PlayerAttemptToFireWeapon(this, worldPoint.ToVector2());
         }
 
         public void TakeDamage(int amount)
@@ -260,12 +249,23 @@ namespace Coursework.Entities
             }
         }
 
-        public void Dispose()
+        public void BindEvents()
         {
-            content.Unload();
-            //Unsubscribe from events
+            GameEventManager.Instance.OnPlayerColliding += WhileColliding;
+            GameEventManager.Instance.OnPlayerCollisionEnter += OnCollisionEnter;
+        }
+
+        public void UnbindEvents()
+        {            
             GameEventManager.Instance.OnPlayerColliding -= WhileColliding;
             GameEventManager.Instance.OnPlayerCollisionEnter -= OnCollisionEnter;
+        }
+
+        public void Dispose()
+        {
+            powerupManager.Dispose();
+            content.Unload();
+            UnbindEvents();
         }
 
         public void LeftHeld()
@@ -284,7 +284,6 @@ namespace Coursework.Entities
             {
                 inputForce -= Vector2.UnitY;//Subtraction because Y axis points down
                 isJumping = true;
-                isGrounded = false;
                 --jumpsRemaining;
             }
         }
@@ -292,57 +291,7 @@ namespace Coursework.Entities
         public void Crouch()
         {
             //Currently does nothing, TODO implement platforms that you crouch to go down through?
-        }
+        }                
 
-        //When the mouse button is clicked, shoot a fireball if the player has the appropriate powerup
-        public void OnMouseButtonDown(Point location)
-        {
-            if (powerupManager.IsPowerupActive(PowerupManager.powerUpType.fireball))
-            {
-                var worldPoint = Camera.mainCamera.ScreenToWorldPoint(location);
-                GameEventManager.Instance.LaunchProjectile(Projectiles.ProjectileType.fireball,Position, worldPoint, false);
-            }
-        }
-
-
-        private class PowerupManager {
-            public enum powerUpType {
-                fireball
-            }
-
-            //Active powerups, and their remaining time
-            private Dictionary<powerUpType, float> activePowerups = new Dictionary<powerUpType, float>();
-
-            public void Update(GameTime gameTime) {
-                float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
-
-                List<powerUpType> keys = new List<powerUpType>(activePowerups.Keys);
-                //Update time remaining for each powerup
-                foreach (var key in keys)
-                {
-                    var timeLeft = activePowerups[key];
-                    timeLeft -= dt;
-                    if (timeLeft <= 0)
-                    {
-                        activePowerups.Remove(key);
-                    }
-                    else {
-                        activePowerups[key] = timeLeft;
-                    }
-                }
-            }
-
-            public void AddPowerup(powerUpType type, float duration = 5) {
-                activePowerups[type] = duration;
-            }
-
-            public bool IsPowerupActive(powerUpType type) {
-                return activePowerups.ContainsKey(type);
-            }
-
-            public void Reset() {
-                activePowerups.Clear();
-            }
-        }
     }
 }

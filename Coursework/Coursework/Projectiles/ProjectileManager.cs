@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Coursework.Projectiles
 {
-    class ProjectileManager: IDisposable
+    class ProjectileManager: EventSubscriber
     {
         public List<Projectile> ActiveProjectiles { get; protected set; } = new List<Projectile>();
         private List<Projectile> killList = new List<Projectile>();
@@ -23,9 +23,7 @@ namespace Coursework.Projectiles
         public ProjectileManager(IServiceProvider provider, string contentRoot)
         {
             content = new ContentManager(provider, contentRoot);
-            GameEventManager.Instance.OnLaunchProjectile += OnLaunchProjectile;
-            GameEventManager.Instance.OnProjectileKilled += OnProjectileKilled;
-            GameEventManager.Instance.OnProjectileNonPlayerCollision += OnProjectileNonPlayerCollision;
+            BindEvents();
             LoadContent();
         }
 
@@ -70,7 +68,7 @@ namespace Coursework.Projectiles
             {
                 var newProj = prefab.Clone();
                 newProj.SetPosition(e.launchPosition);
-                Vector2 direction = Vector2.Normalize(e.worldPointTarget.ToVector2() - e.launchPosition);
+                Vector2 direction = Vector2.Normalize(e.worldPointTarget - e.launchPosition);
                 newProj.SetAffiliation(e.isEnemy);
                 newProj.SetDirection(direction);
                 ActiveProjectiles.Add(newProj);
@@ -96,12 +94,24 @@ namespace Coursework.Projectiles
             }
         }
 
-        public void Dispose()
+        public void BindEvents()
         {
-            content.Unload();
+            GameEventManager.Instance.OnLaunchProjectile += OnLaunchProjectile;
+            GameEventManager.Instance.OnProjectileKilled += OnProjectileKilled;
+            GameEventManager.Instance.OnProjectileNonPlayerCollision += OnProjectileNonPlayerCollision;
+        }
+
+        public void UnbindEvents()
+        {
             GameEventManager.Instance.OnLaunchProjectile -= OnLaunchProjectile;
             GameEventManager.Instance.OnProjectileKilled -= OnProjectileKilled;
             GameEventManager.Instance.OnProjectileNonPlayerCollision -= OnProjectileNonPlayerCollision;
+        }
+
+        public void Dispose()
+        {
+            content.Unload();
+            UnbindEvents();
         }
     }
 }

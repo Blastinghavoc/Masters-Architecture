@@ -12,7 +12,7 @@ namespace Coursework.Entities
     /// <summary>
     /// Represents a 2D game object
     /// </summary>
-    abstract class GameObject
+    public abstract class GameObject
     {
         public virtual Vector2 Position { get; protected set; }
         public Vector2 Velocity { get; protected set; }

@@ -67,7 +67,7 @@ namespace Coursework.StateMachine.GameState
             keybindingManager.BindKeyEvent(Keys.Space, InputState.down, player.Jump);
             keybindingManager.BindKeyEvent(Keys.S, InputState.held, player.Crouch);
 
-            keybindingManager.BindPointerEvent(MouseButton.left, InputState.down, player.OnMouseButtonDown);
+            keybindingManager.BindPointerEvent(MouseButton.left, InputState.down, player.AttemptToUseWeapon);
         }
 
         public override void LoadContent()

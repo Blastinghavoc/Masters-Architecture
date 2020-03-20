@@ -63,7 +63,11 @@
     <Compile Include="Entities\Enemy.cs" />
     <Compile Include="Entities\Interactable.cs" />
     <Compile Include="Entities\PhysicsObject.cs" />
+    <Compile Include="Powerups\FireballEffect.cs" />
+    <Compile Include="Powerups\PowerupEffect.cs" />
+    <Compile Include="Powerups\PowerupManager.cs" />
     <Compile Include="Entities\RectangleExtensions.cs" />
+    <Compile Include="EventSubscriber.cs" />
     <Compile Include="Graphics\AbstractAnimation.cs" />
     <Compile Include="Graphics\Background.cs" />
     <Compile Include="Graphics\Decal.cs" />

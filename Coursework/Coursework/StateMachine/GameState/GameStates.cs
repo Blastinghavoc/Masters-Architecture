@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Input;
 namespace Coursework.StateMachine.GameState
 {
     //Represents states of the whole game (title screen, gameplay, end screen)
-    abstract class GameState : State
+    abstract class GameState : State, EventSubscriber
     {
         protected Game1 owner;
         protected GameEventManager eventManager;
@@ -40,7 +40,7 @@ namespace Coursework.StateMachine.GameState
 
         public override void OnExit(object owner)
         {
-            UnloadContent();
+            Dispose();
         }
 
         public virtual void LoadContent() {
@@ -49,8 +49,8 @@ namespace Coursework.StateMachine.GameState
             BindEvents();
         }
 
-        public abstract void BindEvents();
-        public abstract void UnbindEvents();
+        public virtual void BindEvents() { }
+        public virtual void UnbindEvents() { }
 
         public virtual void InitHUD()
         {
@@ -89,6 +89,10 @@ namespace Coursework.StateMachine.GameState
         //Equivalent to Game.Update
         public abstract void Update(GameTime gameTime);
 
+        public void Dispose()
+        {
+            UnloadContent();
+        }
     }
 
     //A text-only screen with a single transition out of it
@@ -141,14 +145,6 @@ namespace Coursework.StateMachine.GameState
         private void Done()
         {
             done = true;
-        }
-
-        public override void BindEvents()
-        {
-        }
-
-        public override void UnbindEvents()
-        {
         }
 
         public override void Update(GameTime gameTime)

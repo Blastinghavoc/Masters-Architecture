@@ -16,7 +16,7 @@ namespace Coursework
     /// Class representing a whole level in the game, based on class of same name in 
     /// the platformer demo (lab2)
     /// </summary>
-    class Level: IDisposable
+    class Level: EventSubscriber
     {
         public static Level CurrentLevel;//The currently active level. NOTE not a singleton class, but only one level can be active at once
 
@@ -79,10 +79,7 @@ namespace Coursework
             //Initialise the level bounds
             LevelBounds = new Rectangle(Point.Zero, new Point(tiles.GetLength(0)* tileSize.X, tiles.GetLength(1)* tileSize.Y));
 
-            //Detect when the player starts colliding with level entities
-            GameEventManager.Instance.OnPlayerCollisionEnter += OnPlayerCollisionEnter;
-            //Detect death of an enemy
-            GameEventManager.Instance.OnEnemyKilled += OnEnemyKilled;
+            BindEvents();
         }
 
         public void Update(GameTime gameTime)
@@ -360,11 +357,25 @@ namespace Coursework
             return new Point(i, j);
         }
 
-        public void Dispose()
+        public void BindEvents()
         {
-            content.Unload();
+            //Detect when the player starts colliding with level entities
+            GameEventManager.Instance.OnPlayerCollisionEnter += OnPlayerCollisionEnter;
+            //Detect death of an enemy
+            GameEventManager.Instance.OnEnemyKilled += OnEnemyKilled;
+        }
+
+        public void UnbindEvents()
+        {
             GameEventManager.Instance.OnPlayerCollisionEnter -= OnPlayerCollisionEnter;
             GameEventManager.Instance.OnEnemyKilled -= OnEnemyKilled;
         }
+
+        public void Dispose()
+        {
+            content.Unload();
+            UnbindEvents();
+        }
+
     }
 }

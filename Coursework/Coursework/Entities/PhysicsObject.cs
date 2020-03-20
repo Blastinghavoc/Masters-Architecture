@@ -11,7 +11,7 @@ namespace Coursework.Entities
     /// A physics object updates its position based on physics equations
     /// and forces acting on it.
     /// </summary>
-    class PhysicsObject:CollidableObject
+    public class PhysicsObject:CollidableObject
     {
         protected Vector2 Force { get; set; }//Force currently being applied to the object
 
