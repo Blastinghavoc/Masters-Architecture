@@ -21,13 +21,10 @@ namespace Coursework
         public SpriteFont font;
         public Camera camera;
 
-        //Player player;
-        //Level currentLevel;
-        //CollisionManager collisionManager;
-        //KeybindingManager keybindingManager;
-        //HUDManager hudManager;
+        public Graphics.Background background;
+        public Texture2D defaultBackgroundTex;
+
         GameEventManager eventManager;
-        //ProjectileManager projectileManager;
 
         FSM GameStateMachine;
 
@@ -55,7 +52,11 @@ namespace Coursework
 
             camera = new Camera(graphics.GraphicsDevice.Viewport);
             camera.Position = new Vector2(0, 0);
-            Camera.mainCamera = camera;          
+            Camera.mainCamera = camera;
+
+            //Default background
+            defaultBackgroundTex = Content.Load<Texture2D>("PlatformerGraphicsDeluxe/Backgrounds/bg");
+            background = new Graphics.Background(defaultBackgroundTex, Vector2.One, Color.White);
 
             GameStateMachine = new FSM();
             //NOTE spacing doesn't seem to scale correctly, so tabs are used.
@@ -126,12 +127,12 @@ namespace Coursework
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin(transformMatrix: camera.Transform);
+            spriteBatch.Begin(transformMatrix: camera.Transform);            
 
             var gameState = GameStateMachine.CurrentState as GameState;
             if (gameState != null)
             {
-                gameState.Draw(gameTime, spriteBatch);
+                gameState.Draw(gameTime, spriteBatch);                
             }
 
             spriteBatch.End();

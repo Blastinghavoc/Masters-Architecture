@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Coursework.Graphics
 {
     //A drawable entity that can have its position updated.
-    interface Drawable
+    public interface Drawable
     {
         void Update(GameTime gameTime);
         void Update(GameTime gameTime, Vector2 position);

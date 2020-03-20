@@ -77,7 +77,7 @@ namespace Coursework.StateMachine.GameState
 
             player = new Entities.Player(Services, Content.RootDirectory);
 
-            currentLevel = new Level(Services, Content.RootDirectory, GameData.Instance.levelConstants.startLevelName);
+            currentLevel = new Level(Services, Content.RootDirectory, GameData.Instance.levelConstants.startLevelName,background);
 
             projectileManager = new ProjectileManager(Services, Content.RootDirectory);
 
@@ -87,6 +87,9 @@ namespace Coursework.StateMachine.GameState
 
         public override void UnloadContent()
         {
+            //Reset background texture
+            background.SetTexture(owner.defaultBackgroundTex);
+            //Dispose of all content
             player.Dispose();
             currentLevel.Dispose();
             projectileManager.Dispose();
@@ -111,7 +114,7 @@ namespace Coursework.StateMachine.GameState
         private void SwitchToLevel(string levelName)
         {
             currentLevel.Dispose();
-            currentLevel = new Level(owner.Services, owner.Content.RootDirectory, levelName);
+            currentLevel = new Level(owner.Services, owner.Content.RootDirectory, levelName,background);
             player.SetPosition(Vector2.Zero);
         }
 

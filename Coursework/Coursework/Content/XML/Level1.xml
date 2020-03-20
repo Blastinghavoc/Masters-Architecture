@@ -2,6 +2,7 @@
 <LevelData>
     <mapName>map0</mapName>
     <nextLevelName>Level2</nextLevelName>
+    <backgroundPath>PlatformerGraphicsDeluxe/Backgrounds/bg_sky</backgroundPath>
     <bindings>
         <bind>
             <color>

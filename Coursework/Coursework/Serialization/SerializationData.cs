@@ -49,6 +49,7 @@ namespace Coursework.Serialization
     {
         public string mapName;
         public string nextLevelName;
+        public string backgroundPath;
         [XmlArrayItem("bind")]
         public ColorBinding[] bindings;
     }

@@ -2,6 +2,7 @@
 <LevelData>
     <mapName>small</mapName>
     <nextLevelName></nextLevelName>
+    <backgroundPath>PlatformerGraphicsDeluxe/Backgrounds/bg_castle</backgroundPath>
     <bindings>
         <bind>
             <color>

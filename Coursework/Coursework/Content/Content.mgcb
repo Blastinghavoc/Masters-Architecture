@@ -44,7 +44,7 @@
 /processorParam:TextureFormat=Color
 /build:Maps/small.png
 
-#begin PlatformerGraphicsDeluxe/bg.png
+#begin PlatformerGraphicsDeluxe/Backgrounds/bg.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -54,9 +54,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:PlatformerGraphicsDeluxe/bg.png
+/build:PlatformerGraphicsDeluxe/Backgrounds/bg.png
 
-#begin PlatformerGraphicsDeluxe/bg_castle.png
+#begin PlatformerGraphicsDeluxe/Backgrounds/bg_castle.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -66,7 +66,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:PlatformerGraphicsDeluxe/bg_castle.png
+/build:PlatformerGraphicsDeluxe/Backgrounds/bg_castle.png
+
+#begin PlatformerGraphicsDeluxe/Backgrounds/bg_sky.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlatformerGraphicsDeluxe/Backgrounds/bg_sky.png
 
 #begin PlatformerGraphicsDeluxe/Enemies/blockerBody.png
 /importer:TextureImporter

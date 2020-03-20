@@ -40,16 +40,15 @@ namespace Coursework
         {
             //Use a separate sprite batch with Point sampling to avoid blurry text.
             //Based on advice from http://community.monogame.net/t/how-to-change-spritefont-sizes-without-anit-aliasing/9514
-            spriteBatch.End();
-            spriteBatch.Begin(transformMatrix: transformMatrix, samplerState: SamplerState.PointWrap);
+            var myBatch = new SpriteBatch(spriteBatch.GraphicsDevice);
+            myBatch.Begin(transformMatrix: transformMatrix, samplerState: SamplerState.PointWrap);
             
             foreach (var item in elements)
             {
-                item.Draw(spriteBatch, offset, viewDimensions, font);
+                item.Draw(myBatch, offset, viewDimensions, font);
             }
 
-            spriteBatch.End();//Restore original spritebatch state
-            spriteBatch.Begin(transformMatrix: transformMatrix);
+            myBatch.End();            
         }       
     }
 

@@ -64,6 +64,7 @@
     <Compile Include="Entities\Interactable.cs" />
     <Compile Include="Entities\RectangleExtensions.cs" />
     <Compile Include="Graphics\AbstractAnimation.cs" />
+    <Compile Include="Graphics\Background.cs" />
     <Compile Include="Graphics\Decal.cs" />
     <Compile Include="Graphics\Drawable.cs" />
     <Compile Include="Graphics\MultiImageAnimation.cs" />

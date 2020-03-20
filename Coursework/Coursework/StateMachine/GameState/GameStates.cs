@@ -16,9 +16,11 @@ namespace Coursework.StateMachine.GameState
     {
         protected Game1 owner;
         protected GameEventManager eventManager;
+        protected Graphics.Background background;
         public GameState(Game1 owner) {
             this.owner = owner;
             eventManager = GameEventManager.Instance;
+            background = owner.background;
         }
 
         protected KeybindingManager keybindingManager;
@@ -31,8 +33,9 @@ namespace Coursework.StateMachine.GameState
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            background.Draw(spriteBatch);
             //Draw hud
-            hudManager.Draw(spriteBatch);
+            hudManager.Draw(spriteBatch);            
         }
 
         public override void OnExit(object owner)
@@ -68,7 +71,9 @@ namespace Coursework.StateMachine.GameState
         }
 
         private void PostUpdate(GameTime gameTime) {
+            //Update camera and background
             owner.camera.Update(owner.graphics.GraphicsDevice.Viewport);
+            background.SetPosition(owner.camera.Position);
 
             //Update HUD
             hudManager.Update(gameTime, owner.camera);

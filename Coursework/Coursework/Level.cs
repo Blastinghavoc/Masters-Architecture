@@ -42,7 +42,7 @@ namespace Coursework
         private List<Decal> corpses = new List<Decal>();
 
 
-        public Level(IServiceProvider provider, string contentRoot, string levelName, bool makeCurrent = true)
+        public Level(IServiceProvider provider, string contentRoot, string levelName,Background background, bool makeCurrent = true)
         {
             //By default creating a new level makes it the current level.
             if (makeCurrent)
@@ -70,7 +70,11 @@ namespace Coursework
             }
 
             //Load all the relevant content to initialise the level
-            LoadContent(levelData.mapName,colourBindings);            
+            LoadContent(levelData.mapName,colourBindings);
+
+            //Load the background texture for this level and apply it
+            Texture2D bgTex = content.Load<Texture2D>(levelData.backgroundPath);
+            background.SetTexture(bgTex);
 
             //Initialise the level bounds
             LevelBounds = new Rectangle(Point.Zero, new Point(tiles.GetLength(0)* tileSize.X, tiles.GetLength(1)* tileSize.Y));
