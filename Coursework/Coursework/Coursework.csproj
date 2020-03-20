@@ -62,6 +62,7 @@
     <Compile Include="Entities\CollidableObject.cs" />
     <Compile Include="Entities\Enemy.cs" />
     <Compile Include="Entities\Interactable.cs" />
+    <Compile Include="Entities\PhysicsObject.cs" />
     <Compile Include="Entities\RectangleExtensions.cs" />
     <Compile Include="Graphics\AbstractAnimation.cs" />
     <Compile Include="Graphics\Background.cs" />

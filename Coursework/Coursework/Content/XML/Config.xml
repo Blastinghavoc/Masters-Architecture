@@ -17,10 +17,7 @@
          <X>800</X>
          <Y>19600</Y>
       </inputScale>
-      <maxSpeed>
-         <X>500</X>
-         <Y>500</Y>
-      </maxSpeed>      
+      <maxSpeed>500</maxSpeed>      
       <dragFactor>
          <X>0.9</X>
          <Y>1</Y>

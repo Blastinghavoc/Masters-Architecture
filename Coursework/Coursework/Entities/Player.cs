@@ -13,7 +13,7 @@ using Coursework.Serialization;
 
 namespace Coursework.Entities
 {
-    class Player : CollidableObject, IDisposable
+    class Player : PhysicsObject, IDisposable
     {
         private Drawable currentAnimation;
         private Drawable[] animations;
@@ -23,11 +23,8 @@ namespace Coursework.Entities
 
         private ContentManager content;//Player currently manages own content, as this persists between levels
 
-        private Vector2 inputForce;//"Force" currently being applied to the player by user input
+        private Vector2 inputForce = Vector2.Zero;//Force currently aplied by user input
         private readonly Vector2 inputScale = GameData.Instance.playerData.inputScale;//Amount by which to scale input forces in each axis
-        private readonly Vector2 maxSpeed = GameData.Instance.playerData.maxSpeed;
-        private readonly Vector2 dragFactor = GameData.Instance.playerData.dragFactor;//No vertical drag
-        private readonly float gravity = GameData.Instance.playerData.gravity;
 
         private bool isJumping = false;//Used for animation purposes
         private readonly int maxJumps = GameData.Instance.playerData.maxJumps;
@@ -37,10 +34,10 @@ namespace Coursework.Entities
         private int bottomAtLastUpdate = 0;
         private bool CanJump { get { return jumpsRemaining > 0; } }
 
-        private Vector2 previousPosition;//Position of player before they tried to move each frame
-
+        //FSM based animation control
         private FSM animator;
 
+        //Manages the lifetime of powerups on the player
         private PowerupManager powerupManager = new PowerupManager();
 
         public int Health { get; private set; } = GameData.Instance.playerData.startHealth;
@@ -52,6 +49,11 @@ namespace Coursework.Entities
 
             LoadContent();
             InitialiseAnimator();
+
+            //Initialise physics state
+            MaxSpeed = GameData.Instance.playerData.maxSpeed;
+            DragFactor = GameData.Instance.playerData.dragFactor;
+            Gravity = GameData.Instance.playerData.gravity;
 
             //Update collision bounds based on visible size
             UpdateBounds(Position, width, (int)(currentAnimation.Size.Y));
@@ -76,9 +78,16 @@ namespace Coursework.Entities
         }
 
         public override void Update(GameTime gameTime)
-        {            
+        {
+            Force += inputForce * inputScale;//Add physics force based on input force    
+            base.Update(gameTime);//Update physics
+
+            if (Velocity.Y > 0)//If falling, then not jumping!
+            {
+                isJumping = false;
+            }
+
             animator.Update(gameTime);
-            UpdatePhysics(gameTime);
             currentAnimation.Update(gameTime,Position);
             powerupManager.Update(gameTime);
 
@@ -89,38 +98,7 @@ namespace Coursework.Entities
             }
 
             bottomAtLastUpdate = BoundingBox.Bottom;
-        }
-
-        private void UpdatePhysics(GameTime gameTime)
-        {
-            previousPosition = Position;
-
-            var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            //Basic physics based movement. TODO extract to physics manager?
-            Vector2 acceleration = inputScale * inputForce;
-            acceleration.Y += gravity;//gravity
-
-            Velocity += acceleration * dt;
-
-            //Apply drag
-            Velocity *= dragFactor;
-
-            //Enforce speed limit
-            var clampedX = MathHelper.Clamp(Velocity.X, -maxSpeed.X, maxSpeed.X);
-            var clampedY = MathHelper.Clamp(Velocity.Y, -maxSpeed.Y, maxSpeed.Y);
-            Velocity = new Vector2(clampedX, clampedY);
-
-            if (Velocity.Y > 0)
-            {
-                isJumping = false;//Falling
-            }
-
-            //update position
-            Position += Velocity * dt;
-
-            //Reset input force for next update
-            inputForce = Vector2.Zero;
+            inputForce = Vector2.Zero;//Reset input forces for next update
         }
 
         public override void Draw(SpriteBatch spriteBatch, SpriteEffects effect = SpriteEffects.None)

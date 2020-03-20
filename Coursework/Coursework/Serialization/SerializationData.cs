@@ -21,7 +21,7 @@ namespace Coursework.Serialization
         public AnimationData walkAnimation;
 
         public Vector2 inputScale;
-        public Vector2 maxSpeed;
+        public float maxSpeed;
         public Vector2 dragFactor;
         public float gravity;
         public int maxJumps;
