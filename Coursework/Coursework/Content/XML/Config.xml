@@ -77,9 +77,18 @@
          </spec>
          <spec>
             <entityName>FireballPickup</entityName>
-            <entityData xsi:type="InteractableData">
+            <entityData xsi:type="PowerupData">
                <textureName>boxItem</textureName>
-               <interactableType>powerup_fireball</interactableType>
+               <interactableType>powerup</interactableType>
+               <powerupType>fireball</powerupType>
+            </entityData>
+         </spec>
+         <spec>
+            <entityName>InvincibilityPickup</entityName>
+            <entityData xsi:type="PowerupData">
+               <textureName>boxItem</textureName>
+               <interactableType>powerup</interactableType>
+               <powerupType>invincibility</powerupType>
             </entityData>
          </spec>
          <spec>

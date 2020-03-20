@@ -1,4 +1,5 @@
 ﻿using Coursework.Entities;
+using Coursework.Powerups;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -80,10 +81,16 @@ namespace Coursework.Serialization
         public TileCollisionMode collisionMode;
     }
 
+    [XmlInclude(typeof(PowerupData))]
     public class InteractableData : LevelEntityData
     {
         public string textureName;
         public InteractableType interactableType;
+    }
+
+    public class PowerupData : InteractableData
+    {
+        public powerUpType powerupType;
     }
 
     public class EnemyData : LevelEntityData

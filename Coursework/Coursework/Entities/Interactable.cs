@@ -45,10 +45,12 @@ namespace Coursework.Entities
 
     public enum InteractableType
     {
-       coin,
-       enemy,
-       nextLevel,
-       powerup_fireball,
-       projectile
+        coin,
+        enemy,
+        nextLevel,
+        projectile,
+        powerup,
+        //powerup_fireball,
+        //powerup_invincibility,
     }
 }

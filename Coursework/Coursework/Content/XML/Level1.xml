@@ -67,5 +67,14 @@
             </color>
             <entityName>FireballPickup</entityName>
         </bind>
+        <bind>
+            <color>
+                <R>0</R>
+                <G>255</G>
+                <B>255</B>
+                <A>255</A>
+            </color>
+            <entityName>InvincibilityPickup</entityName>
+        </bind>
     </bindings>
 </LevelData>

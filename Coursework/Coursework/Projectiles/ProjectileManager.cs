@@ -55,7 +55,7 @@ namespace Coursework.Projectiles
 
         private void LoadContent()
         {
-            string fireballPath = "PlatformerGraphicsDeluxe/Items/fireball";//TODO move to GameData?
+            string fireballPath = "PlatformerGraphicsDeluxe/Items/fireball";//TODO move to GameData for serialization?
             var tex = content.Load<Texture2D>(fireballPath);
             var scale = Level.CurrentLevel.scaleForTexture(tex);
             Sprite appearance = new Sprite(tex, scale, Color.White);

@@ -127,16 +127,6 @@ namespace Coursework
                             tilePrefabs[item.Key] = new Tile(content.Load<Texture2D>(tileFilePath + tileData.textureName),tileData.collisionMode);
                         }
                         break;
-                    case InteractableData i when i.interactableType != InteractableType.enemy:
-                        {
-                            var interData = i;
-                            var tex = content.Load<Texture2D>(itemFilePath + interData.textureName);
-                            Sprite sprite = new Sprite(tex, scaleForTexture(tex), Color.White);
-                            Interactable newInteractable = new Interactable(sprite, Vector2.Zero);
-                            newInteractable.interactableType = interData.interactableType;
-                            interactablePrefabs[item.Key] = newInteractable;
-                        }
-                        break;
                     case EnemyData e:
                         {
                             var enemyData = e;
@@ -156,6 +146,31 @@ namespace Coursework
                                 Color.White, scaleForTexture(animData.frameDimensions.X).X, true);
 
                             enemyPrefabs[item.Key] = new Enemy(newAnimation, Vector2.Zero, 1, 1, enemyData.enemyType);
+                        }
+                        break;                 
+                    case InteractableData i:
+                        {
+                            var interData = i;
+
+                            var tex = content.Load<Texture2D>(itemFilePath + interData.textureName);
+                            Sprite sprite = new Sprite(tex, scaleForTexture(tex), Color.White);
+
+                            Interactable newInteractable;
+
+                            if (interData is PowerupData p)
+                            {
+                                //Powerups are a very simple subclass of interactables, 
+                                //they need no extra handling except their one piece of data
+                                var newPowerup = new Powerup(sprite, Vector2.Zero);
+                                newPowerup.powerupType = p.powerupType;
+                                newInteractable = newPowerup;
+                            }
+                            else {
+                                newInteractable = new Interactable(sprite, Vector2.Zero);
+                            }
+
+                            newInteractable.interactableType = interData.interactableType;
+                            interactablePrefabs[item.Key] = newInteractable;
                         }
                         break;
                     default:
@@ -270,7 +285,7 @@ namespace Coursework
                             GameEventManager.Instance.NextLevel();
                         }
                         break;
-                    case InteractableType.powerup_fireball:
+                    case InteractableType.powerup:
                         {
                             killList.Add(interactable);//Schedule for deletion
                         }

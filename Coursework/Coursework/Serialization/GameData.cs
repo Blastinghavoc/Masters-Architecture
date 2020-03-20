@@ -56,6 +56,7 @@ namespace Coursework.Serialization
             }
             catch (Exception e)
             {
+                //For debugging purposes only
                 Console.WriteLine("ERROR: XML File could not be deserialized!");
                 Console.WriteLine("Exception Message: " + e.Message);
             }

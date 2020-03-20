@@ -63,7 +63,9 @@
     <Compile Include="Entities\Enemy.cs" />
     <Compile Include="Entities\Interactable.cs" />
     <Compile Include="Entities\PhysicsObject.cs" />
+    <Compile Include="Entities\Powerup.cs" />
     <Compile Include="Powerups\FireballEffect.cs" />
+    <Compile Include="Powerups\InvincibilityEffect.cs" />
     <Compile Include="Powerups\PowerupEffect.cs" />
     <Compile Include="Powerups\PowerupManager.cs" />
     <Compile Include="Entities\RectangleExtensions.cs" />

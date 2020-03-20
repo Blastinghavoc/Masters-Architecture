@@ -1,17 +1,19 @@
 ﻿using Coursework.Entities;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace Coursework.Powerups
 {
+    public enum powerUpType {
+        fireball,
+        invincibility,
+    }
     /// <summary>
     /// Responsible for managing the lifetime of all powerup effects
     /// on a player.
     /// </summary>
     public class PowerupManager:EventSubscriber {
-        public enum powerUpType {
-            fireball
-        }
 
         private Dictionary<powerUpType, PowerupEffect> powerupEffects = new Dictionary<powerUpType, PowerupEffect>();
 
@@ -22,6 +24,9 @@ namespace Coursework.Powerups
         {
             FireballEffect fireballEffect = new FireballEffect();
             powerupEffects.Add(powerUpType.fireball, fireballEffect);
+
+            InvincibilityEffect invincibilityEffect = new InvincibilityEffect();
+            powerupEffects.Add(powerUpType.invincibility, invincibilityEffect);
 
             BindEvents();
         }
@@ -104,13 +109,10 @@ namespace Coursework.Powerups
         //Check if the player has collided with a powerup
         private void OnPlayerCollisionEnter(object sender, PlayerCollisionEventArgs e)
         {
-            Interactable interact = e.colllidedWith as Interactable;
-            if (interact != null)
-            {
-                if (interact.interactableType == InteractableType.powerup_fireball)
-                {
-                    AddPowerup(powerUpType.fireball, e.player);//Add the powerup
-                }                
+            Powerup powerup = e.colllidedWith as Powerup;
+            if (powerup != null)
+            {                
+                AddPowerup(powerup.powerupType, e.player);//Add the powerup                
             }
         }
 

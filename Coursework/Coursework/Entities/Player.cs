@@ -15,6 +15,7 @@ namespace Coursework.Entities
 {
     public class Player : PhysicsObject, EventSubscriber
     {
+        //Animation and drawing data
         private Drawable currentAnimation;
         private Drawable[] animations;
         public SpriteEffects directionalEffect= SpriteEffects.None;
@@ -26,11 +27,11 @@ namespace Coursework.Entities
         private Vector2 inputForce = Vector2.Zero;//Force currently aplied by user input
         private readonly Vector2 inputScale = GameData.Instance.playerData.inputScale;//Amount by which to scale input forces in each axis
 
+        //Jumping data
         private bool isJumping = false;//Used for animation purposes
         private readonly int maxJumps = GameData.Instance.playerData.maxJumps;
-        private int jumpsRemaining = GameData.Instance.playerData.maxJumps;
-        //Based on variable of same name in platformer example, this is used to detect when the player is grounded
-        private int bottomAtLastUpdate = 0;
+        private int jumpsRemaining = GameData.Instance.playerData.maxJumps;        
+        private int bottomAtLastUpdate = 0;//Based on variable of same name in platformer example, this is used to detect when the player is grounded
         private bool CanJump { get { return jumpsRemaining > 0; } }
 
         //FSM based animation control
