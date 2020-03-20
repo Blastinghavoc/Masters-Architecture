@@ -14,7 +14,8 @@ namespace Coursework
         public static GameEventManager Instance;
 
         public event EventHandler<ScoreEventArgs> OnScoreChanged = delegate { };
-        public event EventHandler<PlayerCollisionEventArgs> OnPlayerColliding = delegate { };
+        //Unlike other events, this one is fire continuously as long as the player is colliding with something
+        public event EventHandler<PlayerCollisionEventArgs> WhilePlayerColliding = delegate { };
         public event EventHandler<PlayerCollisionEventArgs> OnPlayerCollisionEnter = delegate { };
         public event EventHandler<PlayerHealthChangedEventArgs> OnPlayerHealthChanged = delegate { };
         public event EventHandler<EnemyKilledEventArgs> OnEnemyKilled = delegate { };
@@ -80,16 +81,21 @@ namespace Coursework
         //Fire player collision events
         public void PlayerCollision(Player player, object collidedWith, Vector2 collisionDepth,CollisionType collisionType= CollisionType.stay)
         {
-            //Always fires if there is a collision happening
-            if (collisionType != CollisionType.exit)
-            {
-                OnPlayerColliding?.Invoke(this,new PlayerCollisionEventArgs(player,collidedWith,collisionDepth,collisionType));
-            }
-
             //Only fires when a collision first starts happening
             if (collisionType == CollisionType.enter)
             {
                 OnPlayerCollisionEnter?.Invoke(this, new PlayerCollisionEventArgs(player, collidedWith, collisionDepth,collisionType));
+            }
+
+            /*
+             NOTE that the order is important, a listener to both the OnEnter and WhileColliding
+             events must be guaranteed to receive the Enter event first!
+             */
+
+            //Always fires if there is a collision happening
+            if (collisionType != CollisionType.exit)
+            {
+                WhilePlayerColliding?.Invoke(this,new PlayerCollisionEventArgs(player,collidedWith,collisionDepth,collisionType));
             }
 
             //TODO collision exit if necessary

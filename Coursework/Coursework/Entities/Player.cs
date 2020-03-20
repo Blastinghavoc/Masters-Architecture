@@ -41,6 +41,9 @@ namespace Coursework.Entities
 
         public int Health { get; private set; } = GameData.Instance.playerData.startHealth;
         public bool IsAlive { get => Health > 0; }
+        public bool IsInvincible = false;
+        private readonly float damageImmunityDuration = GameData.Instance.playerData.damageImmunityDuration;
+        private float damageImmunityTimerSeconds = 0;
 
         public Player(IServiceProvider provider,string contentRoot) {
             Position = new Vector2(0, 0);
@@ -88,6 +91,12 @@ namespace Coursework.Entities
             currentAnimation.Update(gameTime,Position);
             powerupManager.Update(gameTime);
 
+            //Update immunity timer
+            if (damageImmunityTimerSeconds> 0)
+            {
+                damageImmunityTimerSeconds -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+
             if (!IsAlive)
             {
                 //Notify the event manager of the player's death
@@ -113,31 +122,45 @@ namespace Coursework.Entities
         //What to do while the player is colliding with something
         private void WhileColliding(object sender, PlayerCollisionEventArgs e)
         {
-            TileDescriptor tile = e.colllidedWith as TileDescriptor;
-
-            if (tile != null)//Resolve collisions with level tile
+            switch (e.colllidedWith)
             {
+                case TileDescriptor tile:
+                    {
+                        var absCollY = Math.Abs(e.collisionDepth.Y);
+                        var absCollX = Math.Abs(e.collisionDepth.X);
 
-                var absCollY = Math.Abs(e.collisionDepth.Y);
-                var absCollX = Math.Abs(e.collisionDepth.X);
+                        //Collided from above something
+                        if (absCollY < absCollX && e.collisionDepth.Y < 0 && bottomAtLastUpdate >= tile.bounds.Top)
+                        {
+                            jumpsRemaining = maxJumps;
+                        }
 
-                //Collided from above something
-                if (absCollY < absCollX && e.collisionDepth.Y < 0 && bottomAtLastUpdate >= tile.bounds.Top)
-                {
-                    jumpsRemaining = maxJumps;
-                }                
-
-                StaticCollisionResponse(e.collisionDepth);
-                return;
-            }                    
+                        StaticCollisionResponse(e.collisionDepth);
+                    }
+                    break;
+                case Enemy enemy:
+                    {
+                        if (enemy.IsAlive)
+                        {
+                            //Provided the enemy is alive, they may damage the player
+                            //Note that the player may be immune and ignore it.
+                            TakeDamage(enemy.Damage);
+                        }                        
+                    }
+                    break;
+                default:
+                    break;
+            }               
         }
 
-        //What to do only when the player starts colliding with something
+        //What to do when the player starts colliding with something
         private void OnCollisionEnter(object sender, PlayerCollisionEventArgs e)
         {
             Enemy enemy = e.colllidedWith as Enemy;
-            if (enemy != null)
+            if (enemy != null && enemy.IsAlive)
             {
+                //If the player enters an enemies hitbox from above, they squash them
+
                 var bottom = BoundingBox.GetBottomCenter();
                 var enemyBottom = enemy.BoundingBox.GetBottomCenter();
                 var enemyHeight = enemy.Appearance.Size.Y;
@@ -146,10 +169,7 @@ namespace Coursework.Entities
                 {
                     enemy.Health = 0;
                 }
-                else
-                {
-                    TakeDamage(enemy.Damage);
-                }
+                //Otherwise the squash fails. The player may take damage; see the WhileColliding function
             }
         }
 
@@ -161,7 +181,13 @@ namespace Coursework.Entities
 
         public void TakeDamage(int amount)
         {
+            if (IsInvincible || damageImmunityTimerSeconds > 0)
+            {
+                return;//Can't take damage if immune
+            }
+
             Health -= amount;
+            damageImmunityTimerSeconds = damageImmunityDuration;//Player gets some immunity before they can take damage again.
             GameEventManager.Instance.PlayerHealthChanged(this);
         }
 
@@ -251,13 +277,13 @@ namespace Coursework.Entities
 
         public void BindEvents()
         {
-            GameEventManager.Instance.OnPlayerColliding += WhileColliding;
+            GameEventManager.Instance.WhilePlayerColliding += WhileColliding;
             GameEventManager.Instance.OnPlayerCollisionEnter += OnCollisionEnter;
         }
 
         public void UnbindEvents()
         {            
-            GameEventManager.Instance.OnPlayerColliding -= WhileColliding;
+            GameEventManager.Instance.WhilePlayerColliding -= WhileColliding;
             GameEventManager.Instance.OnPlayerCollisionEnter -= OnCollisionEnter;
         }
 

@@ -27,6 +27,7 @@ namespace Coursework.Serialization
         public int maxJumps;
 
         public int startHealth;
+        public float damageImmunityDuration;
     }
 
     //Data used by all levels

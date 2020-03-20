@@ -23,8 +23,9 @@
          <Y>1</Y>
       </dragFactor> 
       <gravity>981</gravity>
-      <startHealth>3</startHealth>
       <maxJumps>2</maxJumps>
+      <startHealth>3</startHealth>
+      <damageImmunityDuration>1.0</damageImmunityDuration>
    </playerData>
    <levelConstants>
       <tileSize>
