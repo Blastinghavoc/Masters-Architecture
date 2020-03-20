@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Coursework.Animation;
+using Coursework.Graphics;
 using Coursework.StateMachine;
 using Coursework.StateMachine.Player;
 using Coursework.Serialization;

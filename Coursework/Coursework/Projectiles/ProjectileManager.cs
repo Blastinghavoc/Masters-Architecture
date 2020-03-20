@@ -1,4 +1,4 @@
-﻿using Coursework.Animation;
+﻿using Coursework.Graphics;
 using Coursework.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;

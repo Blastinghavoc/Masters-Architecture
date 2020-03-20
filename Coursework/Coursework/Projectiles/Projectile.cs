@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Coursework.Animation;
+using Coursework.Graphics;
 using Coursework.Entities;
 using Coursework.StateMachine;
 using Microsoft.Xna.Framework;

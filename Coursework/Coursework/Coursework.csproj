@@ -57,18 +57,18 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Animation\AbstractAnimation.cs" />
-    <Compile Include="Animation\Decal.cs" />
-    <Compile Include="Animation\Drawable.cs" />
-    <Compile Include="Animation\MultiImageAnimation.cs" />
-    <Compile Include="Animation\Sprite.cs" />
-    <Compile Include="Animation\SpriteSheetAnimation.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="CollisionManager.cs" />
     <Compile Include="Entities\CollidableObject.cs" />
     <Compile Include="Entities\Enemy.cs" />
     <Compile Include="Entities\Interactable.cs" />
     <Compile Include="Entities\RectangleExtensions.cs" />
+    <Compile Include="Graphics\AbstractAnimation.cs" />
+    <Compile Include="Graphics\Decal.cs" />
+    <Compile Include="Graphics\Drawable.cs" />
+    <Compile Include="Graphics\MultiImageAnimation.cs" />
+    <Compile Include="Graphics\Sprite.cs" />
+    <Compile Include="Graphics\SpriteSheetAnimation.cs" />
     <Compile Include="Input\MouseEventArgs.cs" />
     <Compile Include="Projectiles\Projectile.cs" />
     <Compile Include="Projectiles\ProjectileManager.cs" />
