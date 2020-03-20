@@ -115,7 +115,8 @@ namespace Coursework.StateMachine.GameState
         {
             currentLevel.Dispose();
             currentLevel = new Level(owner.Services, owner.Content.RootDirectory, levelName,background);
-            player.SetPosition(Vector2.Zero);
+            player.Reset(Vector2.Zero);
+            projectileManager.Reset();
         }
 
         public override void BindEvents()

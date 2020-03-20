@@ -70,7 +70,12 @@ namespace Coursework.Powerups
             }
         }
 
+        //Deactivate all active effects
         public void Reset() {
+            foreach (var item in activeEffects)
+            {
+                item.Value.OnExpired();
+            }
             activeEffects.Clear();
         }
 

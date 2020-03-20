@@ -63,15 +63,12 @@ namespace Coursework.Entities
             BindEvents();
         }
 
-        //Completely resets the player, health, position, velocity etc
-        public void HardReset() 
+        //Resets the player ready for a new level.
+        public void Reset(Vector2 position)
         {
-            Position = new Vector2(0, 0);
-            InitialiseAnimator();
-            Health = GameData.Instance.playerData.startHealth;
-            GameEventManager.Instance.PlayerHealthChanged(this);
+            Position = position;
             isJumping = false;
-            jumpsRemaining = maxJumps; 
+            jumpsRemaining = 0;
             Velocity = Vector2.Zero;
             directionalEffect = SpriteEffects.None;
             powerupManager.Reset();
@@ -129,12 +126,13 @@ namespace Coursework.Entities
                         var absCollY = Math.Abs(e.collisionDepth.Y);
                         var absCollX = Math.Abs(e.collisionDepth.X);
 
-                        //Collided from above something
+                        //Collided from above something, therefore we are now grounded
                         if (absCollY < absCollX && e.collisionDepth.Y < 0 && bottomAtLastUpdate >= tile.bounds.Top)
                         {
                             jumpsRemaining = maxJumps;
                         }
 
+                        //Default collision response moves the player such that they are no longer colliding
                         StaticCollisionResponse(e.collisionDepth);
                     }
                     break;

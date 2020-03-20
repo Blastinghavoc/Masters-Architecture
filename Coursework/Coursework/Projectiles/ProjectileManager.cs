@@ -11,6 +11,16 @@ using System.Threading.Tasks;
 
 namespace Coursework.Projectiles
 {
+    /// <summary>
+    /// Class managing the creation and lifetime of projectiles.
+    /// 
+    /// Note that this class persists accross all levels,
+    /// which means that it may have content that is not strictly
+    /// necessary for the given level. If this ever caused issues,
+    /// each Level could have its own projectile manager and
+    /// load only the content for projectiles needed in that level,
+    /// however this was not considered necessary at this time.
+    /// </summary>
     class ProjectileManager: EventSubscriber
     {
         public List<Projectile> ActiveProjectiles { get; protected set; } = new List<Projectile>();
@@ -59,6 +69,12 @@ namespace Coursework.Projectiles
             {
                 item.Draw(spriteBatch);
             }
+        }
+
+        //Reset for a new level
+        public void Reset()
+        {
+            ActiveProjectiles.Clear();
         }
 
         public void OnLaunchProjectile(object sender, ProjectileLaunchEventArgs e)
