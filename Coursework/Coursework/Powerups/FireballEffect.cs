@@ -19,7 +19,6 @@ namespace Coursework.Powerups
         public FireballEffect():base()
         {
             DurationSeconds = 10;
-            RefreshDuration();
             EffectColor = Color.Orange;
         }
 

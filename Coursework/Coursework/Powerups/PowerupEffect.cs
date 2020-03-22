@@ -14,8 +14,8 @@ namespace Coursework.Powerups
     {
         protected Entities.Player player;
 
-        public float TimeRemaining { get; protected set; }
-        public float DurationSeconds { get; protected set; }
+        public float TimeRemaining { get; protected set; } = 0;
+        public float DurationSeconds { get; protected set; } = 0;
         public bool Active { get {return TimeRemaining > 0; } }
 
         //A colour to apply to the player if they have the effect
@@ -23,7 +23,6 @@ namespace Coursework.Powerups
 
         public PowerupEffect()
         {            
-            RefreshDuration();
         }
 
         //What to do when the effect is aquired by the player

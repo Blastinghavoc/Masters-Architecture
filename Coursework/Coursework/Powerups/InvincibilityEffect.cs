@@ -13,7 +13,6 @@ namespace Coursework.Powerups
         public InvincibilityEffect():base()
         {
             DurationSeconds = 5;
-            RefreshDuration();
             EffectColor = Color.Cyan;
         }
 

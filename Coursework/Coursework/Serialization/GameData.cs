@@ -77,8 +77,7 @@ namespace Coursework.Serialization
             HighScoreData data = null;
             StreamReader reader = new StreamReader("Content/XML/HighScores.xml");
             try
-            {
-                //StreamReader reader = new StreamReader("Content/XML/HighScores.xml");
+            {                
                 data = (HighScoreData)new XmlSerializer(typeof(HighScoreData)).Deserialize(reader.BaseStream);                
             }
             catch (Exception e)
