@@ -4,7 +4,7 @@ using Coursework.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Coursework.StateMachine.GameState
+namespace Coursework.StateMachine.GameStates
 {
     /// <summary>
     /// Subclass of TextScreen used for both the win and lose screens.

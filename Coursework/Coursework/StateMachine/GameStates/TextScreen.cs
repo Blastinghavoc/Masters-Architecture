@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Coursework.StateMachine.GameState
+namespace Coursework.StateMachine.GameStates
 {
     /// <summary>
     /// A text-only screen with a single transition out of it.

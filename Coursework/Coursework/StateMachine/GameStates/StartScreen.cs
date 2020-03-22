@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Coursework.StateMachine.GameState
+namespace Coursework.StateMachine.GameStates
 {
     /// <summary>
     /// Subclass of TextScreen used at the start of the game.

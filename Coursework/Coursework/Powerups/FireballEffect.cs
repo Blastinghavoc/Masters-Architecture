@@ -28,11 +28,6 @@ namespace Coursework.Powerups
             cooldownTimer = 0;
         }
 
-        public override void OnExpired()
-        {
-            base.OnExpired();
-        }
-
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);

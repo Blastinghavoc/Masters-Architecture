@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Coursework.Serialization;
 
-namespace Coursework.StateMachine.GameState
+namespace Coursework.StateMachine.GameStates
 {
     //The actual gameplay state
     class PlayGame : GameState

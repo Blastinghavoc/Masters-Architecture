@@ -6,7 +6,7 @@ using Coursework.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Coursework.StateMachine.GameState
+namespace Coursework.StateMachine.GameStates
 {
     /// <summary>
     /// Represents states of the whole game (title screen, gameplay, end screen).

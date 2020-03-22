@@ -5,7 +5,7 @@ using Coursework.Input;
 using Coursework.Entities;
 using Coursework.Projectiles;
 using Coursework.StateMachine;
-using Coursework.StateMachine.GameState;
+using Coursework.StateMachine.GameStates;
 using Coursework.Serialization;
 
 namespace Coursework
