@@ -87,8 +87,11 @@
     <Compile Include="StateMachine\AI\General.cs" />
     <Compile Include="StateMachine\AI\Slime.cs" />
     <Compile Include="StateMachine\FSM.cs" />
-    <Compile Include="StateMachine\GameState\GameStates.cs" />
+    <Compile Include="StateMachine\GameState\EndScreen.cs" />
+    <Compile Include="StateMachine\GameState\GameState.cs" />
     <Compile Include="StateMachine\GameState\PlayGame.cs" />
+    <Compile Include="StateMachine\GameState\StartScreen.cs" />
+    <Compile Include="StateMachine\GameState\TextScreen.cs" />
     <Compile Include="StateMachine\Player\PlayerStates.cs" />
     <Compile Include="StateMachine\Projectile\Fireball.cs" />
     <Compile Include="StateMachine\Projectile\General.cs" />

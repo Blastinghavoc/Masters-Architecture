@@ -24,6 +24,7 @@ namespace Coursework.StateMachine.GameState
         HUDElement scoreText;
         HUDElement healthText;
 
+        //Variables used in transitions out of this state
         public bool GameWon { get; private set; } = false;
         public bool GameLost { get; private set; } = false;
 
