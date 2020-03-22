@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Coursework.Entities
 {
     //A non-player collidable object with a visual appearance
-    class Interactable: CollidableObject
+    public class Interactable: CollidableObject
     {
         public Drawable Appearance { get; protected set; }
         public override Vector2 Position { get => base.Position; protected set { base.Position = value; Appearance.SetPosition(value); } }

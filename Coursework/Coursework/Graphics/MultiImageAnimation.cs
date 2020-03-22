@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Coursework.Graphics
 {
-    class MultiImageAnimation : AbstractAnimation
+    public class MultiImageAnimation : AbstractAnimation
     {
         protected override Texture2D Image { get => frames[currentFrameIndex]; set => frames[currentFrameIndex] = value; }
 

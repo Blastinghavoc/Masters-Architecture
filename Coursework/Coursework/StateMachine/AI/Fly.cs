@@ -64,13 +64,14 @@ namespace Coursework.StateMachine.AI.Fly
 
     class Dying : State
     {
-        public Decal DyingAppearance { get; set; }
+        public Decal DyingAppearance { get;protected set; }
         public bool HitGround = false;
         public float FallSpeed = 48;
 
-        public Dying()
+        public Dying(Decal dyingAppearance)
         {
             Name = "Dying";
+            this.DyingAppearance = dyingAppearance;
         }
 
         public override void OnEnter(object owner)

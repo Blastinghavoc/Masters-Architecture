@@ -20,9 +20,7 @@ namespace Coursework.Entities
         private Drawable[] animations;
         public SpriteEffects directionalEffect= SpriteEffects.None;
 
-        private readonly int width = GameData.Instance.levelConstants.tileSize.Y;//Width in world coords
-
-        private ContentManager content;//Player currently manages own content, as this persists between levels
+        private ContentManager content;//Player manages own content, as this persists between levels
 
         private Vector2 inputForce = Vector2.Zero;//Force currently aplied by user input
         private readonly Vector2 inputScale = GameData.Instance.playerData.inputScale;//Amount by which to scale input forces in each axis
@@ -59,7 +57,7 @@ namespace Coursework.Entities
             Gravity = GameData.Instance.playerData.gravity;
 
             //Update collision bounds based on visible size
-            UpdateBounds(Position, width, (int)(currentAnimation.Size.Y));
+            UpdateBounds(Position, (int)currentAnimation.Size.X, (int)currentAnimation.Size.Y);
 
             BindEvents();
         }
@@ -178,6 +176,11 @@ namespace Coursework.Entities
             GameEventManager.Instance.PlayerAttemptToFireWeapon(this, worldPoint.ToVector2());
         }
 
+        /// <summary>
+        /// Attempt to take damage. The player gets a short
+        /// period of immunity after taking damage.
+        /// </summary>
+        /// <param name="amount"></param>
         public void TakeDamage(int amount)
         {
             if (IsInvincible || damageImmunityTimerSeconds > 0)
@@ -186,7 +189,7 @@ namespace Coursework.Entities
             }
 
             Health -= amount;
-            damageImmunityTimerSeconds = damageImmunityDuration;//Player gets some immunity before they can take damage again.
+            damageImmunityTimerSeconds = damageImmunityDuration;
             GameEventManager.Instance.PlayerHealthChanged(this);
         }
 
@@ -201,37 +204,22 @@ namespace Coursework.Entities
 
             var animationData = GameData.Instance.playerData.walkAnimation;
 
-            var frameDimensions = animationData.frameDimensions;
-            var texScale = width / (float)frameDimensions.X;
+            var frameDimensions = animationData.frameDimensions;            
+            var texScale = Utils.scaleForTexture(frameDimensions.X);
 
             string filePath = GameData.Instance.playerData.walkAnimationPath;
-            int numFrames = animationData.numFrames;
-            Texture2D[] frames = new Texture2D[numFrames];
-            string basePath = filePath + animationData.baseName;
-            for (int i = 1; i <= numFrames; i++)
-            {
-                string fileName = basePath;
-                if (i < 10)
-                {
-                    fileName += "0";
-                }
-                fileName += i.ToString();
-                frames[i - 1] = content.Load<Texture2D>(fileName);
-            }
 
-            var frameTime = animationData.frameDuration;
-
-            var walkAnim = new MultiImageAnimation(frames, Position, frameDimensions.X, frameDimensions.Y,
-                numFrames, frameTime, Color.White, texScale, true);
+            Unpacker unpacker = new Unpacker(content);
+            var walkAnim = unpacker.Unpack(animationData,filePath);            
 
             animations[1] = walkAnim;
 
             Texture2D idleTex = content.Load<Texture2D>(GameData.Instance.playerData.idlePath);
-            Sprite idleSprite = new Sprite(idleTex, new Vector2(texScale), Color.White);
+            Sprite idleSprite = new Sprite(idleTex, texScale, Color.White);
             animations[0] = idleSprite;
 
             Texture2D jumpTex = content.Load<Texture2D>(GameData.Instance.playerData.jumpPath);
-            Sprite jumpSprite = new Sprite(jumpTex, new Vector2(texScale), Color.White);
+            Sprite jumpSprite = new Sprite(jumpTex, texScale, Color.White);
             animations[2] = jumpSprite;
 
         }

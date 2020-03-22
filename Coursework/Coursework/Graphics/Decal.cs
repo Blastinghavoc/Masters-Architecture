@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Coursework.Graphics
 {
     //Sprite with a built-in effect. Used for enemy corpses to retain their orientation
-    class Decal : Sprite
+    public class Decal : Sprite
     {
         public SpriteEffects Effect { get; set; }
 
@@ -22,6 +22,6 @@ namespace Coursework.Graphics
         {
             effect = effect | this.Effect;
             base.Draw(spriteBatch, effect);
-        }
+        }        
     }
 }

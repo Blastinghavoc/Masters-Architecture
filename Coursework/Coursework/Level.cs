@@ -16,7 +16,7 @@ namespace Coursework
     /// Class representing a whole level in the game, based on class of same name in 
     /// the platformer demo (lab2)
     /// </summary>
-    class Level: EventSubscriber
+    public class Level: EventSubscriber
     {
         public static Level CurrentLevel;//The currently active level. NOTE not a singleton class, but only one level can be active at once
 
@@ -38,7 +38,6 @@ namespace Coursework
         public List<Interactable> Interactables { get; protected set; } = new List<Interactable>();
         private List<Interactable> killList = new List<Interactable>();//List of interactables to be removed
 
-        public Dictionary<EnemyType, Decal> CorpseSkins { get; private set; } = new Dictionary<EnemyType, Decal>();
         private List<Decal> corpses = new List<Decal>();
 
 
@@ -109,11 +108,8 @@ namespace Coursework
             Dictionary<Color, Interactable> interactablePrefabs = new Dictionary<Color, Interactable>();//Prefabs for all non-enemy interactables
             Dictionary<Color, Enemy> enemyPrefabs = new Dictionary<Color, Enemy>();//Enemies
 
-            //Obtain file paths
-            string tileFilePath = GameData.Instance.levelConstants.tileFilePath;
-            string itemFilePath = GameData.Instance.levelConstants.itemFilePath;
-            string enemyFilePath = GameData.Instance.levelConstants.enemyFilePath;
-            string mapFilePath = GameData.Instance.levelConstants.mapFilePath;
+            //Used to create entities from their data descriptions
+            Unpacker unpacker = new Unpacker(content);
 
             //Load resources based on colour bindings to populate the prefabs
             foreach (var item in colourBindings)
@@ -123,54 +119,17 @@ namespace Coursework
                 {
                     case TileData t:
                         {
-                            var tileData = t;
-                            tilePrefabs[item.Key] = new Tile(content.Load<Texture2D>(tileFilePath + tileData.textureName),tileData.collisionMode);
+                            tilePrefabs[item.Key] = unpacker.Unpack(t);
                         }
                         break;
                     case EnemyData e:
                         {
-                            var enemyData = e;
-                            var deadTex = content.Load<Texture2D>(enemyFilePath + enemyData.corpseTextureName);
-                            CorpseSkins[enemyData.enemyType] = new Decal(deadTex, scaleForTexture(deadTex), Color.White);
-
-                            var animData = enemyData.animationData;
-                            Texture2D[] frames = new Texture2D[animData.numFrames];
-                            //Load all animation frame textures
-                            for (int i = 0; i < animData.numFrames; i++)
-                            {
-                                frames[i] = content.Load<Texture2D>(enemyFilePath + animData.baseName + (i+1).ToString());
-                            }
-
-                            var newAnimation = new MultiImageAnimation(frames, Vector2.Zero, animData.frameDimensions.X, 
-                                animData.frameDimensions.Y, animData.numFrames, animData.frameDuration, 
-                                Color.White, scaleForTexture(animData.frameDimensions.X).X, true);
-
-                            enemyPrefabs[item.Key] = new Enemy(newAnimation, Vector2.Zero, 1, 1, enemyData.enemyType);
+                            enemyPrefabs[item.Key] = unpacker.Unpack(e);
                         }
                         break;                 
                     case InteractableData i:
-                        {
-                            var interData = i;
-
-                            var tex = content.Load<Texture2D>(itemFilePath + interData.textureName);
-                            Sprite sprite = new Sprite(tex, scaleForTexture(tex), Color.White);
-
-                            Interactable newInteractable;
-
-                            if (interData is PowerupData p)
-                            {
-                                //Powerups are a very simple subclass of interactables, 
-                                //they need no extra handling except their one piece of data
-                                var newPowerup = new Powerup(sprite, Vector2.Zero);
-                                newPowerup.powerupType = p.powerupType;
-                                newInteractable = newPowerup;
-                            }
-                            else {
-                                newInteractable = new Interactable(sprite, Vector2.Zero);
-                            }
-
-                            newInteractable.interactableType = interData.interactableType;
-                            interactablePrefabs[item.Key] = newInteractable;
+                        {                            
+                            interactablePrefabs[item.Key] = unpacker.Unpack(i);
                         }
                         break;
                     default:
@@ -179,7 +138,7 @@ namespace Coursework
             }
 
             //Now that the prefabs are loaded, populate the level from the map file
-
+            string mapFilePath = GameData.Instance.levelConstants.mapFilePath;
             Texture2D map = content.Load<Texture2D>(mapFilePath + mapName);
 
             int width = map.Width;
@@ -297,33 +256,29 @@ namespace Coursework
             }
         }
 
-        //When an enemy is killed, delete it and replace it with its corpse
+        
+        /// <summary>
+        /// When an enemy is killed, delete it and replace it with its corpse.
+        /// This saves processing it for collisions etc.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnEnemyKilled(object sender,EnemyKilledEventArgs e)
         {
             Enemy enemy = e.enemy;
             killList.Add(enemy);
-            Decal corpse;
-            if (CorpseSkins.TryGetValue(enemy.enemyType,out corpse))
-            {
-                corpse = corpse.Clone() as Decal;//New instance of the corpse decal
-                corpse.Effect = enemy.DirectionalEffect;
-                var offset = enemy.Appearance.Size - corpse.Size;
 
-                corpse.SetPosition(enemy.Position + offset);
+            Decal corpse = enemy.CorpseAppearance;
+            
+            corpse = corpse.Clone() as Decal;//New instance of the corpse decal
+            corpse.Effect = enemy.DirectionalEffect;
+            var offset = enemy.Appearance.Size - corpse.Size;
 
-                corpses.Add(corpse);
-            }
-        }
+            corpse.SetPosition(enemy.Position + offset);
 
-        public Vector2 scaleForTexture(Texture2D t)
-        {
-            return new Vector2(tileSize.X / (float)t.Width);
-        }
-
-        public Vector2 scaleForTexture(float textureWidth)
-        {
-            return new Vector2(tileSize.X / textureWidth);
-        }
+            corpses.Add(corpse);
+            
+        }        
 
         public TileCollisionMode GetCollisionModeAt(Point p)
         {

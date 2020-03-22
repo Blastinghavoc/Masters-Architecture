@@ -12,7 +12,7 @@ namespace Coursework.Graphics
     /// <summary>
     /// Based on lab 1 animation tutorial
     /// </summary>
-    abstract class AbstractAnimation : Drawable
+    public abstract class AbstractAnimation : Drawable
     {
         protected abstract Texture2D Image { get; set; }
 

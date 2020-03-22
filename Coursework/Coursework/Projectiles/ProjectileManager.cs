@@ -57,7 +57,7 @@ namespace Coursework.Projectiles
         {
             string fireballPath = "PlatformerGraphicsDeluxe/Items/fireball";//TODO move to GameData for serialization?
             var tex = content.Load<Texture2D>(fireballPath);
-            var scale = Level.CurrentLevel.scaleForTexture(tex);
+            var scale = Utils.scaleForTexture(tex);
             Sprite appearance = new Sprite(tex, scale, Color.White);
             Projectile fireballPrefab = new Projectile(appearance, Vector2.Zero, ProjectileType.fireball, 128,1, false);
             prefabs[ProjectileType.fireball] = fireballPrefab;

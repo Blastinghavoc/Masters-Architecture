@@ -20,7 +20,7 @@ namespace Coursework.Entities
         fly
     }
 
-    class Enemy : Interactable
+    public class Enemy : Interactable
     {
         public int Health { get; set; }
         public int Damage { get; set; }
@@ -32,12 +32,15 @@ namespace Coursework.Entities
 
         public SpriteEffects DirectionalEffect { get; set; } = SpriteEffects.None;
 
-        public Enemy(Drawable appearance, Vector2 position, int health, int damage,EnemyType type = EnemyType.slime) : base(appearance, position)
+        public Decal CorpseAppearance { get; protected set; }
+
+        public Enemy(Drawable appearance,Decal corpseAppearance, Vector2 position, int health, int damage,EnemyType type = EnemyType.slime) : base(appearance, position)
         {
             Health = health;
             Damage = damage;
-            this.enemyType = type;
+            enemyType = type;
             interactableType = InteractableType.enemy;
+            CorpseAppearance = corpseAppearance;
 
             InitialiseBrain();
         }
@@ -88,8 +91,7 @@ namespace Coursework.Entities
                 case EnemyType.fly:
                     {
                         var patrol = new Fly.Patrol();
-                        var dying = new Fly.Dying();
-                        dying.DyingAppearance = Level.CurrentLevel.CorpseSkins[enemyType].Clone() as Decal;
+                        var dying = new Fly.Dying(CorpseAppearance);
                         var dead = new Dead();
 
                         patrol.AddTransition(dying, () => { return !this.IsAlive; });

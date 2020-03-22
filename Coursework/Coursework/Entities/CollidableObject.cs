@@ -28,6 +28,13 @@ namespace Coursework.Entities
             BoundingBox = new Rectangle(topLeftCorner, new Point(width,height));
         }
 
+        /// <summary>
+        /// Determine whether this object is colliding with some other bounding box.
+        /// Sets the penetration depth parameter if a collision is detected
+        /// </summary>
+        /// <param name="box"></param>
+        /// <param name="penetrationDepth"></param>
+        /// <returns></returns>
         public bool CheckCollision(Rectangle box, out Vector2 penetrationDepth)
         {
             var penDepth = RectangleExtensions.GetIntersectionDepth(BoundingBox, box);
@@ -44,12 +51,20 @@ namespace Coursework.Entities
             return CheckCollision(obj.BoundingBox, out penetrationDepth);
         }
 
-        //Collision response to hitting a static object
+        /// <summary>
+        /// Collsion response to hitting a static object.
+        /// Moves this object such that they are no longer colliding.
+        /// Based on lab 2 collision code
+        /// </summary>
+        /// <param name="penetrationDepth"></param>
         protected virtual void StaticCollisionResponse(Vector2 penetrationDepth)
         {
             var xMag = Math.Abs(penetrationDepth.X);
             var yMag = Math.Abs(penetrationDepth.Y);
             Vector2 adjustment;
+
+            //Tiny extra correction to apply.
+            const float epsilon = 0.0001f;
 
             //Adjust in direction of minimum overlap
             if (yMag > xMag)
@@ -61,13 +76,15 @@ namespace Coursework.Entities
                     var floatRemainder = Position.X % 1;
                     if (xAdjustment > 0)
                     {
-                        xAdjustment = 1-  floatRemainder;
+                        xAdjustment = 1- floatRemainder;
+                        xAdjustment += epsilon;
                     }
                     else
                     {
-                        xAdjustment = floatRemainder;
-                    }
-                    xAdjustment *= Math.Sign(penetrationDepth.X);
+                        xAdjustment = (floatRemainder > 0) ? -floatRemainder : -1;
+                        xAdjustment -= epsilon;
+                    }                    
+                    //xAdjustment *= Math.Sign(penetrationDepth.X);
                 }
 
                 adjustment = new Vector2(xAdjustment, 0);
@@ -83,12 +100,14 @@ namespace Coursework.Entities
                     if (yAdjustment > 0)
                     {
                         yAdjustment = 1 - floatRemainder;
+                        yAdjustment += epsilon;
                     }
                     else
-                    {
-                        yAdjustment = floatRemainder;
+                    {                        
+                        yAdjustment = (floatRemainder > 0) ? -floatRemainder : -1;
+                        yAdjustment -= epsilon;
                     }
-                    yAdjustment *= Math.Sign(penetrationDepth.Y);
+                    //yAdjustment *= Math.Sign(penetrationDepth.Y);
                 }
 
                 adjustment = new Vector2(0, yAdjustment);

@@ -82,6 +82,7 @@
     <Compile Include="Projectiles\ProjectileManager.cs" />
     <Compile Include="Serialization\HighScoreData.cs" />
     <Compile Include="Serialization\SerializationData.cs" />
+    <Compile Include="Serialization\Unpacker.cs" />
     <Compile Include="StateMachine\AI\Fly.cs" />
     <Compile Include="StateMachine\AI\General.cs" />
     <Compile Include="StateMachine\AI\Slime.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tile.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

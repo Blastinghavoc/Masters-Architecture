@@ -9,7 +9,12 @@ using System.Xml.Serialization;
 
 namespace Coursework.Serialization
 {
-    //Based on lab 2
+    
+    /// <summary>
+    /// Class handling the serialization and deserialization of data,
+    /// and providing a common interface to it.
+    /// Based on lab 2
+    /// </summary>
     public class GameData
     {
         public static GameData Instance { get; private set; } = null;

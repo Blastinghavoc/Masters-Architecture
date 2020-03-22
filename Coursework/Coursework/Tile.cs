@@ -16,7 +16,7 @@ namespace Coursework
     /// <summary>
     /// Basic world tile, based on the one from Lab 2
     /// </summary>
-    struct Tile
+    public struct Tile
     {
         public Texture2D texture;
         public TileCollisionMode collisionMode;
@@ -28,6 +28,9 @@ namespace Coursework
 
     }
 
+    /// <summary>
+    /// A complete description of a Tile, including where it is positioned in a level.
+    /// </summary>
     class TileDescriptor {
         public TileCollisionMode collisionMode;
         public Vector2 worldPosition;
