@@ -20,6 +20,18 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/gameFont.spritefont
 
+#begin Maps/dungeon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Maps/dungeon.png
+
 #begin Maps/map0.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -4222,6 +4234,9 @@
 
 #begin XML/Config.xml
 /copy:XML/Config.xml
+
+#begin XML/DungeonLevel.xml
+/copy:XML/DungeonLevel.xml
 
 #begin XML/HighScores.xml
 /copy:XML/HighScores.xml

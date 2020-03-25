@@ -55,6 +55,20 @@
             </entityData>
          </spec>
          <spec>
+            <entityName>CastleTile</entityName>
+            <entityData xsi:type="TileData">
+               <textureName>castleCenter</textureName>
+               <collisionMode>solid</collisionMode>
+            </entityData>
+         </spec>
+         <spec>
+            <entityName>LavaTile</entityName>
+            <entityData xsi:type="TileData">
+               <textureName>liquidLavaTop_mid</textureName>
+               <collisionMode>lava</collisionMode>
+            </entityData>
+         </spec>
+         <spec>
             <entityName>DoorTopTile</entityName>
             <entityData xsi:type="TileData">
                <textureName>door_openTop</textureName>

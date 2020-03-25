@@ -10,7 +10,8 @@ namespace Coursework
 {
     public enum TileCollisionMode {
         empty,
-        solid
+        solid,
+        lava,//Empty, but deals damage on collision
     }
 
     /// <summary>

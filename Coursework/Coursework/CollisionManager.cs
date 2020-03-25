@@ -120,20 +120,18 @@ namespace Coursework
 
                     Vector2 penDepth;
                     if (obj.CheckCollision(tileBounds,out penDepth))
-                    {
-                        if (TileCollisionMode.solid.Equals(collisionMode))
-                        {
-                            TileDescriptor tileDescriptor = new TileDescriptor(collisionMode, currentLevel.GetWorldPosition(i, j), new Point(i, j),tileBounds);
+                    {                        
+                        TileDescriptor tileDescriptor = new TileDescriptor(collisionMode, currentLevel.GetWorldPosition(i, j), new Point(i, j),tileBounds);
 
-                            Player player = obj as Player;
-                            if (player != null)
-                            {
-                                GameEventManager.Instance.PlayerCollision(player, tileDescriptor, penDepth);
-                            }
-                            else {
-                                GameEventManager.Instance.NonPlayerCollision(obj, tileDescriptor, penDepth);
-                            }
+                        Player player = obj as Player;
+                        if (player != null)
+                        {
+                            GameEventManager.Instance.PlayerCollision(player, tileDescriptor, penDepth);
                         }
+                        else {
+                            GameEventManager.Instance.NonPlayerCollision(obj, tileDescriptor, penDepth);
+                        }
+                        
                     }
                 }
             }

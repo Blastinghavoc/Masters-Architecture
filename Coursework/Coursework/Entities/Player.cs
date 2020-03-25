@@ -122,17 +122,25 @@ namespace Coursework.Entities
             {
                 case TileDescriptor tile:
                     {
-                        var absCollY = Math.Abs(e.collisionDepth.Y);
-                        var absCollX = Math.Abs(e.collisionDepth.X);
-
-                        //Collided from above something, therefore we are now grounded
-                        if (absCollY < absCollX && e.collisionDepth.Y < 0 && bottomAtLastUpdate >= tile.bounds.Top)
+                        if (tile.collisionMode == TileCollisionMode.solid)
                         {
-                            jumpsRemaining = maxJumps;
-                        }
+                            var absCollY = Math.Abs(e.collisionDepth.Y);
+                            var absCollX = Math.Abs(e.collisionDepth.X);
 
-                        //Default collision response moves the player such that they are no longer colliding
-                        StaticCollisionResponse(e.collisionDepth);
+                            //Collided from above something, therefore we are now grounded
+                            if (absCollY < absCollX && e.collisionDepth.Y < 0 && bottomAtLastUpdate >= tile.bounds.Top)
+                            {
+                                jumpsRemaining = maxJumps;
+                            }
+
+                            //Default collision response moves the player such that they are no longer colliding
+                            StaticCollisionResponse(e.collisionDepth);
+                        }
+                        else if (tile.collisionMode == TileCollisionMode.lava)
+                        {
+                            //Take damage on collision with lava
+                            TakeDamage(1);
+                        }
                     }
                     break;
                 case Enemy enemy:
