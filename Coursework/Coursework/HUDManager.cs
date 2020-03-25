@@ -36,12 +36,12 @@ namespace Coursework
             elements.Add(element);
         }        
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(GraphicsDevice graphicsDevice)
         {
             //Use a separate sprite batch with Point sampling to avoid blurry text.
             //Based on advice from http://community.monogame.net/t/how-to-change-spritefont-sizes-without-anit-aliasing/9514
-            var myBatch = new SpriteBatch(spriteBatch.GraphicsDevice);
-            myBatch.Begin(transformMatrix: transformMatrix, samplerState: SamplerState.PointWrap);
+            var myBatch = new SpriteBatch(graphicsDevice);
+            myBatch.Begin(sortMode: SpriteSortMode.BackToFront,transformMatrix: transformMatrix, samplerState: SamplerState.PointWrap);
             
             foreach (var item in elements)
             {

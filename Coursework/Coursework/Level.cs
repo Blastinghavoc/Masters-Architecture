@@ -197,7 +197,7 @@ namespace Coursework
             }
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch)
         {
             //Draw all tiles
             for (int i = 0; i < tiles.GetLength(0); i++)

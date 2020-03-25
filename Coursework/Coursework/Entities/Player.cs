@@ -223,16 +223,19 @@ namespace Coursework.Entities
             string filePath = GameData.Instance.playerData.walkAnimationPath;
 
             Unpacker unpacker = new Unpacker(content);
-            var walkAnim = unpacker.Unpack(animationData,filePath);            
+            var walkAnim = unpacker.Unpack(animationData,filePath);
+            walkAnim.LayerDepth = 0.1f;
 
             animations[1] = walkAnim;
 
             Texture2D idleTex = content.Load<Texture2D>(GameData.Instance.playerData.idlePath);
             Sprite idleSprite = new Sprite(idleTex, texScale, Color.White);
+            idleSprite.LayerDepth = 0.1f;
             animations[0] = idleSprite;
 
             Texture2D jumpTex = content.Load<Texture2D>(GameData.Instance.playerData.jumpPath);
             Sprite jumpSprite = new Sprite(jumpTex, texScale, Color.White);
+            jumpSprite.LayerDepth = 0.1f;
             animations[2] = jumpSprite;
 
         }

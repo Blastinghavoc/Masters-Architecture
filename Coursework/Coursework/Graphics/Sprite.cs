@@ -25,6 +25,7 @@ namespace Coursework.Graphics
         public Vector2 Size => new Vector2(texture.Width * scale.X, texture.Height * scale.Y);
 
         public float Rotation { get; set; } = 0;
+        public float LayerDepth { get; set; } = 0.5f;
 
         public Sprite(Texture2D texture, Vector2 scale,Color color)
         {
@@ -38,7 +39,7 @@ namespace Coursework.Graphics
         public virtual void Draw(SpriteBatch spriteBatch, SpriteEffects effect = SpriteEffects.None)
         {
             var drawPosition = position + PositionOffset;
-            spriteBatch.Draw(texture,position: drawPosition, color: color,effects: effect,scale: scale,origin: RotationOrigin, rotation: Rotation);
+            spriteBatch.Draw(texture,position: drawPosition, color: color,effects: effect,scale: scale,origin: RotationOrigin, rotation: Rotation, layerDepth: LayerDepth);
         }
 
 

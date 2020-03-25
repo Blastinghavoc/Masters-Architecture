@@ -35,17 +35,16 @@ namespace Coursework.StateMachine.GameStates
             GameLost = false;
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             //Draw level and all entities managed by it
-            currentLevel.Draw(gameTime, spriteBatch);
+            currentLevel.Draw(spriteBatch);
 
             //Draw projectiles
             projectileManager.Draw(spriteBatch);
 
             //Draw player
             player.Draw(spriteBatch);
-            base.Draw(gameTime, spriteBatch);
         }
 
         public override void InitHUD()

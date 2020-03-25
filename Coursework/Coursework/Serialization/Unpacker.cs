@@ -38,6 +38,9 @@ namespace Coursework.Serialization
 
             var newAnimation = Unpack(d.animationData,enemyFilePath);
 
+            newAnimation.LayerDepth = 0.2f;//Set layer depths
+            corpseAppearance.LayerDepth = 0.2f;
+
             return new Enemy(newAnimation,corpseAppearance, Vector2.Zero, 1, 1, d.enemyType); ;
         }
 

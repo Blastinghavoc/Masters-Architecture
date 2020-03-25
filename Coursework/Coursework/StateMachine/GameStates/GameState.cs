@@ -32,11 +32,39 @@ namespace Coursework.StateMachine.GameStates
             LoadContent();
         }
 
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        /// <summary>
+        /// Handles drawing sequence.
+        /// Note that anything in PreDraw and 
+        /// PostDraw creates its own spritebatch.
+        /// </summary>
+        public void Draw()
         {
-            background.Draw(spriteBatch);
-            //Draw hud
-            hudManager.Draw(spriteBatch);            
+            PreDraw();
+
+            SpriteBatch spriteBatch = new SpriteBatch(owner.GraphicsDevice);
+            spriteBatch.Begin(sortMode: SpriteSortMode.BackToFront, transformMatrix: owner.camera.Transform);
+
+            Draw(spriteBatch);
+
+            spriteBatch.End();
+
+            PostDraw();
+        }
+
+        private void PreDraw()
+        {
+            //Draw background
+            background.Draw(owner.GraphicsDevice);
+        }
+
+        private void PostDraw()
+        {
+            //Draw HUD last, over everything else
+            hudManager.Draw(owner.GraphicsDevice);
+        }
+
+        public virtual void Draw(SpriteBatch spriteBatch)
+        {            
         }
 
         public override void OnExit(object owner)

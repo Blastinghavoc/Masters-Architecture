@@ -40,7 +40,7 @@ namespace Coursework.Entities
             Damage = damage;
             enemyType = type;
             interactableType = InteractableType.enemy;
-            CorpseAppearance = corpseAppearance;
+            CorpseAppearance = corpseAppearance;            
 
             InitialiseBrain();
         }

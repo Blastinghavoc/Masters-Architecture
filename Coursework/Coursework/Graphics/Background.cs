@@ -21,16 +21,15 @@ namespace Coursework.Graphics
         }
 
         //Texture wrapping and scrolling based on https://www.david-gouveia.com/scrolling-textures-in-xna
-        public override void Draw(SpriteBatch spriteBatch, SpriteEffects effect = SpriteEffects.None)
+        public void Draw(GraphicsDevice device, SpriteEffects effect = SpriteEffects.None)
         {
             //New spritebatch to render in tiled mode
-            var device = spriteBatch.GraphicsDevice;
             var myBatch = new SpriteBatch(device);
             myBatch.Begin(sortMode:SpriteSortMode.BackToFront,samplerState:SamplerState.LinearWrap);
 
             var screenRect = new Rectangle((int)position.X, (int)position.Y, device.Viewport.Width, device.Viewport.Height);    
             
-            myBatch.Draw(texture, Vector2.Zero, screenRect, color,Rotation,rotationOrigin,scale,effect,0);
+            myBatch.Draw(texture, Vector2.Zero, screenRect, color,Rotation,rotationOrigin,scale,effect,1);
 
             myBatch.End();
         }

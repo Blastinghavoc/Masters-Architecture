@@ -39,6 +39,8 @@ namespace Coursework.Graphics
 
         public float Rotation { get; set; } = 0;
 
+        public float LayerDepth { get; set; } = 0.5f;
+
         private Vector2 rotationOrigin;
         public Vector2 RotationOrigin { get => rotationOrigin; set { rotationOrigin = value; PositionOffset = RotationOrigin * scale; } }
         public Vector2 PositionOffset { get; private set; }
@@ -133,7 +135,7 @@ namespace Coursework.Graphics
             // Only draw the animation when we are active
             if (Active)
             {                
-                spriteBatch.Draw(Image, destinationRectangle: destinationRect, sourceRectangle: sourceRect, color: color, effects: effect,origin: RotationOrigin,rotation: Rotation);
+                spriteBatch.Draw(Image, destinationRectangle: destinationRect, sourceRectangle: sourceRect, color: color, effects: effect,origin: RotationOrigin,rotation: Rotation,layerDepth: LayerDepth);
             }
         }
 

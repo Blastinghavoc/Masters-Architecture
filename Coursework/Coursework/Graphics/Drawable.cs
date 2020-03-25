@@ -25,6 +25,8 @@ namespace Coursework.Graphics
         //Display size
         Vector2 Size { get; }
 
+        float LayerDepth { get; set; }
+
         Drawable Clone();
     }
 }

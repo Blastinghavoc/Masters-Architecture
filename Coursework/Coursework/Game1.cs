@@ -17,7 +17,6 @@ namespace Coursework
     public class Game1 : Game
     {
         public GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
         public SpriteFont font;
         public Camera camera;
 
@@ -88,9 +87,6 @@ namespace Coursework
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
             font = Content.Load<SpriteFont>("Fonts/gamefont");//Same font as used in the labs
 
             GameStateMachine.Initialise("Start");
@@ -125,17 +121,14 @@ namespace Coursework
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            spriteBatch.Begin(transformMatrix: camera.Transform);            
+            GraphicsDevice.Clear(Color.CornflowerBlue);          
 
             var gameState = GameStateMachine.CurrentState as GameState;
             if (gameState != null)
             {
-                gameState.Draw(gameTime, spriteBatch);                
+                gameState.Draw();                
             }
 
-            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
