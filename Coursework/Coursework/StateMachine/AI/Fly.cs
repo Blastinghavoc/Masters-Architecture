@@ -99,8 +99,7 @@ namespace Coursework.StateMachine.AI.Fly
                 Point belowTile;
 
                 belowTile = currentLevel.GetTileIndices(enemy.BoundingBox.GetBottomCenter());
-                //belowTile.Y += 1;
-
+                
                 if (currentLevel.GetCollisionModeAt(belowTile) != TileCollisionMode.solid)
                 {
                     //Update position

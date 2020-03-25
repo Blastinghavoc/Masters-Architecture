@@ -89,6 +89,10 @@ namespace Coursework.StateMachine.Player
 
     }
 
+    /// <summary>
+    /// State that does nothing.
+    /// In future it could display a corpse before ending the game.
+    /// </summary>
     class Dead : State
     {
         public Dead()
@@ -97,8 +101,7 @@ namespace Coursework.StateMachine.Player
         }
 
         public override void OnEnter(object owner)
-        {
-            GameEventManager.Instance.PlayerDied();
+        {            
         }
 
         public override void OnExit(object owner)

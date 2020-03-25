@@ -191,6 +191,11 @@ namespace Coursework.Entities
             Health -= amount;
             damageImmunityTimerSeconds = damageImmunityDuration;
             GameEventManager.Instance.PlayerHealthChanged(this);
+            //Fire the player died event if necessary
+            if (!IsAlive)
+            {
+                GameEventManager.Instance.PlayerDied();
+            }
         }
 
         public void SetPosition(Vector2 pos)
@@ -224,6 +229,9 @@ namespace Coursework.Entities
 
         }
 
+        /// <summary>
+        /// Create the animator FSM for the player.
+        /// </summary>
         private void InitialiseAnimator()
         {
             animator = new FSM(this);
