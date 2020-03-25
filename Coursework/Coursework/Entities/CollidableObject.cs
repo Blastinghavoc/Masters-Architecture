@@ -69,12 +69,14 @@ namespace Coursework.Entities
             //Adjust in direction of minimum overlap
             if (yMag > xMag)
             {
+                bool left = penetrationDepth.X > 0;//Colliding as if moving left into the object
+
                 //Sub-integer correction for very small penetration depth
                 var xAdjustment = penetrationDepth.X;
                 if (xMag ==1)
                 {
                     var floatRemainder = Position.X % 1;
-                    if (xAdjustment > 0)
+                    if (left)
                     {
                         xAdjustment = 1- floatRemainder;
                         xAdjustment += epsilon;
@@ -84,20 +86,32 @@ namespace Coursework.Entities
                         xAdjustment = (floatRemainder > 0) ? -floatRemainder : -1;
                         xAdjustment -= epsilon;
                     }                    
-                    //xAdjustment *= Math.Sign(penetrationDepth.X);
                 }
 
                 adjustment = new Vector2(xAdjustment, 0);
-                Velocity = new Vector2(0, Velocity.Y);//Arrest velocity in colliding direction
+
+                float arrestedVel = Velocity.X;
+                if (left)
+                {
+                    arrestedVel = Math.Max(arrestedVel, 0);
+                }
+                else
+                {
+                    arrestedVel = Math.Min(arrestedVel, 0);
+                }
+
+                Velocity = new Vector2(arrestedVel, Velocity.Y);//Arrest velocity in colliding direction
             }
             else
             {
+                bool up = penetrationDepth.Y > 0;//Colliding as if moving up into the object
+
                 //Sub-integer correction for very small penetration depth
                 var yAdjustment = penetrationDepth.Y;
                 if (yMag == 1)
                 {
                     var floatRemainder = Position.Y % 1;
-                    if (yAdjustment > 0)
+                    if (up)
                     {
                         yAdjustment = 1 - floatRemainder;
                         yAdjustment += epsilon;
@@ -107,11 +121,21 @@ namespace Coursework.Entities
                         yAdjustment = (floatRemainder > 0) ? -floatRemainder : -1;
                         yAdjustment -= epsilon;
                     }
-                    //yAdjustment *= Math.Sign(penetrationDepth.Y);
                 }
 
                 adjustment = new Vector2(0, yAdjustment);
-                Velocity = new Vector2(Velocity.X,0);//Arrest velocity in colliding direction
+
+                float arrestedVel = Velocity.Y;
+                if (up)
+                {
+                    arrestedVel = Math.Max(arrestedVel, 0);
+                }
+                else
+                {
+                    arrestedVel = Math.Min(arrestedVel, 0);
+                }
+
+                Velocity = new Vector2(Velocity.X,arrestedVel);//Arrest velocity in colliding direction
             }
 
             this.Position += adjustment;

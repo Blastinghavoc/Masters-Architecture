@@ -17,14 +17,19 @@ namespace Coursework.Entities
     public enum EnemyType
     {
         slime,
-        fly
+        fly,
+        blocker
     }
 
     public class Enemy : Interactable
     {
-        public int Health { get; set; }
+        public int Health { get; protected set; }
         public int Damage { get; set; }
         public bool IsAlive { get => Health > 0; }
+
+        public readonly bool IsInvincible = false;
+
+        public readonly bool IsSolid = false;//Determines how the player collides with the enemy
 
         public EnemyType enemyType { get; private set; }
 
@@ -34,13 +39,15 @@ namespace Coursework.Entities
 
         public Decal CorpseAppearance { get; protected set; }
 
-        public Enemy(Drawable appearance,Decal corpseAppearance, Vector2 position, int health, int damage,EnemyType type = EnemyType.slime) : base(appearance, position)
+        public Enemy(Drawable appearance,Decal corpseAppearance, Vector2 position, int health, int damage,EnemyType type = EnemyType.slime,bool invincible=false, bool solid = false) : base(appearance, position)
         {
             Health = health;
             Damage = damage;
             enemyType = type;
             interactableType = InteractableType.enemy;
-            CorpseAppearance = corpseAppearance;            
+            CorpseAppearance = corpseAppearance;
+            IsInvincible = invincible;
+            IsSolid = solid;
 
             InitialiseBrain();
         }
@@ -74,6 +81,20 @@ namespace Coursework.Entities
         private void InitialiseBrain()
         {
             brain = BrainFactory.GetBrainFor(this);
+        }
+
+        public void SetHealth(int amount)
+        {
+            Health = amount;
+        }
+
+        public void TakeDamage(int amount)
+        {
+            if (IsInvincible)
+            {
+                return;
+            }
+            Health -= amount;
         }
     }
 }

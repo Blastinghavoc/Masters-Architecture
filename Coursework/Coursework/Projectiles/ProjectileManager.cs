@@ -111,7 +111,7 @@ namespace Coursework.Projectiles
             Enemy enemy = e.colllidedWith as Enemy;
             if (enemy!= null && proj.IsAlly)
             {
-                enemy.Health -= proj.Damage;
+                enemy.TakeDamage(proj.Damage);
             }
         }
 

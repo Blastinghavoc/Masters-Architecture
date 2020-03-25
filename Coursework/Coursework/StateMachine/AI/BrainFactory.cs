@@ -45,6 +45,23 @@ namespace Coursework.StateMachine.AI
                         brain.Initialise("Patrol");
                     }
                     break;
+                case EnemyType.blocker:
+                    {
+                        var idle1 = new Blocker.Idle();
+                        var idle2 = new Blocker.Idle();
+                        var up = new Blocker.Up(enemy);
+                        var down = new Blocker.Down(enemy);
+
+                        //Behaviour loop: down -> idle -> up -> idle -> down
+                        idle1.AddTransition(down, () => { return idle1.DurationOver; });
+                        down.AddTransition(idle2, () => { return down.Done; });
+                        idle2.AddTransition(up, () => { return idle2.DurationOver; });
+                        up.AddTransition(idle1, () => { return up.Done; });
+
+                        brain.AddStates(idle1, idle2, up, down);
+                        brain.Initialise("Idle");
+                    }
+                    break;
                 default:
                     break;
             }

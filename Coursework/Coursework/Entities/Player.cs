@@ -124,17 +124,7 @@ namespace Coursework.Entities
                     {
                         if (tile.collisionMode == TileCollisionMode.solid)
                         {
-                            var absCollY = Math.Abs(e.collisionDepth.Y);
-                            var absCollX = Math.Abs(e.collisionDepth.X);
-
-                            //Collided from above something, therefore we are now grounded
-                            if (absCollY < absCollX && e.collisionDepth.Y < 0 && bottomAtLastUpdate >= tile.bounds.Top)
-                            {
-                                jumpsRemaining = maxJumps;
-                            }
-
-                            //Default collision response moves the player such that they are no longer colliding
-                            StaticCollisionResponse(e.collisionDepth);
+                            SolidCollisionResponse(e.collisionDepth, tile.bounds);
                         }
                         else if (tile.collisionMode == TileCollisionMode.lava)
                         {
@@ -150,12 +140,35 @@ namespace Coursework.Entities
                             //Provided the enemy is alive, they may damage the player
                             //Note that the player may be immune and ignore it.
                             TakeDamage(enemy.Damage);
+
+                            if (enemy.IsSolid)
+                            {//If the enemy is solid, perform collision response
+                                SolidCollisionResponse(e.collisionDepth, enemy.BoundingBox);
+                            }
                         }                        
                     }
                     break;
                 default:
                     break;
             }               
+        }
+
+        /// <summary>
+        /// Collision response when hitting a solid object.
+        /// </summary>
+        private void SolidCollisionResponse(Vector2 collisionDepth, Rectangle collidedWithBounds)
+        {
+            var absCollY = Math.Abs(collisionDepth.Y);
+            var absCollX = Math.Abs(collisionDepth.X);
+
+            //Collided from above something, therefore we are now grounded
+            if (absCollY < absCollX && collisionDepth.Y < 0 && bottomAtLastUpdate >= collidedWithBounds.Top)
+            {
+                jumpsRemaining = maxJumps;
+            }
+
+            //Use base class collision response that moves the player such that they are no longer colliding
+            StaticCollisionResponse(collisionDepth);
         }
 
         //What to do when the player starts colliding with something
@@ -172,7 +185,7 @@ namespace Coursework.Entities
                 //Must be above the enemy by at least half its height to squash it
                 if (bottom.Y <= enemyBottom.Y - enemyHeight / 2)
                 {
-                    enemy.Health = 0;
+                    enemy.TakeDamage(1);
                 }
                 //Otherwise the squash fails. The player may take damage; see the WhileColliding function
             }
@@ -204,6 +217,16 @@ namespace Coursework.Entities
             {
                 GameEventManager.Instance.PlayerDied();
             }
+        }
+
+        /// <summary>
+        /// Forcibly kill the player.
+        /// </summary>
+        public void Kill()
+        {
+            Health = 0;
+            GameEventManager.Instance.PlayerHealthChanged(this);
+            GameEventManager.Instance.PlayerDied();            
         }
 
         public void SetPosition(Vector2 pos)

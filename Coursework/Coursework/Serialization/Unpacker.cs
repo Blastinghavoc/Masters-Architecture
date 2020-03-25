@@ -36,12 +36,23 @@ namespace Coursework.Serialization
             var deadTex = content.Load<Texture2D>(enemyFilePath + d.corpseTextureName);
             var corpseAppearance = new Decal(deadTex, Utils.scaleForTexture(deadTex), Color.White);
 
-            var newAnimation = Unpack(d.animationData,enemyFilePath);
+            Drawable appearance;
+            if (d.animationData.numFrames > 1)
+            {
+                appearance = Unpack(d.animationData, enemyFilePath);
+            }
+            else
+            {
+                //If the animation has only 1 frame, it's actually a sprite
+                var tex = content.Load<Texture2D>(enemyFilePath + d.animationData.baseName);
+                Sprite sprite = new Sprite(tex, Utils.scaleForTexture(tex), Color.White);
+                appearance = sprite;
+            }
 
-            newAnimation.LayerDepth = 0.2f;//Set layer depths
+            appearance.LayerDepth = 0.2f;//Set layer depths
             corpseAppearance.LayerDepth = 0.2f;
 
-            return new Enemy(newAnimation,corpseAppearance, Vector2.Zero, 1, 1, d.enemyType); ;
+            return new Enemy(appearance, corpseAppearance, Vector2.Zero, d.health, d.damage, d.enemyType,d.invincible,d.solid);
         }
 
         public Interactable Unpack(InteractableData d)

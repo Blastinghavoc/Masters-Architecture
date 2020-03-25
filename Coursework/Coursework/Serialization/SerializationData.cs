@@ -98,6 +98,8 @@ namespace Coursework.Serialization
         public EnemyType enemyType;
         public int health;
         public int damage;
+        public bool invincible;
+        public bool solid;
         public AnimationData animationData;
         public string corpseTextureName;
     }

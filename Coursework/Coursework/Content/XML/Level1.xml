@@ -43,6 +43,15 @@
         <bind>
             <color>
                 <R>0</R>
+                <G>255</G>
+                <B>0</B>
+                <A>255</A>
+            </color>
+            <entityName>Blocker</entityName>
+        </bind>
+        <bind>
+            <color>
+                <R>0</R>
                 <G>124</G>
                 <B>124</B>
                 <A>255</A>

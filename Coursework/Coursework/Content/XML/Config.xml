@@ -111,6 +111,8 @@
                <enemyType>slime</enemyType>
                <health>1</health>
                <damage>1</damage>
+               <invincible>false</invincible>
+               <solid>false</solid>
                <animationData>
                   <baseName>slimeWalk</baseName>
                   <frameDimensions>
@@ -129,6 +131,8 @@
                <enemyType>fly</enemyType>
                <health>1</health>
                <damage>1</damage>
+               <invincible>false</invincible>
+               <solid>false</solid>
                <animationData>
                   <baseName>flyFly</baseName>
                   <frameDimensions>
@@ -139,6 +143,26 @@
                   <frameDuration>100</frameDuration>
                </animationData>
                <corpseTextureName>flyDead</corpseTextureName>
+            </entityData>
+         </spec>
+         <spec>
+            <entityName>Blocker</entityName>
+            <entityData xsi:type="EnemyData">
+               <enemyType>blocker</enemyType>
+               <health>1</health>
+               <damage>0</damage>
+               <invincible>true</invincible>
+               <solid>true</solid>
+               <animationData>
+                  <baseName>blockerMad</baseName>
+                  <frameDimensions>
+                  <X>51</X>
+                  <Y>51</Y>
+                  </frameDimensions>
+                  <numFrames>1</numFrames>
+                  <frameDuration>100</frameDuration>
+               </animationData>
+               <corpseTextureName>blockerSad</corpseTextureName>
             </entityData>
          </spec>
       </entitySpecifications>
