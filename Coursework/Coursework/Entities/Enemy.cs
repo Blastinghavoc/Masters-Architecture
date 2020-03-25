@@ -73,39 +73,7 @@ namespace Coursework.Entities
 
         private void InitialiseBrain()
         {
-            brain = new FSM(this);
-
-            switch (enemyType)
-            {
-                case EnemyType.slime:
-                    {
-                        State patrol = new Slime.Patrol();
-                        State dead = new Dead();
-                        patrol.AddTransition(dead, () => { return !this.IsAlive; });
-
-                        brain.AddState(patrol);
-                        brain.AddState(dead);
-                        brain.Initialise("Patrol");
-                    }
-                    break;
-                case EnemyType.fly:
-                    {
-                        var patrol = new Fly.Patrol();
-                        var dying = new Fly.Dying(CorpseAppearance);
-                        var dead = new Dead();
-
-                        patrol.AddTransition(dying, () => { return !this.IsAlive; });
-                        dying.AddTransition(dead,() => { return dying.HitGround; });
-
-                        brain.AddState(patrol);
-                        brain.AddState(dying);
-                        brain.AddState(dead);
-                        brain.Initialise("Patrol");
-                    }
-                    break;
-                default:
-                    break;
-            }
+            brain = BrainFactory.GetBrainFor(this);
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Coursework.StateMachine
 {
-    class Transition
+    public class Transition
     {
         public readonly State NextState;
         public readonly Func<bool> Condition;

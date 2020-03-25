@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Coursework.StateMachine
 {
-    abstract class State
+    public abstract class State
     {
         public abstract void OnEnter(object owner);
         public abstract void OnExit(object owner);

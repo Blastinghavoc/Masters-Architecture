@@ -10,7 +10,7 @@ namespace Coursework.StateMachine
     /// <summary>
     /// This class and the State and Transition classes are based on the lab 5 tutorial
     /// </summary>
-    class FSM
+    public class FSM
     {
         private object owner = null;
         private List<State> states = new List<State>();
