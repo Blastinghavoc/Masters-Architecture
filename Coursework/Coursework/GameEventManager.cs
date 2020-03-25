@@ -1,4 +1,5 @@
 ﻿using Coursework.Entities;
+using Coursework.Entities.Enemies;
 using Coursework.Projectiles;
 using Microsoft.Xna.Framework;
 using System;

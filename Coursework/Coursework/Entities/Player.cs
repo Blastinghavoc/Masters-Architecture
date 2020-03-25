@@ -10,6 +10,7 @@ using Coursework.StateMachine;
 using Coursework.StateMachine.Player;
 using Coursework.Serialization;
 using Coursework.Powerups;
+using Coursework.Entities.Enemies;
 
 namespace Coursework.Entities
 {

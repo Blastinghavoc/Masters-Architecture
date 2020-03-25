@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Coursework.Entities;
+using Coursework.Entities.Enemies;
 using Microsoft.Xna.Framework;
 
 /// <summary>

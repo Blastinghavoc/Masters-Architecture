@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Coursework.Graphics;
 using Coursework.Entities;
 using Microsoft.Xna.Framework;
+using Coursework.Entities.Enemies;
 
 namespace Coursework.StateMachine.AI.Fly
 {

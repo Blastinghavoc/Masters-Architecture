@@ -1,4 +1,5 @@
 ﻿using Coursework.Entities;
+using Coursework.Entities.Enemies;
 using Coursework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -52,7 +53,18 @@ namespace Coursework.Serialization
             appearance.LayerDepth = 0.2f;//Set layer depths
             corpseAppearance.LayerDepth = 0.2f;
 
-            return new Enemy(appearance, corpseAppearance, Vector2.Zero, d.health, d.damage, d.enemyType,d.invincible,d.solid);
+            //Instantiate as correct type
+            switch (d.enemyType)
+            {
+                case EnemyType.slime:
+                    return new Slime(appearance, corpseAppearance, Vector2.Zero, d.health, d.damage, d.invincible, d.solid);
+                case EnemyType.fly:
+                    return new Fly(appearance, corpseAppearance, Vector2.Zero, d.health, d.damage, d.invincible, d.solid);
+                case EnemyType.blocker:
+                    return new Blocker(appearance, corpseAppearance, Vector2.Zero, d.health, d.damage, d.invincible, d.solid);
+                default:
+                    return null;
+            }
         }
 
         public Interactable Unpack(InteractableData d)

@@ -12,26 +12,20 @@ using Slime = Coursework.StateMachine.AI.Slime;
 using Fly = Coursework.StateMachine.AI.Fly;
 using Coursework.StateMachine.AI;
 
-namespace Coursework.Entities
+namespace Coursework.Entities.Enemies
 {
-    public enum EnemyType
-    {
-        slime,
-        fly,
-        blocker
-    }
-
-    public class Enemy : Interactable
+    /// <summary>
+    /// Base class for all enemies in the game
+    /// </summary>
+    public abstract class Enemy : Interactable
     {
         public int Health { get; protected set; }
         public int Damage { get; set; }
         public bool IsAlive { get => Health > 0; }
 
-        public readonly bool IsInvincible = false;
+        public bool IsInvincible = false;//Determines whether the enemy can take damage
 
-        public readonly bool IsSolid = false;//Determines how the player collides with the enemy
-
-        public EnemyType enemyType { get; private set; }
+        public bool IsSolid = false;//Determines how the player collides with the enemy
 
         private FSM brain;
 
@@ -39,11 +33,10 @@ namespace Coursework.Entities
 
         public Decal CorpseAppearance { get; protected set; }
 
-        public Enemy(Drawable appearance,Decal corpseAppearance, Vector2 position, int health, int damage,EnemyType type = EnemyType.slime,bool invincible=false, bool solid = false) : base(appearance, position)
+        public Enemy(Drawable appearance,Decal corpseAppearance, Vector2 position, int health, int damage,bool invincible=false, bool solid = false) : base(appearance, position)
         {
             Health = health;
             Damage = damage;
-            enemyType = type;
             interactableType = InteractableType.enemy;
             CorpseAppearance = corpseAppearance;
             IsInvincible = invincible;
@@ -67,7 +60,7 @@ namespace Coursework.Entities
 
         public new Enemy Clone()
         {
-            var tmp = this.MemberwiseClone() as Enemy;
+            var tmp = MemberwiseClone() as Enemy;
             tmp.Appearance = Appearance.Clone();
             tmp.InitialiseBrain();
             return tmp;
@@ -75,7 +68,7 @@ namespace Coursework.Entities
 
         public void SetAppearance(Drawable app)
         {
-            this.Appearance = app;
+            Appearance = app;
         }
 
         private void InitialiseBrain()

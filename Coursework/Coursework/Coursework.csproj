@@ -60,7 +60,10 @@
     <Compile Include="Camera.cs" />
     <Compile Include="CollisionManager.cs" />
     <Compile Include="Entities\CollidableObject.cs" />
-    <Compile Include="Entities\Enemy.cs" />
+    <Compile Include="Entities\Enemies\Blocker.cs" />
+    <Compile Include="Entities\Enemies\Enemy.cs" />
+    <Compile Include="Entities\Enemies\Fly.cs" />
+    <Compile Include="Entities\Enemies\Slime.cs" />
     <Compile Include="Entities\Interactable.cs" />
     <Compile Include="Entities\PhysicsObject.cs" />
     <Compile Include="Entities\Powerup.cs" />

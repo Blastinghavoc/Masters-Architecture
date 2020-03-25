@@ -93,6 +93,17 @@ namespace Coursework.Serialization
         public powerUpType powerupType;
     }
 
+    /// <summary>
+    /// Used to simplify serialization of enemies, since they
+    /// currently all have the same data.
+    /// </summary>
+    public enum EnemyType
+    {
+        slime,
+        fly,
+        blocker
+    }
+
     public class EnemyData : LevelEntityData
     {
         public EnemyType enemyType;

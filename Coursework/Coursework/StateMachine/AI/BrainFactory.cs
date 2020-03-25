@@ -1,4 +1,5 @@
 ﻿using Coursework.Entities;
+using Coursework.Entities.Enemies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,9 @@ namespace Coursework.StateMachine.AI
         public static FSM GetBrainFor(Enemy enemy) {
             var brain = new FSM(enemy);
 
-            switch (enemy.enemyType)
+            switch (enemy)
             {
-                case EnemyType.slime:
+                case Entities.Enemies.Slime s:
                     {
                         State patrol = new Slime.Patrol();
                         State dead = new Dead();
@@ -30,7 +31,7 @@ namespace Coursework.StateMachine.AI
                         brain.Initialise("Patrol");
                     }
                     break;
-                case EnemyType.fly:
+                case Entities.Enemies.Fly f:
                     {
                         var patrol = new Fly.Patrol();
                         var dying = new Fly.Dying(enemy.CorpseAppearance);
@@ -45,7 +46,7 @@ namespace Coursework.StateMachine.AI
                         brain.Initialise("Patrol");
                     }
                     break;
-                case EnemyType.blocker:
+                case Entities.Enemies.Blocker b:
                     {
                         var idle1 = new Blocker.Idle();
                         var idle2 = new Blocker.Idle();

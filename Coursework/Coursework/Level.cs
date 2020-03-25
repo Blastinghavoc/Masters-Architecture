@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Coursework.Entities;
 using Coursework.Graphics;
 using Coursework.Serialization;
+using Coursework.Entities.Enemies;
 
 namespace Coursework
 {
