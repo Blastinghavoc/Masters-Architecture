@@ -105,7 +105,6 @@ namespace Coursework.StateMachine.GameStates
             //Detect collisions
             collisionManager.Update(currentLevel, player, projectileManager);
 
-
             //Update camera
             owner.camera.Position = player.Position;
             owner.camera.ConstrainToArea(currentLevel.LevelBounds);

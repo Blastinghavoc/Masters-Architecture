@@ -69,7 +69,7 @@ namespace Coursework.StateMachine.GameStates
 
         public override void OnExit(object owner)
         {
-            Dispose();
+            UnloadContent();
         }
 
         public virtual void LoadContent() {

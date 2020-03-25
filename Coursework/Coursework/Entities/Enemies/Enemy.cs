@@ -17,7 +17,7 @@ namespace Coursework.Entities.Enemies
     /// <summary>
     /// Base class for all enemies in the game
     /// </summary>
-    public abstract class Enemy : Interactable
+    public abstract class Enemy : Interactable,IDisposable
     {
         public int Health { get; protected set; }
         public int Damage { get; set; }
@@ -88,6 +88,15 @@ namespace Coursework.Entities.Enemies
                 return;
             }
             Health -= amount;
+        }
+
+        /// <summary>
+        /// The brain must be disposed of to ensure any events
+        /// subscribed to by brain states are unsubscribed.
+        /// </summary>
+        public void Dispose()
+        {
+            brain.Dispose();
         }
     }
 }

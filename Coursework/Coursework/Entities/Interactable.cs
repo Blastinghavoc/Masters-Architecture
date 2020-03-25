@@ -50,7 +50,5 @@ namespace Coursework.Entities
         nextLevel,
         projectile,
         powerup,
-        //powerup_fireball,
-        //powerup_invincibility,
     }
 }

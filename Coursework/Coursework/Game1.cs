@@ -98,6 +98,7 @@ namespace Coursework
         /// </summary>
         protected override void UnloadContent()
         {
+            GameStateMachine.Dispose();
         }
 
         /// <summary>

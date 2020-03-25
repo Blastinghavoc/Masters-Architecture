@@ -10,7 +10,7 @@ namespace Coursework.StateMachine
     /// <summary>
     /// This class and the State and Transition classes are based on the lab 5 tutorial
     /// </summary>
-    public class FSM
+    public class FSM:IDisposable
     {
         private object owner = null;
         private List<State> states = new List<State>();
@@ -71,5 +71,23 @@ namespace Coursework.StateMachine
             CurrentState.Update(owner, gameTime);
         }
 
+        /// <summary>
+        /// Disposes of the current state, if it is disposable.
+        /// Note that states are expected to release any
+        /// require resources on exit, so only the current
+        /// state should ever need disposing.
+        /// </summary>
+        public void Dispose()
+        {
+            //Dispose of the current state.
+            if (CurrentState != null)
+            {
+                var disp = CurrentState as IDisposable;
+                if (disp != null)
+                {
+                    disp.Dispose();
+                }
+            }            
+        }
     }
 }

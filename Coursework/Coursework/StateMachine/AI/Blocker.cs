@@ -40,7 +40,7 @@ namespace Coursework.StateMachine.AI.Blocker
         }
     }
 
-    class Up : State
+    class Up : State,EventSubscriber
     {
         public float Speed = 64;
         public bool Done = false;
@@ -55,12 +55,12 @@ namespace Coursework.StateMachine.AI.Blocker
         public override void OnEnter(object owner)
         {
             Done = false;
-            GameEventManager.Instance.WhilePlayerColliding += OnPlayerCollision;
+            BindEvents();
         }
 
         public override void OnExit(object owner)
         {
-            GameEventManager.Instance.WhilePlayerColliding -= OnPlayerCollision;
+            UnbindEvents();
         }
 
         public override void Update(object owner, GameTime gameTime)
@@ -107,9 +107,24 @@ namespace Coursework.StateMachine.AI.Blocker
                 }
             }
         }
+
+        public void BindEvents()
+        {
+            GameEventManager.Instance.WhilePlayerColliding += OnPlayerCollision;
+        }
+
+        public void UnbindEvents()
+        {
+            GameEventManager.Instance.WhilePlayerColliding -= OnPlayerCollision;
+        }
+
+        public void Dispose()
+        {
+            UnbindEvents();
+        }
     }
 
-    class Down : State
+    class Down : State,EventSubscriber
     {
         public float Speed = 96;
         public bool Done = false;
@@ -124,12 +139,12 @@ namespace Coursework.StateMachine.AI.Blocker
         public override void OnEnter(object owner)
         {
             Done = false;
-            GameEventManager.Instance.WhilePlayerColliding += OnPlayerCollision;
+            BindEvents();
         }
 
         public override void OnExit(object owner)
         {
-            GameEventManager.Instance.WhilePlayerColliding -= OnPlayerCollision;
+            UnbindEvents();
         }
 
         public override void Update(object owner, GameTime gameTime)
@@ -175,6 +190,21 @@ namespace Coursework.StateMachine.AI.Blocker
                     e.player.Kill();//Player got crushed
                 }
             }
+        }
+
+        public void BindEvents()
+        {
+            GameEventManager.Instance.WhilePlayerColliding += OnPlayerCollision;
+        }
+
+        public void UnbindEvents()
+        {
+            GameEventManager.Instance.WhilePlayerColliding -= OnPlayerCollision;
+        }
+
+        public void Dispose()
+        {
+            UnbindEvents();
         }
     }
 }

@@ -86,8 +86,12 @@ namespace Coursework
         {
             //Remove any interactables that were scheduled for deletion
             foreach (var item in killList)
-            {
+            {                
                 Interactables.Remove(item);
+                if (item is IDisposable d)
+                {
+                    d.Dispose();//Dispose of interactable if necessary
+                }
             }
             killList.Clear();
 
@@ -344,6 +348,14 @@ namespace Coursework
 
         public void Dispose()
         {
+            //Dispose of any disposable interactables
+            foreach (var item in Interactables)
+            {
+                if (item is IDisposable d)
+                {
+                    d.Dispose();
+                }
+            }
             content.Unload();
             UnbindEvents();
         }
