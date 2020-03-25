@@ -87,7 +87,6 @@
     <Compile Include="Serialization\SerializationData.cs" />
     <Compile Include="Serialization\Unpacker.cs" />
     <Compile Include="StateMachine\AI\Blocker.cs" />
-    <Compile Include="StateMachine\AI\BrainFactory.cs" />
     <Compile Include="StateMachine\AI\Fly.cs" />
     <Compile Include="StateMachine\AI\General.cs" />
     <Compile Include="StateMachine\AI\Slime.cs" />

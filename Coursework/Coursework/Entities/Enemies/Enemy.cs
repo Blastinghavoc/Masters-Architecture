@@ -27,7 +27,7 @@ namespace Coursework.Entities.Enemies
 
         public bool IsSolid = false;//Determines how the player collides with the enemy
 
-        private FSM brain;
+        protected FSM brain;
 
         public SpriteEffects DirectionalEffect { get; set; } = SpriteEffects.None;
 
@@ -71,10 +71,10 @@ namespace Coursework.Entities.Enemies
             Appearance = app;
         }
 
-        private void InitialiseBrain()
-        {
-            brain = BrainFactory.GetBrainFor(this);
-        }
+        /// <summary>
+        /// Subclasses must define their own behaviour
+        /// </summary>
+        protected abstract void InitialiseBrain();
 
         public void SetHealth(int amount)
         {
