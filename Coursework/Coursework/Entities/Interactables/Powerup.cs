@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Coursework.Entities.Interactables;
 using Coursework.Graphics;
+using Coursework.Levels;
 using Coursework.Powerups;
 using Microsoft.Xna.Framework;
 
-namespace Coursework.Entities
+namespace Coursework.Entities.Interactables
 {
     //A simple subclass of interactable that represents a powerup item
     class Powerup : Interactable

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Coursework.Entities;
 using Coursework.Entities.Enemies;
+using Coursework.Levels;
 using Microsoft.Xna.Framework;
 
 /// <summary>

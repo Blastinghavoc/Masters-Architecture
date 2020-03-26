@@ -12,7 +12,7 @@ using Coursework.Serialization;
 using Coursework.Entities.Enemies;
 using Coursework.Entities.Interactables;
 
-namespace Coursework
+namespace Coursework.Levels
 {
     /// <summary>
     /// Class representing a whole level in the game, based on class of same name in 
@@ -180,9 +180,10 @@ namespace Coursework
                             case EnemyData d:
                                 {
                                     var enemy = enemyPrefabs[colour];
-                                    var offset = new Vector2(0, tileSize.Y - enemy.Appearance.Size.Y);
-
                                     var newEnemy = enemy.Clone();//Prototype pattern
+
+                                    //Ensure the enemy is placed such that the bottom of them is on the ground (if applicable)
+                                    var offset = new Vector2(0, tileSize.Y - enemy.BoundingBox.Size.Y);
                                     newEnemy.SetPosition(GetWorldPosition(i, j) + offset);
 
                                     LevelEntities.Add(newEnemy);

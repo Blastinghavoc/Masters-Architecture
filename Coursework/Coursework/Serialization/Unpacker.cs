@@ -2,6 +2,7 @@
 using Coursework.Entities.Enemies;
 using Coursework.Entities.Interactables;
 using Coursework.Graphics;
+using Coursework.Levels;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;

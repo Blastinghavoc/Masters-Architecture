@@ -27,7 +27,6 @@ namespace Coursework.Projectiles
         public readonly ProjectileType projectileType;
 
         public float Speed { get; protected set; }
-        public Vector2 Direction { get; protected set; }
 
         //Support for potentially complex projectile behaviours
         private FSM behaviour;
@@ -47,8 +46,14 @@ namespace Coursework.Projectiles
             behaviour.Update(gameTime);
         }
 
+        /// <summary>
+        /// Speed is fixed, direction can be changed.
+        /// This changes the velocity of the projectile
+        /// to have the relevant speed in the given direction
+        /// </summary>
+        /// <param name="direction">Expected to be normalize</param>
         public void SetDirection(Vector2 direction) {
-            Direction = direction;
+            Velocity = direction * Speed;
         }
 
         private void InitialiseBehaviour()

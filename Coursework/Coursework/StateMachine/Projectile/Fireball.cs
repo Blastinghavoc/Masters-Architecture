@@ -37,7 +37,7 @@ namespace Coursework.StateMachine.Projectile
 
             projectile.Appearance.Rotation += 10*dt;
 
-            projectile.SetPosition(projectile.Position + projectile.Direction * projectile.Speed * dt);            
+            projectile.SetPosition(projectile.Position + projectile.Velocity * dt);            
         }
     }
 }

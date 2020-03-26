@@ -11,6 +11,7 @@ using Coursework.StateMachine.Player;
 using Coursework.Serialization;
 using Coursework.Powerups;
 using Coursework.Entities.Enemies;
+using Coursework.Levels;
 
 namespace Coursework.Entities
 {

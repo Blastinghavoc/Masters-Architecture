@@ -137,7 +137,7 @@ namespace Coursework
     public class NonPlayerCollisionEventArgs
     {
         public CollidableObject collider;
-        public Object colllidedWith;
+        public object colllidedWith;
         public Vector2 collisionDepth;
         public CollisionType collisionType;
 

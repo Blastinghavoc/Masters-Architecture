@@ -13,7 +13,7 @@ namespace Coursework.Entities
     /// <summary>
     /// Represents a 2D game object
     /// </summary>
-    public abstract class GameObject
+    public class GameObject
     {
         public Drawable Appearance { get; protected set; }
 

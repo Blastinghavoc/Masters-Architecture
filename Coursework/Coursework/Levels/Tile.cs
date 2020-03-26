@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Coursework
+namespace Coursework.Levels
 {
     public enum TileCollisionMode {
         empty,

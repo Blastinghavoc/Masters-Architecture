@@ -25,7 +25,7 @@ namespace Coursework.Entities.Interactables
         /// This greatly reduces event subscription/unsubscription overhead
         /// by preventing each object having to manage its own subscriptions
         /// </summary>
-        public abstract void InteractOnEnter(Level sender, PlayerCollisionEventArgs e);
+        public abstract void InteractOnEnter(Levels.Level sender, PlayerCollisionEventArgs e);
 
         #region Inherited methods
 

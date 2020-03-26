@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Coursework.Entities.Enemies;
 using Coursework.Entities;
 using Microsoft.Xna.Framework;
+using Coursework.Levels;
 
 /// <summary>
 /// States for the behaviour of the Blocker enemy.
