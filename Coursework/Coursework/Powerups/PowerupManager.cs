@@ -5,6 +5,10 @@ using System.Collections.Generic;
 
 namespace Coursework.Powerups
 {
+    /// <summary>
+    /// Used to determine what effect to apply to the player
+    /// when a powerup is collected.
+    /// </summary>
     public enum powerUpType {
         fireball,
         invincibility,

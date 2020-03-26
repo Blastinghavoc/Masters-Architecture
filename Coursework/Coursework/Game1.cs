@@ -31,6 +31,12 @@ namespace Coursework
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+
+            //Set window size
+            graphics.PreferredBackBufferWidth = 1000;
+            graphics.PreferredBackBufferHeight = 600;
+            graphics.ApplyChanges();
+
             Content.RootDirectory = "Content";
         }
 
