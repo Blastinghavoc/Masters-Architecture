@@ -106,14 +106,18 @@ namespace Coursework.Entities
 
         public override void Draw(SpriteBatch spriteBatch, SpriteEffects effect = SpriteEffects.None)
         {
-            var defaultColor = currentAnimation.color;
+            var damageColour = Color.Red;
+
+            //Get colour from all active powerups
+            var powerupColour = powerupManager.GetCumulativeEffectColour();
+
+            //Interpolate with damage colour
+            var resultColour = Color.Lerp(powerupColour, damageColour, Math.Max(damageImmunityTimerSeconds / damageImmunityDuration, 0));
 
             //Apply special effect color
-            currentAnimation.color = powerupManager.GetCumulativeEffectColour();
+            currentAnimation.color = resultColour;
 
             currentAnimation.Draw(spriteBatch,effect | directionalEffect);
-
-            currentAnimation.color = defaultColor;
         }
 
         //What to do while the player is colliding with something
@@ -208,6 +212,11 @@ namespace Coursework.Entities
             if (IsInvincible || damageImmunityTimerSeconds > 0)
             {
                 return;//Can't take damage if immune
+            }
+
+            if (amount == 0)
+            {
+                return;
             }
 
             Health -= amount;
