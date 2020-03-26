@@ -11,11 +11,11 @@ using Coursework.StateMachine.Projectile;
 
 namespace Coursework.Projectiles
 {
-    /*
-     Unlike other interactables, projectiles may or may not interact with the player, depending on 
-     their affiliation (enemy/ally)
-    */
-    class Projectile : Interactable
+    /// <summary>
+    /// Represents a collidable projectile object.
+    /// May collide with players or enemies, depending on affiliation.
+    /// </summary>
+    public class Projectile : CollidableObject
     {
         private bool isEnemyAffiliated = false;
         public bool IsEnemy { get { return isEnemyAffiliated; } }
@@ -80,10 +80,9 @@ namespace Coursework.Projectiles
             isEnemyAffiliated = enemy;
         }
 
-        public new Projectile Clone()
+        public virtual new Projectile Clone()
         {
-            var tmp = this.MemberwiseClone() as Projectile;
-            tmp.Appearance = Appearance.Clone();
+            var tmp = base.Clone() as Projectile;
             tmp.InitialiseBehaviour();
             return tmp;
         }

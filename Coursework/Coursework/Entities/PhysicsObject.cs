@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Coursework.Graphics;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,14 @@ namespace Coursework.Entities
 
         protected Vector2 DragFactor { get; set; } = new Vector2(0.9f, 1);//Drag in each direction (multiplicative)
         protected float Gravity { get; set; } = 981;
+
+        //Inherited constructor
+        public PhysicsObject():base() { }
+
+        //Inherited constructor
+        public PhysicsObject(Drawable appearance, Vector2 position) : base(appearance, position)
+        {
+        }
 
         /// <summary>
         /// Implements basic physics based movement, but with no concept of mass,

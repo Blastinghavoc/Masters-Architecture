@@ -17,7 +17,7 @@ namespace Coursework.Entities.Enemies
     /// <summary>
     /// Base class for all enemies in the game
     /// </summary>
-    public abstract class Enemy : Interactable,IDisposable
+    public abstract class Enemy : CollidableObject, IDisposable
     {
         public int Health { get; protected set; }
         public int Damage { get; set; }
@@ -37,7 +37,6 @@ namespace Coursework.Entities.Enemies
         {
             Health = health;
             Damage = damage;
-            interactableType = InteractableType.enemy;
             CorpseAppearance = corpseAppearance;
             IsInvincible = invincible;
             IsSolid = solid;
@@ -47,8 +46,8 @@ namespace Coursework.Entities.Enemies
 
         public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
             brain.Update(gameTime);
-            Appearance.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch, SpriteEffects effect = SpriteEffects.None)
@@ -58,10 +57,9 @@ namespace Coursework.Entities.Enemies
             base.Draw(spriteBatch, effect);
         }
 
-        public new Enemy Clone()
+        public virtual new Enemy Clone()
         {
-            var tmp = MemberwiseClone() as Enemy;
-            tmp.Appearance = Appearance.Clone();
+            var tmp = base.Clone() as Enemy;
             tmp.InitialiseBrain();
             return tmp;
         }

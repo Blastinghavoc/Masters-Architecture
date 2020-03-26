@@ -1,5 +1,6 @@
 ﻿using Coursework.Entities;
 using Coursework.Entities.Enemies;
+using Coursework.Entities.Interactables;
 using Coursework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -84,10 +85,20 @@ namespace Coursework.Serialization
             }
             else
             {
-                newInteractable = new Interactable(sprite, Vector2.Zero);
+                switch (d.interactableType)
+                {
+                    case InteractableType.coin:
+                        newInteractable = new Coin(sprite, Vector2.Zero);
+                        break;
+                    case InteractableType.nextLevel:
+                        newInteractable = new LevelTransition(sprite, Vector2.Zero);
+                        break;
+                    default:
+                        newInteractable = null;
+                        break;
+                }
             }
 
-            newInteractable.interactableType = d.interactableType;
             return newInteractable;
         }
 

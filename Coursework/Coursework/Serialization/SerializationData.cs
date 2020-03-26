@@ -81,6 +81,17 @@ namespace Coursework.Serialization
         public TileCollisionMode collisionMode;
     }
 
+    /// <summary>
+    /// Used to simplify serialization of 
+    /// simple interactables (those with no extra data)
+    /// </summary>
+    public enum InteractableType
+    {
+        coin,
+        nextLevel,
+        powerup,
+    }
+
     [XmlInclude(typeof(PowerupData))]
     public class InteractableData : LevelEntityData
     {
@@ -90,7 +101,7 @@ namespace Coursework.Serialization
 
     public class PowerupData : InteractableData
     {
-        public powerUpType powerupType;
+        public PowerupType powerupType;
     }
 
     /// <summary>

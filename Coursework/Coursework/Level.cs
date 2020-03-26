@@ -10,6 +10,7 @@ using Coursework.Entities;
 using Coursework.Graphics;
 using Coursework.Serialization;
 using Coursework.Entities.Enemies;
+using Coursework.Entities.Interactables;
 
 namespace Coursework
 {
@@ -35,9 +36,9 @@ namespace Coursework
 
         readonly int coinValue = GameData.Instance.levelConstants.coinValue;
 
-        //List of all interactable objects in the level, including enemies
-        public List<Interactable> Interactables { get; protected set; } = new List<Interactable>();
-        private List<Interactable> killList = new List<Interactable>();//List of interactables to be removed
+        //List of all entities in the level, including enemies
+        public List<CollidableObject> LevelEntities { get; protected set; } = new List<CollidableObject>();
+        private List<CollidableObject> killList = new List<CollidableObject>();//List of entities to be removed
 
         private List<Decal> corpses = new List<Decal>();
 
@@ -84,19 +85,19 @@ namespace Coursework
 
         public void Update(GameTime gameTime)
         {
-            //Remove any interactables that were scheduled for deletion
+            //Remove any entities that were scheduled for deletion
             foreach (var item in killList)
             {                
-                Interactables.Remove(item);
+                LevelEntities.Remove(item);
                 if (item is IDisposable d)
                 {
-                    d.Dispose();//Dispose of interactable if necessary
+                    d.Dispose();//Dispose of entity if necessary
                 }
             }
             killList.Clear();
 
-            //Update all interactables (note that for many of them this does nothing)
-            foreach (var item in Interactables)
+            //Update all entities (note that for many of them this does nothing)
+            foreach (var item in LevelEntities)
             {
                 item.Update(gameTime);
             }
@@ -110,7 +111,7 @@ namespace Coursework
         {
             //Create prefab dictionaries
             Dictionary<Color, Tile> tilePrefabs = new Dictionary<Color, Tile>();//Prefabs for each type of tile     
-            Dictionary<Color, Interactable> interactablePrefabs = new Dictionary<Color, Interactable>();//Prefabs for all non-enemy interactables
+            Dictionary<Color, Interactable> interactablePrefabs = new Dictionary<Color, Interactable>();//Prefabs for all interactables
             Dictionary<Color, Enemy> enemyPrefabs = new Dictionary<Color, Enemy>();//Enemies
 
             //Used to create entities from their data descriptions
@@ -184,14 +185,14 @@ namespace Coursework
                                     var newEnemy = enemy.Clone();//Prototype pattern
                                     newEnemy.SetPosition(GetWorldPosition(i, j) + offset);
 
-                                    Interactables.Add(newEnemy);
+                                    LevelEntities.Add(newEnemy);
                                 }
                                 break;
                             case InteractableData d:
                                 {
                                     var inter = interactablePrefabs[colour].Clone();//Prototype pattern
                                     inter.SetPosition(GetWorldPosition(i, j));
-                                    Interactables.Add(inter);
+                                    LevelEntities.Add(inter);
                                 }
                                 break;
                             default:
@@ -220,7 +221,7 @@ namespace Coursework
             }
 
             //Draw all interactables
-            foreach (var item in Interactables)
+            foreach (var item in LevelEntities)
             {
                 item.Draw(spriteBatch);
             }
@@ -231,34 +232,22 @@ namespace Coursework
             }
         }
 
+        /// <summary>
+        /// Detect and resolve player collisions with the level interactables
+        /// </summary>
         private void OnPlayerCollisionEnter(object sender, PlayerCollisionEventArgs e)
         {
             Interactable interactable = e.colllidedWith as Interactable;
             if (interactable != null)
             {
-                switch (interactable.interactableType)
-                {
-                    case InteractableType.coin:
-                        {
-                            GameEventManager.Instance.AddScore(coinValue);//Picking up coins gains you score
-                            killList.Add(interactable);//Schedule for deletion
-                        }
-                        break;
-                    case InteractableType.nextLevel:
-                        {
-                            GameEventManager.Instance.NextLevel();
-                        }
-                        break;
-                    case InteractableType.powerup:
-                        {
-                            killList.Add(interactable);//Schedule for deletion
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                
+                //Run the interaction for the specific interactable that was entered
+                interactable.InteractOnEnter(this, e);                
             }
+        }
+
+        public void ScheduleForDeletion(CollidableObject obj)
+        {
+            killList.Add(obj);//Schedule for deletion next update
         }
 
         
@@ -348,8 +337,8 @@ namespace Coursework
 
         public void Dispose()
         {
-            //Dispose of any disposable interactables
-            foreach (var item in Interactables)
+            //Dispose of any disposable entities
+            foreach (var item in LevelEntities)
             {
                 if (item is IDisposable d)
                 {

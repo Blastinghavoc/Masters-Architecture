@@ -123,7 +123,7 @@ namespace Coursework
         }
     }
 
-    class PlayerUseWeaponEventArgs {
+    public class PlayerUseWeaponEventArgs {
         public Vector2 targetWorldPosition;
         public Player player;
 
@@ -134,7 +134,7 @@ namespace Coursework
         }
     }
 
-    class NonPlayerCollisionEventArgs
+    public class NonPlayerCollisionEventArgs
     {
         public CollidableObject collider;
         public Object colllidedWith;
@@ -150,7 +150,7 @@ namespace Coursework
         }
     }
 
-    class ProjectileKilledEventArgs {
+    public class ProjectileKilledEventArgs {
         public Projectile projectile;
 
         public ProjectileKilledEventArgs(Projectile projectile)
@@ -159,7 +159,7 @@ namespace Coursework
         }
     }
 
-    class ProjectileLaunchEventArgs {
+    public class ProjectileLaunchEventArgs {
         public ProjectileType projectileType;
         public Vector2 launchPosition;
         public Vector2 worldPointTarget;
@@ -174,7 +174,7 @@ namespace Coursework
         }
     }
 
-    class EnemyKilledEventArgs
+    public class EnemyKilledEventArgs
     {
         public Enemy enemy;
 
@@ -184,7 +184,7 @@ namespace Coursework
         }
     }
 
-    class PlayerHealthChangedEventArgs
+    public class PlayerHealthChangedEventArgs
     {
         public Player player;
 
@@ -194,7 +194,7 @@ namespace Coursework
         }
     }
 
-    class PlayerCollisionEventArgs
+    public class PlayerCollisionEventArgs
     {
         public Player player;
         public Object colllidedWith;
@@ -210,7 +210,7 @@ namespace Coursework
         }
     }
 
-    class ScoreEventArgs {
+    public class ScoreEventArgs {
         public int newScore;
         public int amountAdded;
 

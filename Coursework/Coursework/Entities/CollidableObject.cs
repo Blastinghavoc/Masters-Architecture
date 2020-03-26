@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Coursework.Graphics;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,18 @@ namespace Coursework.Entities
         public override Vector2 Position { get => base.Position; protected set { base.Position = value; UpdateBounds(); } }
 
         public Rectangle BoundingBox { get; protected set; }
+
+        //Inherited constructor
+        public CollidableObject():base() { }
+        //Inherited constructor
+        public CollidableObject(Drawable appearance, Vector2 position):base(appearance,position)
+        {
+            //By default, collision bounds are calculated from appearance size
+            if (Appearance!= null)
+            {
+                UpdateBounds(Position, (int)Appearance.Size.X,(int)Appearance.Size.Y);
+            }
+        }
 
         //Move the bounding box to the current position of the object
         protected void UpdateBounds()

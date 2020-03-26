@@ -17,7 +17,7 @@ namespace Coursework.Entities
     public class Player : PhysicsObject, EventSubscriber
     {
         //Animation and drawing data
-        private Drawable currentAnimation;
+        //private Drawable currentAnimation;
         private Drawable[] animations;
         public SpriteEffects directionalEffect= SpriteEffects.None;
 
@@ -45,8 +45,7 @@ namespace Coursework.Entities
         private readonly float damageImmunityDuration = GameData.Instance.playerData.damageImmunityDuration;
         private float damageImmunityTimerSeconds = 0;
 
-        public Player(IServiceProvider provider,string contentRoot) {
-            Position = new Vector2(0, 0);
+        public Player(IServiceProvider provider,string contentRoot):base() {
             content = new ContentManager(provider, contentRoot);
 
             LoadContent();
@@ -58,7 +57,7 @@ namespace Coursework.Entities
             Gravity = GameData.Instance.playerData.gravity;
 
             //Update collision bounds based on visible size
-            UpdateBounds(Position, (int)currentAnimation.Size.X, (int)currentAnimation.Size.Y);
+            UpdateBounds(Position, (int)Appearance.Size.X, (int)Appearance.Size.Y);
 
             BindEvents();
         }
@@ -76,6 +75,8 @@ namespace Coursework.Entities
 
         public override void Update(GameTime gameTime)
         {
+            animator.Update(gameTime);     
+            
             Force += inputForce * inputScale;//Add physics force based on input force    
             base.Update(gameTime);//Update physics
 
@@ -84,8 +85,6 @@ namespace Coursework.Entities
                 isJumping = false;
             }
 
-            animator.Update(gameTime);
-            currentAnimation.Update(gameTime,Position);
             powerupManager.Update(gameTime);
 
             //Update immunity timer
@@ -115,9 +114,9 @@ namespace Coursework.Entities
             var resultColour = Color.Lerp(powerupColour, damageColour, Math.Max(damageImmunityTimerSeconds / damageImmunityDuration, 0));
 
             //Apply special effect color
-            currentAnimation.color = resultColour;
+            Appearance.color = resultColour;
 
-            currentAnimation.Draw(spriteBatch,effect | directionalEffect);
+            base.Draw(spriteBatch,effect | directionalEffect);
         }
 
         //What to do while the player is colliding with something
@@ -186,7 +185,7 @@ namespace Coursework.Entities
 
                 var bottom = BoundingBox.GetBottomCenter();
                 var enemyBottom = enemy.BoundingBox.GetBottomCenter();
-                var enemyHeight = enemy.Appearance.Size.Y;
+                var enemyHeight = enemy.BoundingBox.Size.Y;
                 //Must be above the enemy by at least half its height to squash it
                 if (bottom.Y <= enemyBottom.Y - enemyHeight / 2)
                 {
@@ -229,6 +228,11 @@ namespace Coursework.Entities
             }
         }
 
+        public void AddPowerupEffect(PowerupType powerUpType)
+        {
+            powerupManager.AddPowerupEffect(powerUpType, this);
+        }
+
         /// <summary>
         /// Forcibly kill the player.
         /// </summary>
@@ -237,11 +241,6 @@ namespace Coursework.Entities
             Health = 0;
             GameEventManager.Instance.PlayerHealthChanged(this);
             GameEventManager.Instance.PlayerDied();            
-        }
-
-        public void SetPosition(Vector2 pos)
-        {
-            Position = pos;
         }
 
         private void LoadContent()
@@ -305,10 +304,10 @@ namespace Coursework.Entities
         }
 
         private void SetCurrentAnimation(int index)
-        {
-            currentAnimation = animations[index];
-            var anim = currentAnimation as AbstractAnimation;
-            if (anim !=null)
+        {            
+            Appearance = animations[index];
+            Appearance.SetPosition(Position);
+            if (Appearance is AbstractAnimation anim)
             {
                 anim.Reset();
             }

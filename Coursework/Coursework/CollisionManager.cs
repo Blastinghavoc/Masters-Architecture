@@ -24,8 +24,8 @@ namespace Coursework
             //Update player/level collisions
             UpdateObjectLevelCollisions(currentLevel, player);
 
-            List<Interactable> enemyProjectiles = new List<Interactable>();
-            List<Interactable> allyProjectiles = new List<Interactable>();
+            List<CollidableObject> enemyProjectiles = new List<CollidableObject>();
+            List<CollidableObject> allyProjectiles = new List<CollidableObject>();
             //Update projectile/level collisions
             foreach (var item in projectileManager.ActiveProjectiles)
             {
@@ -40,18 +40,18 @@ namespace Coursework
                 }
             }
 
-            //Get a combined list of all interactables, including projectiles
-            List<Interactable> combinedInteractables = new List<Interactable>(currentLevel.Interactables);
-            combinedInteractables.AddRange(enemyProjectiles);
+            //Get a combined list of all entities, including projectiles
+            List<CollidableObject> combinedEntities = new List<CollidableObject>(currentLevel.LevelEntities);
+            combinedEntities.AddRange(enemyProjectiles);
 
-            //Update player collisions with all interactables (level managed ones, and projectiles)
-            UpdateObjectInteractableCollisions(combinedInteractables, player);
+            //Update player collisions with all entities (level managed ones, and projectiles)
+            UpdateObjectEntityCollisions(combinedEntities, player);
 
             //Get list of enemies
-            List<Interactable> enemies = new List<Interactable>();
-            foreach (var item in currentLevel.Interactables)
+            List<CollidableObject> enemies = new List<CollidableObject>();
+            foreach (var item in currentLevel.LevelEntities)
             {
-                if (item.interactableType == InteractableType.enemy)
+                if (item is Entities.Enemies.Enemy)
                 {
                     enemies.Add(item);
                 }
@@ -60,13 +60,13 @@ namespace Coursework
             //Update allied projectile collisions with all enemies (projectiles do not collide with non-enemy interactables)
             foreach (var proj in allyProjectiles)
             {
-                UpdateObjectInteractableCollisions(enemies, proj);
+                UpdateObjectEntityCollisions(enemies, proj);
             }
         }
 
-        private void UpdateObjectInteractableCollisions(List<Interactable> interactables, CollidableObject obj)
+        private void UpdateObjectEntityCollisions(List<CollidableObject> entities, CollidableObject obj)
         {
-            foreach (var item in interactables)
+            foreach (var item in entities)
             {
                 Vector2 penDepth;
                 if (obj.CheckCollision(item, out penDepth))
@@ -159,7 +159,7 @@ namespace Coursework
 
     }
 
-    enum CollisionType
+    public enum CollisionType
     {
         enter,
         exit,

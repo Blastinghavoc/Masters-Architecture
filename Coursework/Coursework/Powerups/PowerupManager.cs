@@ -9,7 +9,7 @@ namespace Coursework.Powerups
     /// Used to determine what effect to apply to the player
     /// when a powerup is collected.
     /// </summary>
-    public enum powerUpType {
+    public enum PowerupType {
         fireball,
         invincibility,
     }
@@ -17,28 +17,26 @@ namespace Coursework.Powerups
     /// Responsible for managing the lifetime of all powerup effects
     /// on a player.
     /// </summary>
-    public class PowerupManager:EventSubscriber {
+    public class PowerupManager:IDisposable {
 
-        private Dictionary<powerUpType, PowerupEffect> powerupEffects = new Dictionary<powerUpType, PowerupEffect>();
+        private Dictionary<PowerupType, PowerupEffect> powerupEffects = new Dictionary<PowerupType, PowerupEffect>();
 
         //Subset of powerupEffects that are active
-        private Dictionary<powerUpType, PowerupEffect> activeEffects = new Dictionary<powerUpType, PowerupEffect>();
+        private Dictionary<PowerupType, PowerupEffect> activeEffects = new Dictionary<PowerupType, PowerupEffect>();
 
         public PowerupManager()
         {
             FireballEffect fireballEffect = new FireballEffect();
-            powerupEffects.Add(powerUpType.fireball, fireballEffect);
+            powerupEffects.Add(PowerupType.fireball, fireballEffect);
 
             InvincibilityEffect invincibilityEffect = new InvincibilityEffect();
-            powerupEffects.Add(powerUpType.invincibility, invincibilityEffect);
-
-            BindEvents();
+            powerupEffects.Add(PowerupType.invincibility, invincibilityEffect);
         }
 
         public void Update(GameTime gameTime) {
             float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            List<powerUpType> removeList = new List<powerUpType>();
+            List<PowerupType> removeList = new List<PowerupType>();
 
             //Update each active powerup
             foreach (var pair in activeEffects)
@@ -62,7 +60,7 @@ namespace Coursework.Powerups
 
         }
 
-        public void AddPowerup(powerUpType type, Player p) {
+        public void AddPowerupEffect(PowerupType type, Player p) {
             PowerupEffect effect;
             if (activeEffects.TryGetValue(type,out effect))
             {
@@ -110,30 +108,8 @@ namespace Coursework.Powerups
             return new Color(result);
         }
 
-        //Check if the player has collided with a powerup
-        private void OnPlayerCollisionEnter(object sender, PlayerCollisionEventArgs e)
-        {
-            Powerup powerup = e.colllidedWith as Powerup;
-            if (powerup != null)
-            {                
-                AddPowerup(powerup.powerupType, e.player);//Add the powerup                
-            }
-        }
-
-        public void BindEvents()
-        {
-            GameEventManager.Instance.OnPlayerCollisionEnter += OnPlayerCollisionEnter;
-        }
-
-        public void UnbindEvents()
-        {
-            GameEventManager.Instance.OnPlayerCollisionEnter -= OnPlayerCollisionEnter;
-        }
-
         public void Dispose()
         {
-            UnbindEvents();
-
             //Call Dispose on all effects
             foreach (var item in powerupEffects)
             {

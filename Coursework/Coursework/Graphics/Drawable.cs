@@ -22,7 +22,7 @@ namespace Coursework.Graphics
 
         Color color { get; set; }
         
-        //Display size
+        //Display size in world units
         Vector2 Size { get; }
 
         float LayerDepth { get; set; }

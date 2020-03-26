@@ -64,9 +64,11 @@
     <Compile Include="Entities\Enemies\Enemy.cs" />
     <Compile Include="Entities\Enemies\Fly.cs" />
     <Compile Include="Entities\Enemies\Slime.cs" />
-    <Compile Include="Entities\Interactable.cs" />
+    <Compile Include="Entities\Interactables\Coin.cs" />
+    <Compile Include="Entities\Interactables\Interactable.cs" />
+    <Compile Include="Entities\Interactables\LevelTransition.cs" />
     <Compile Include="Entities\PhysicsObject.cs" />
-    <Compile Include="Entities\Powerup.cs" />
+    <Compile Include="Entities\Interactables\Powerup.cs" />
     <Compile Include="Powerups\FireballEffect.cs" />
     <Compile Include="Powerups\InvincibilityEffect.cs" />
     <Compile Include="Powerups\PowerupEffect.cs" />
