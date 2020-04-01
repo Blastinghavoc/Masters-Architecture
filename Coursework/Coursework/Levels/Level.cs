@@ -308,18 +308,24 @@ namespace Coursework.Levels
             return new Vector2(i * tileSize.X, j* tileSize.Y);
         }
 
+        /// <summary>
+        /// Obtain the indices in the tiles array for the given position.
+        /// Note that these can be negative.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
         public Point GetTileIndices(Vector2 position)
         {
-            int i = (int)(position.X / tileSize.X);
-            int j = (int)(position.Y / tileSize.Y);
+            var tmp = position / tileSize.ToVector2();
+            int i = (int)Math.Floor(tmp.X);
+            int j = (int)Math.Floor(tmp.Y);
+
             return new Point(i, j);
         }
 
         public Point GetTileIndices(Point position)
         {
-            int i = (position.X / tileSize.X);
-            int j = (position.Y / tileSize.Y);
-            return new Point(i, j);
+            return GetTileIndices(position.ToVector2());
         }
 
         public void BindEvents()
