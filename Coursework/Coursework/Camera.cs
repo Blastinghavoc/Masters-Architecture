@@ -85,8 +85,25 @@ namespace Coursework
             var halfWidth = VisibleArea.Width / 2f;
             var halfHeight = VisibleArea.Height / 2f;
 
-            var adjustedX = MathHelper.Clamp(Position.X, bounds.Left + halfWidth, bounds.Right - halfWidth);
-            var adjustedY = MathHelper.Clamp(Position.Y, bounds.Top + halfHeight, bounds.Bottom - halfHeight);
+            var leftBound = bounds.Left + halfWidth;
+            var rightBound = bounds.Right - halfWidth;
+
+            var adjustedX = MathHelper.Clamp(Position.X, leftBound, rightBound);
+
+            var topBound = bounds.Top + halfHeight;
+            var bottomBound = bounds.Bottom - halfHeight;
+
+            /*
+             If the camera view can't fit properly in the bounds, prefer to "spill" the view
+             upwards rather than downwards. This prevents ever seeing beneath a level, but you
+             may see above it.
+             */
+            if (bottomBound < topBound)
+            {
+                topBound = bottomBound;
+            }
+
+            var adjustedY = MathHelper.Clamp(Position.Y, topBound, bottomBound);
 
             Position = new Vector2(adjustedX, adjustedY);
         }

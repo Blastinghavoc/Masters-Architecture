@@ -27,6 +27,9 @@ namespace Coursework
 
         FSM GameStateMachine;
 
+        //Keybindings that persist accross all game states (fullscreen control)
+        private KeybindingManager globalBindings;
+
 
         public Game1()
         {
@@ -35,20 +38,23 @@ namespace Coursework
             //Set window size
             graphics.PreferredBackBufferWidth = 1000;
             graphics.PreferredBackBufferHeight = 600;
+            graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
         }
 
         /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
+        /// Initialises necessary objects for game start.
+        /// Most notably initialises the game state machine
         /// </summary>
         protected override void Initialize()
         {
             this.IsMouseVisible = true;
+
+            globalBindings = new KeybindingManager();
+            //Bind the fullscreen toggle to the global bindings
+            globalBindings.BindKeyEvent(Keys.F11, InputState.down, ToggleFullScreen);
 
             GameData.Initialise();
 
@@ -88,13 +94,13 @@ namespace Coursework
         }
 
         /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
+        /// Load the font and initialise the game state machine
         /// </summary>
         protected override void LoadContent()
         {
-            font = Content.Load<SpriteFont>("Fonts/gamefont");//Same font as used in the labs
+            font = Content.Load<SpriteFont>("Fonts/gamefont");//Same font as used in the labs     
 
+            //This call is here, rather than in initialise, because the state machine requires the font to be already loaded
             GameStateMachine.Initialise("Start");
         }
 
@@ -105,17 +111,19 @@ namespace Coursework
         protected override void UnloadContent()
         {
             GameStateMachine.Dispose();
+            Content.Unload();
         }
 
         /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
+        /// Update the game state machine and global keybindings
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            globalBindings.Update();
 
             GameStateMachine.Update(gameTime);
 
@@ -137,6 +145,15 @@ namespace Coursework
             }
 
             base.Draw(gameTime);
+        }
+
+        /// <summary>
+        /// Allow toggling fullscreen on and off at any point in the game.
+        /// </summary>
+        private void ToggleFullScreen()
+        {
+            graphics.IsFullScreen = !graphics.IsFullScreen;
+            graphics.ApplyChanges();
         }
     }
 }
