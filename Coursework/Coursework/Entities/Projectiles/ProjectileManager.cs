@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Coursework.Entities.Enemies;
 using Coursework.Entities.Projectiles;
+using Coursework.Serialization;
 
 namespace Coursework.Projectiles
 {
@@ -67,12 +68,27 @@ namespace Coursework.Projectiles
 
         private void LoadContent()
         {
-            string fireballPath = "PlatformerGraphicsDeluxe/Items/fireball";//TODO move to GameData for serialization?
-            var tex = content.Load<Texture2D>(fireballPath);
-            var scale = Utils.scaleForTexture(tex);
-            Sprite appearance = new Sprite(tex, scale, Color.White);
-            Projectile fireballPrefab = new FireballProjectile(appearance, Vector2.Zero, 128,1, false);
-            prefabs[ProjectileType.fireball] = fireballPrefab;
+            //Load each projectile from the de-serialized projectile data
+            foreach (var item in GameData.Instance.projectileData.projectileSpecifications)
+            {
+                string path = item.pathToTexture;
+                var tex = content.Load<Texture2D>(path);
+                var scale = Utils.scaleForTexture(tex);
+                Sprite appearance = new Sprite(tex, scale, Color.White);
+
+                Projectile prefab = null;
+
+                switch (item.type)
+                {
+                    case ProjectileType.fireball:
+                        prefab = new FireballProjectile(appearance, Vector2.Zero, item.speed, item.damage);
+                        break;
+                    default:
+                        break;
+                }
+
+                prefabs[item.type] = prefab;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)

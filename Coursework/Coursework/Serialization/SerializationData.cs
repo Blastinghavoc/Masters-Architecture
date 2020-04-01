@@ -32,6 +32,20 @@ namespace Coursework.Serialization
         public float damageImmunityDuration;
     }
 
+    public class ProjectileData
+    {
+        [XmlArrayItem("projSpec")]
+        public ProjectileSpecification[] projectileSpecifications;
+    }
+
+    public class ProjectileSpecification
+    {
+        public Projectiles.ProjectileType type;
+        public int speed;
+        public int damage;
+        public string pathToTexture;
+    }
+
     //Data used by all levels
     public class ConstantLevelData
     {

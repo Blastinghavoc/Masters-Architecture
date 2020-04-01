@@ -27,6 +27,16 @@
       <startHealth>3</startHealth>
       <damageImmunityDuration>1.0</damageImmunityDuration>
    </playerData>
+   <projectileData>
+      <projectileSpecifications>
+         <projSpec>
+            <type>fireball</type>
+            <speed>128</speed>
+            <damage>1</damage>
+            <pathToTexture>PlatformerGraphicsDeluxe/Items/fireball</pathToTexture>
+         </projSpec>
+      </projectileSpecifications>
+   </projectileData>
    <levelConstants>
       <tileSize>
          <X>32</X>

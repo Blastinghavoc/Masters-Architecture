@@ -103,6 +103,8 @@ namespace Coursework.Serialization
 
         public ConstantLevelData levelConstants;
 
+        public ProjectileData projectileData;
+
     }
 
     
