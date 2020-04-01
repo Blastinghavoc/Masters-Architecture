@@ -91,6 +91,7 @@ namespace Coursework.Serialization
         coin,
         nextLevel,
         powerup,
+        extraLife,
     }
 
     [XmlInclude(typeof(PowerupData))]

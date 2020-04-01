@@ -94,5 +94,23 @@
             </color>
             <entityName>InvincibilityPickup</entityName>
         </bind>
+        <bind>
+            <color>
+                <R>0</R>
+                <G>255</G>
+                <B>0</B>
+                <A>255</A>
+            </color>
+            <entityName>Blocker</entityName>
+        </bind>
+        <bind>
+            <color>
+                <R>0</R>
+                <G>63</G>
+                <B>255</B>
+                <A>255</A>
+            </color>
+            <entityName>Heart</entityName>
+        </bind>
     </bindings>
 </LevelData>

@@ -65,6 +65,7 @@
     <Compile Include="Entities\Enemies\Fly.cs" />
     <Compile Include="Entities\Enemies\Slime.cs" />
     <Compile Include="Entities\Interactables\Coin.cs" />
+    <Compile Include="Entities\Interactables\ExtraLife.cs" />
     <Compile Include="Entities\Interactables\Interactable.cs" />
     <Compile Include="Entities\Interactables\LevelTransition.cs" />
     <Compile Include="Entities\PhysicsObject.cs" />

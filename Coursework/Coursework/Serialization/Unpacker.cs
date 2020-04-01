@@ -94,6 +94,9 @@ namespace Coursework.Serialization
                     case InteractableType.nextLevel:
                         newInteractable = new LevelTransition(sprite, Vector2.Zero);
                         break;
+                    case InteractableType.extraLife:
+                        newInteractable = new ExtraLife(sprite, Vector2.Zero);
+                        break;
                     default:
                         newInteractable = null;
                         break;

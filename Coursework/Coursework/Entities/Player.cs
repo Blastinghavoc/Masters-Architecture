@@ -41,6 +41,7 @@ namespace Coursework.Entities
         private PowerupManager powerupManager = new PowerupManager();
 
         public int Health { get; private set; } = GameData.Instance.playerData.startHealth;
+        private readonly int maxHealth = GameData.Instance.playerData.startHealth;
         public bool IsAlive { get => Health > 0; }
         public bool IsInvincible = false;
         private readonly float damageImmunityDuration = GameData.Instance.playerData.damageImmunityDuration;
@@ -226,6 +227,26 @@ namespace Coursework.Entities
             if (!IsAlive)
             {
                 GameEventManager.Instance.PlayerDied();
+            }
+        }
+
+        /// <summary>
+        /// Similar to TakeDamage, but with no "immunity".
+        /// Cannot heal the player above their max health.
+        /// </summary>
+        /// <param name="amount"></param>
+        public void Heal(int amount)
+        {
+            if (amount == 0)
+            {
+                return;
+            }
+
+            var tmpHealth = Health + amount;
+            if (tmpHealth <= maxHealth)
+            {
+                Health = tmpHealth;
+                GameEventManager.Instance.PlayerHealthChanged(this);
             }
         }
 

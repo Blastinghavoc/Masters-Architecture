@@ -90,6 +90,13 @@
             </entityData>
          </spec>
          <spec>
+            <entityName>Heart</entityName>
+            <entityData xsi:type="InteractableData">
+               <textureName>heart</textureName>
+               <interactableType>extraLife</interactableType>
+            </entityData>
+         </spec>
+         <spec>
             <entityName>FireballPickup</entityName>
             <entityData xsi:type="PowerupData">
                <textureName>boxItem</textureName>
