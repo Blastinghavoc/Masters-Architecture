@@ -36,8 +36,8 @@ namespace Coursework
             graphics = new GraphicsDeviceManager(this);
 
             //Set window size
-            graphics.PreferredBackBufferWidth = 1000;
-            graphics.PreferredBackBufferHeight = 600;
+            graphics.PreferredBackBufferWidth = 1350;
+            graphics.PreferredBackBufferHeight = 700;
             graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
