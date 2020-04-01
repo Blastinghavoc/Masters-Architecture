@@ -145,7 +145,9 @@ namespace Coursework.Levels
 
             //Now that the prefabs are loaded, populate the level from the map file
             string mapFilePath = GameData.Instance.levelConstants.mapFilePath;
-            Texture2D map = content.Load<Texture2D>(mapFilePath + mapName);
+            //Temporary content manager for the map, it will not be needed once this method finishes
+            var tempContent = new ContentManager(content.ServiceProvider, content.RootDirectory);
+            Texture2D map = tempContent.Load<Texture2D>(mapFilePath + mapName);
 
             int width = map.Width;
             int height = map.Height;
@@ -202,6 +204,8 @@ namespace Coursework.Levels
                     }
                 }
             }
+
+            tempContent.Unload();
         }
 
         public void Draw(SpriteBatch spriteBatch)
