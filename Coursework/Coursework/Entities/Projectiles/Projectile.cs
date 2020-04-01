@@ -15,7 +15,7 @@ namespace Coursework.Projectiles
     /// Represents a collidable projectile object.
     /// May collide with players or enemies, depending on affiliation.
     /// </summary>
-    public class Projectile : CollidableObject
+    public abstract class Projectile : CollidableObject
     {
         private bool isEnemyAffiliated = false;
         public bool IsEnemy { get { return isEnemyAffiliated; } }
@@ -24,16 +24,13 @@ namespace Coursework.Projectiles
         //The damage dealt by the projectile
         public int Damage { get; protected set; }
 
-        public readonly ProjectileType projectileType;
-
         public float Speed { get; protected set; }
 
         //Support for potentially complex projectile behaviours
-        private FSM behaviour;
+        protected FSM behaviour;
 
-        public Projectile(Drawable appearance, Vector2 position, ProjectileType projectileType,float speed,int damage,bool isEnemy = false) : base(appearance, position)
+        public Projectile(Drawable appearance, Vector2 position,float speed,int damage,bool isEnemy = false) : base(appearance, position)
         {
-            this.projectileType = projectileType;
             isEnemyAffiliated = isEnemy;
             this.Speed = speed;
             this.Damage = damage;
@@ -56,29 +53,10 @@ namespace Coursework.Projectiles
             Velocity = direction * Speed;
         }
 
-        private void InitialiseBehaviour()
-        {
-            behaviour = new FSM(this);
-            switch (projectileType)
-            {
-                case ProjectileType.fireball:
-                    {
-                        //Fireball has a simple single state behaviour
-                        Fireball fireballState = new Fireball();
-                        Dead dead = new Dead();
-
-                        fireballState.AddTransition(dead, () => { return fireballState.LifeTime <= 0; });
-
-                        behaviour.AddState(fireballState);
-                        behaviour.AddState(dead);
-
-                        behaviour.Initialise("Fireball");
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
+        /// <summary>
+        /// Overriden by derived classes to set up the behaviour
+        /// </summary>
+        protected abstract void InitialiseBehaviour();
 
         public void SetAffiliation(bool enemy)
         {
@@ -91,10 +69,5 @@ namespace Coursework.Projectiles
             tmp.InitialiseBehaviour();
             return tmp;
         }
-    }
-
-    public enum ProjectileType
-    {
-        fireball
-    }
+    }    
 }

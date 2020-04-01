@@ -216,7 +216,7 @@ namespace Coursework.Levels
                     if (tile.texture != null)
                     {
                         //Draw tile with appropriate scale
-                        spriteBatch.Draw(tile.texture, worldPosition, null, Color.White, 0, Vector2.Zero, tileTextureScale, SpriteEffects.None, 0);
+                        spriteBatch.Draw(tile.texture, worldPosition, null, Color.White, 0, Vector2.Zero, tileTextureScale, SpriteEffects.None, 0.8f);
                     }
                 }
             }

@@ -9,9 +9,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Coursework.Entities.Enemies;
+using Coursework.Entities.Projectiles;
 
 namespace Coursework.Projectiles
 {
+    /// <summary>
+    /// Used so that other code does not have to deal with actual Projectile
+    /// instances, they can just declare the type of projectile to launch when
+    /// firing the launch projectile event.
+    /// </summary>
+    public enum ProjectileType
+    {
+        fireball
+    }
+
     /// <summary>
     /// Class managing the creation and lifetime of projectiles.
     /// 
@@ -60,7 +71,7 @@ namespace Coursework.Projectiles
             var tex = content.Load<Texture2D>(fireballPath);
             var scale = Utils.scaleForTexture(tex);
             Sprite appearance = new Sprite(tex, scale, Color.White);
-            Projectile fireballPrefab = new Projectile(appearance, Vector2.Zero, ProjectileType.fireball, 128,1, false);
+            Projectile fireballPrefab = new FireballProjectile(appearance, Vector2.Zero, 128,1, false);
             prefabs[ProjectileType.fireball] = fireballPrefab;
         }
 
@@ -78,6 +89,12 @@ namespace Coursework.Projectiles
             ActiveProjectiles.Clear();
         }
 
+        /// <summary>
+        /// Instantiate a new projectile of the relevant type, if the prefab
+        /// exists. Set its initial parameters, and add it to the ActiveProjectiles
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void OnLaunchProjectile(object sender, ProjectileLaunchEventArgs e)
         {
             Projectile prefab;
@@ -106,12 +123,12 @@ namespace Coursework.Projectiles
                 return;//Ignore collisions with other projectiles
             }
 
-            //NOTE: replace with firing projectile killed event if anything other than the projectile manager cares about projectile killed events
-            killList.Add(proj);//Assuming all projectiles die on collision with anything
+            //This ensures that anything else that wants to know when projectiles are killed is correctly notified.
+            GameEventManager.Instance.KilledProjectile(proj);//Assuming projectiles die on collision with anything
 
             Enemy enemy = e.colllidedWith as Enemy;
             if (enemy!= null && proj.IsAlly)
-            {
+            {//Damage the enemy if applicable
                 enemy.TakeDamage(proj.Damage);
             }
         }
