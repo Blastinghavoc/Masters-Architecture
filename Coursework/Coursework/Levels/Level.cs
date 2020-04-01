@@ -216,7 +216,7 @@ namespace Coursework.Levels
                     if (tile.texture != null)
                     {
                         //Draw tile with appropriate scale
-                        spriteBatch.Draw(tile.texture, worldPosition, null, Color.White, 0, Vector2.Zero, tileTextureScale, SpriteEffects.None, 0.8f);
+                        spriteBatch.Draw(tile.texture, worldPosition, null, Color.White, 0, Vector2.Zero, tileTextureScale, SpriteEffects.None, 0.0f);
                     }
                 }
             }
@@ -289,7 +289,7 @@ namespace Coursework.Levels
 
             if (j < 0 || j >= tiles.GetLength(1))
             {
-                return TileCollisionMode.empty;//Outside bounds top and bottom are considered empty
+                return TileCollisionMode.solid;//Outside bounds top and bottom are considered solid.
             }
 
             return tiles[i, j].collisionMode;

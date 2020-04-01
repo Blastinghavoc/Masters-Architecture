@@ -60,6 +60,7 @@ namespace Coursework.Entities.Enemies
         public virtual new Enemy Clone()
         {
             var tmp = base.Clone() as Enemy;
+            tmp.CorpseAppearance = CorpseAppearance.Clone() as Decal;
             tmp.InitialiseBrain();
             return tmp;
         }

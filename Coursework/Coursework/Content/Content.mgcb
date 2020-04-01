@@ -44,6 +44,18 @@
 /processorParam:TextureFormat=Color
 /build:Maps/map0.png
 
+#begin Maps/medium.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Maps/medium.png
+
 #begin Maps/small.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -91,6 +103,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:PlatformerGraphicsDeluxe/Backgrounds/bg_sky.png
+
+#begin PlatformerGraphicsDeluxe/Backgrounds/bg_snow.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlatformerGraphicsDeluxe/Backgrounds/bg_snow.png
 
 #begin PlatformerGraphicsDeluxe/Enemies/blockerBody.png
 /importer:TextureImporter
@@ -727,6 +751,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:PlatformerGraphicsDeluxe/HUD/hud_x.png
+
+#begin PlatformerGraphicsDeluxe/Interactables/boxCoinAlt.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlatformerGraphicsDeluxe/Interactables/boxCoinAlt.png
 
 #begin PlatformerGraphicsDeluxe/Interactables/boxItem.png
 /importer:TextureImporter
@@ -4253,9 +4289,15 @@
 #begin XML/HighScores.xml
 /copy:XML/HighScores.xml
 
-#begin XML/Level1.xml
-/copy:XML/Level1.xml
+#begin XML/smallGrass.xml
+/copy:XML/smallGrass.xml
 
-#begin XML/Level2.xml
-/copy:XML/Level2.xml
+#begin XML/smallSnow.xml
+/copy:XML/smallSnow.xml
+
+#begin XML/testing.xml
+/copy:XML/testing.xml
+
+#begin XML/warehouse.xml
+/copy:XML/warehouse.xml
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LevelData>
-    <mapName>map0</mapName>
-    <nextLevelName>Level2</nextLevelName>
+    <mapName>small</mapName>
+    <nextLevelName>smallSnow</nextLevelName>
     <backgroundPath>PlatformerGraphicsDeluxe/Backgrounds/bg_sky</backgroundPath>
     <bindings>
         <bind>
@@ -12,6 +12,15 @@
                 <A>255</A>
             </color>
             <entityName>GrassTile</entityName>
+        </bind>
+        <bind>
+            <color>
+                <R>64</R>
+                <G>64</G>
+                <B>64</B>
+                <A>255</A>
+            </color>
+            <entityName>GrassTileInner</entityName>
         </bind>
         <bind>
             <color>
@@ -43,24 +52,6 @@
         <bind>
             <color>
                 <R>0</R>
-                <G>255</G>
-                <B>0</B>
-                <A>255</A>
-            </color>
-            <entityName>Blocker</entityName>
-        </bind>
-        <bind>
-            <color>
-                <R>0</R>
-                <G>63</G>
-                <B>255</B>
-                <A>255</A>
-            </color>
-            <entityName>Heart</entityName>
-        </bind>
-        <bind>
-            <color>
-                <R>0</R>
                 <G>124</G>
                 <B>124</B>
                 <A>255</A>
@@ -75,24 +66,6 @@
                 <A>255</A>
             </color>
             <entityName>DoorTopTile</entityName>
-        </bind>
-        <bind>
-            <color>
-                <R>255</R>
-                <G>100</G>
-                <B>0</B>
-                <A>255</A>
-            </color>
-            <entityName>FireballPickup</entityName>
-        </bind>
-        <bind>
-            <color>
-                <R>0</R>
-                <G>255</G>
-                <B>255</B>
-                <A>255</A>
-            </color>
-            <entityName>InvincibilityPickup</entityName>
         </bind>
     </bindings>
 </LevelData>

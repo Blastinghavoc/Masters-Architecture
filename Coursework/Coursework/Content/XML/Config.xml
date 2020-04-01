@@ -37,13 +37,20 @@
       <itemFilePath>PlatformerGraphicsDeluxe/Interactables/</itemFilePath>
       <enemyFilePath>PlatformerGraphicsDeluxe/Enemies/</enemyFilePath>
       <mapFilePath>Maps/</mapFilePath>
-      <startLevelName>Level1</startLevelName>
+      <startLevelName>smallGrass</startLevelName>
       <coinValue>1</coinValue>
       <entitySpecifications>
          <spec>
             <entityName>GrassTile</entityName>
             <entityData xsi:type="TileData">
                <textureName>grassMid</textureName>
+               <collisionMode>solid</collisionMode>
+            </entityData>
+         </spec>
+         <spec>
+            <entityName>GrassTileInner</entityName>
+            <entityData xsi:type="TileData">
+               <textureName>grassCenter</textureName>
                <collisionMode>solid</collisionMode>
             </entityData>
          </spec>
@@ -55,9 +62,23 @@
             </entityData>
          </spec>
          <spec>
+            <entityName>SnowTileInner</entityName>
+            <entityData xsi:type="TileData">
+               <textureName>snowCenter</textureName>
+               <collisionMode>solid</collisionMode>
+            </entityData>
+         </spec>
+         <spec>
             <entityName>CastleTile</entityName>
             <entityData xsi:type="TileData">
                <textureName>castleCenter</textureName>
+               <collisionMode>solid</collisionMode>
+            </entityData>
+         </spec>
+         <spec>
+            <entityName>BoxTile</entityName>
+            <entityData xsi:type="TileData">
+               <textureName>boxAlt</textureName>
                <collisionMode>solid</collisionMode>
             </entityData>
          </spec>
@@ -79,6 +100,13 @@
             <entityName>GoldCoin</entityName>
             <entityData xsi:type="InteractableData">
                <textureName>coinGold</textureName>
+               <interactableType>coin</interactableType>
+            </entityData>
+         </spec>
+         <spec>
+            <entityName>GoldBox</entityName>
+            <entityData xsi:type="InteractableData">
+               <textureName>boxCoinAlt</textureName>
                <interactableType>coin</interactableType>
             </entityData>
          </spec>

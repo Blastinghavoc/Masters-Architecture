@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LevelData>
-    <mapName>small</mapName>
+    <mapName>medium</mapName>
     <nextLevelName>DungeonLevel</nextLevelName>
     <backgroundPath>PlatformerGraphicsDeluxe/Backgrounds/bg_castle</backgroundPath>
     <bindings>
@@ -11,7 +11,16 @@
                 <B>0</B>
                 <A>255</A>
             </color>
-            <entityName>SnowTile</entityName>
+            <entityName>CastleTile</entityName>
+        </bind>
+        <bind>
+            <color>
+                <R>127</R>
+                <G>63</G>
+                <B>63</B>
+                <A>255</A>
+            </color>
+            <entityName>BoxTile</entityName>
         </bind>
         <bind>
             <color>
@@ -20,7 +29,7 @@
                 <B>0</B>
                 <A>255</A>
             </color>
-            <entityName>GoldCoin</entityName>
+            <entityName>GoldBox</entityName>
         </bind>
         <bind>
             <color>
@@ -57,6 +66,42 @@
                 <A>255</A>
             </color>
             <entityName>DoorTopTile</entityName>
+        </bind>
+        <bind>
+            <color>
+                <R>255</R>
+                <G>100</G>
+                <B>0</B>
+                <A>255</A>
+            </color>
+            <entityName>FireballPickup</entityName>
+        </bind>
+        <bind>
+            <color>
+                <R>0</R>
+                <G>255</G>
+                <B>255</B>
+                <A>255</A>
+            </color>
+            <entityName>InvincibilityPickup</entityName>
+        </bind>
+        <bind>
+            <color>
+                <R>0</R>
+                <G>255</G>
+                <B>0</B>
+                <A>255</A>
+            </color>
+            <entityName>Blocker</entityName>
+        </bind>
+        <bind>
+            <color>
+                <R>0</R>
+                <G>63</G>
+                <B>255</B>
+                <A>255</A>
+            </color>
+            <entityName>Heart</entityName>
         </bind>
     </bindings>
 </LevelData>

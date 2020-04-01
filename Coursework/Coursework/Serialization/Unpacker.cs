@@ -53,7 +53,7 @@ namespace Coursework.Serialization
             }
 
             appearance.LayerDepth = 0.2f;//Set layer depths
-            corpseAppearance.LayerDepth = 0.2f;
+            corpseAppearance.LayerDepth = 0.3f;
 
             //Instantiate as correct type
             switch (d.enemyType)
