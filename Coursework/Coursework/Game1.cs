@@ -149,10 +149,13 @@ namespace Coursework
 
         /// <summary>
         /// Allow toggling fullscreen on and off at any point in the game.
+        /// Uses a "borderless fullscreen", 
+        /// REF https://community.monogame.net/t/how-to-implement-borderless-fullscreen-on-desktopgl-project/8359
         /// </summary>
         private void ToggleFullScreen()
         {
             graphics.IsFullScreen = !graphics.IsFullScreen;
+            graphics.HardwareModeSwitch = !graphics.HardwareModeSwitch;
             graphics.ApplyChanges();
         }
     }
