@@ -19,10 +19,15 @@ namespace Coursework.Entities.Enemies
         protected override void InitialiseBrain()
         {
             brain = new StateMachine.FSM(this);
+            var start = new Start();
             var idle1 = new Idle();
             var idle2 = new Idle();
             var up = new Up(this);
             var down = new Down(this);
+
+            //Transitions out of start state
+            start.AddTransition(down, () => { return start.down; });
+            start.AddTransition(up, () => { return start.up; });
 
             //Behaviour loop: down -> idle -> up -> idle -> down
             idle1.AddTransition(down, () => { return idle1.DurationOver; });
@@ -30,8 +35,8 @@ namespace Coursework.Entities.Enemies
             idle2.AddTransition(up, () => { return idle2.DurationOver; });
             up.AddTransition(idle1, () => { return up.Done; });
 
-            brain.AddStates(idle1, idle2, up, down);
-            brain.Initialise("Idle");
+            brain.AddStates(start,idle1, idle2, up, down);
+            brain.Initialise("Start");
         }
     }
 }

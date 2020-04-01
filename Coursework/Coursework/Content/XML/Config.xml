@@ -93,6 +93,13 @@
             </entityData>
          </spec>
          <spec>
+            <entityName>WaterTile</entityName>
+            <entityData xsi:type="TileData">
+               <textureName>liquidWaterTop_mid</textureName>
+               <collisionMode>empty</collisionMode>
+            </entityData>
+         </spec>
+         <spec>
             <entityName>LavaTile</entityName>
             <entityData xsi:type="TileData">
                <textureName>liquidLavaTop_mid</textureName>

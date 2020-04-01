@@ -41,6 +41,57 @@ namespace Coursework.StateMachine.AI.Blocker
         }
     }
 
+    /// <summary>
+    /// Start state, figures out whether to go up or down first
+    /// </summary>
+    class Start : State
+    {
+        public bool up = false;
+        public bool down = false;
+
+        public Start()
+        {
+            Name = "Start";
+        }
+
+        public override void OnEnter(object owner)
+        {
+            up = false;
+            down = false;
+        }
+
+        public override void OnExit(object owner)
+        {            
+        }
+
+        public override void Update(object owner, GameTime gameTime)
+        {
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (owner is Enemy enemy)
+            {
+                var currentLevel = Level.CurrentLevel;
+
+                Point upTile;
+                var topPoint = enemy.BoundingBox.Center;
+                topPoint.Y -= enemy.BoundingBox.Height / 2;
+                upTile = currentLevel.GetTileIndices(topPoint);
+
+                Point downTile;
+                var botomPoint = enemy.BoundingBox.GetBottomCenter();
+                downTile = currentLevel.GetTileIndices(botomPoint);
+
+                if (currentLevel.GetCollisionModeAt(downTile) == TileCollisionMode.solid)
+                {
+                    up = true;//If there is a tile beneath the blocker, start by going up
+                }
+                else
+                {
+                    down = true;//Otherwise, start by going down
+                }
+            }
+        }
+    }
+
     class Up : State,EventSubscriber
     {
         public float Speed = 64;
