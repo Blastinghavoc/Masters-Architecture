@@ -71,11 +71,6 @@ namespace Coursework.StateMachine.AI.Blocker
             {
                 var currentLevel = Level.CurrentLevel;
 
-                Point upTile;
-                var topPoint = enemy.BoundingBox.Center;
-                topPoint.Y -= enemy.BoundingBox.Height / 2;
-                upTile = currentLevel.GetTileIndices(topPoint);
-
                 Point downTile;
                 var botomPoint = enemy.BoundingBox.GetBottomCenter();
                 downTile = currentLevel.GetTileIndices(botomPoint);
