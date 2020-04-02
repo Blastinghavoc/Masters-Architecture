@@ -153,7 +153,7 @@ namespace Coursework.StateMachine.AI.Blocker
                 var absCollY = Math.Abs(depth.Y);
                 var absCollX = Math.Abs(depth.X);
                 //If the collision is vertical, and the collision depth is too much, kill the player
-                if (absCollY < absCollX && depth.Y < -owner.BoundingBox.Height / 4)
+                if (absCollY < absCollX && depth.Y < -owner.BoundingBox.Height / 3)
                 {
                     e.player.Kill();//Player got crushed
                 }
@@ -237,7 +237,7 @@ namespace Coursework.StateMachine.AI.Blocker
                 var absCollY = Math.Abs(depth.Y);
                 var absCollX = Math.Abs(depth.X);
                 //If the collision is vertical, and the collision depth is too much, kill the player
-                if (absCollY< absCollX && depth.Y > owner.BoundingBox.Height / 4)
+                if (absCollY< absCollX && depth.Y > owner.BoundingBox.Height / 3)
                 {
                     e.player.Kill();//Player got crushed
                 }
