@@ -22,6 +22,10 @@ namespace Coursework.StateMachine
             this.owner = owner;
         }
 
+        /// <summary>
+        /// Initialise the FSM with the state with the given name
+        /// </summary>
+        /// <param name="startStateName"></param>
         public void Initialise(string startStateName)
         {
             CurrentState = states.Find(state => state.Name.Equals(startStateName));
@@ -40,6 +44,10 @@ namespace Coursework.StateMachine
             states.Add(state);
         }
 
+        /// <summary>
+        /// Facilitates shorthand for adding multiple states at once
+        /// </summary>
+        /// <param name="list"></param>
         public void AddStates(params State[] list)
         {
             foreach (var state in list)
@@ -74,7 +82,7 @@ namespace Coursework.StateMachine
         /// <summary>
         /// Disposes of the current state, if it is disposable.
         /// Note that states are expected to release any
-        /// require resources on exit, so only the current
+        /// required resources on exit, so only the current
         /// state should ever need disposing.
         /// </summary>
         public void Dispose()

@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Coursework.Entities
 {
     /// <summary>
-    /// Represents a 2D game object
+    /// Represents a 2D game object with a drawable appearance
     /// </summary>
     public class GameObject
     {
@@ -35,6 +35,11 @@ namespace Coursework.Entities
             Position = position;
         }
 
+        /// <summary>
+        /// Update the appearance, so that if it is an animation it
+        /// will operate correctly.
+        /// </summary>
+        /// <param name="gameTime"></param>
         public virtual void Update(GameTime gameTime) {
             Appearance?.Update(gameTime);
         }
@@ -44,6 +49,10 @@ namespace Coursework.Entities
             Appearance?.Draw(spriteBatch, effect);
         }
 
+        /// <summary>
+        /// Support for the prototype pattern
+        /// </summary>
+        /// <returns></returns>
         public virtual GameObject Clone()
         {
             var tmp = this.MemberwiseClone() as GameObject;

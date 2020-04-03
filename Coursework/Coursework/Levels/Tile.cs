@@ -15,7 +15,9 @@ namespace Coursework.Levels
     }
 
     /// <summary>
-    /// Basic world tile, based on the one from Lab 2
+    /// Basic world tile, based on the one from Lab 2.
+    /// More lightweight than TileDescriptor, this is the form
+    /// that the Level stores tiles in.
     /// </summary>
     public struct Tile
     {
@@ -31,6 +33,7 @@ namespace Coursework.Levels
 
     /// <summary>
     /// A complete description of a Tile, including where it is positioned in a level.
+    /// This format is used when classes outside the Level need to know about a tile.
     /// </summary>
     class TileDescriptor {
         public TileCollisionMode collisionMode;

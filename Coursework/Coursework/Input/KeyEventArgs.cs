@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Coursework.Input
 {    
+    //Very simple eventargs class for key events
     class KeyEventArgs: EventArgs
     {
         public readonly Keys Key;

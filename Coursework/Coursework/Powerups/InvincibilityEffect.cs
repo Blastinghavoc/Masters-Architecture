@@ -8,6 +8,9 @@ using Microsoft.Xna.Framework;
 
 namespace Coursework.Powerups
 {
+    /// <summary>
+    /// Simple powerup effect granting the player temporary invincibility
+    /// </summary>
     class InvincibilityEffect:PowerupEffect
     {
         public InvincibilityEffect():base()

@@ -12,6 +12,9 @@ namespace Coursework.Input
         right
     }
 
+    /// <summary>
+    /// Simple EventArgs class for mouse events
+    /// </summary>
     class MouseEventArgs : EventArgs
     {
         public readonly MouseButton button;

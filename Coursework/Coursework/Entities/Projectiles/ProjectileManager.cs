@@ -37,6 +37,8 @@ namespace Coursework.Projectiles
     class ProjectileManager: EventSubscriber
     {
         public List<Projectile> ActiveProjectiles { get; protected set; } = new List<Projectile>();
+
+        //List of projectiles to delete next update
         private List<Projectile> killList = new List<Projectile>();
 
         private Dictionary<ProjectileType, Projectile> prefabs = new Dictionary<ProjectileType, Projectile>();
@@ -78,6 +80,7 @@ namespace Coursework.Projectiles
 
                 Projectile prefab = null;
 
+                //More projectile types could be added here.
                 switch (item.type)
                 {
                     case ProjectileType.fireball:
@@ -116,11 +119,13 @@ namespace Coursework.Projectiles
             Projectile prefab;
             if (prefabs.TryGetValue(e.projectileType,out prefab))
             {
-                var newProj = prefab.Clone();
+                var newProj = prefab.Clone();//Prototype pattern
+
                 newProj.SetPosition(e.launchPosition);
                 Vector2 direction = Vector2.Normalize(e.worldPointTarget - e.launchPosition);
                 newProj.SetAffiliation(e.isEnemy);
                 newProj.SetDirection(direction);
+
                 ActiveProjectiles.Add(newProj);
             }
         }

@@ -9,6 +9,9 @@ using Coursework.StateMachine.AI.Blocker;
 
 namespace Coursework.Entities.Enemies
 {
+    /// <summary>
+    /// Implementation of the Blocker enemy.
+    /// </summary>
     class Blocker : Enemy
     {
         public Blocker(Drawable appearance, Decal corpseAppearance, Vector2 position, int health, int damage, bool invincible = false, bool solid = false) : 

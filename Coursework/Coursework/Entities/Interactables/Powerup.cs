@@ -11,7 +11,9 @@ using Microsoft.Xna.Framework;
 
 namespace Coursework.Entities.Interactables
 {
-    //A simple subclass of interactable that represents a powerup item
+    /// <summary>
+    /// Subclass of Interactable representing a powerup item
+    /// </summary>
     class Powerup : Interactable
     {
         public PowerupType powerupType = PowerupType.fireball;

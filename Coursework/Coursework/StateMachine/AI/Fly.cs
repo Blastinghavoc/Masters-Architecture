@@ -11,6 +11,9 @@ using Coursework.Levels;
 
 namespace Coursework.StateMachine.AI.Fly
 {
+    /// <summary>
+    /// Move side to side, changing direction if a solid tile is encountered
+    /// </summary>
     class Patrol : State
     {
         public float speed = -32;
@@ -64,6 +67,10 @@ namespace Coursework.StateMachine.AI.Fly
         }
     }
 
+    /// <summary>
+    /// Gradually fall to the ground so that the corpse
+    /// can be created in a reasonable place.
+    /// </summary>
     class Dying : State
     {
         public Decal DyingAppearance { get;protected set; }

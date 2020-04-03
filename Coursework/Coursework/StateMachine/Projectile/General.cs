@@ -8,6 +8,11 @@ using P = Coursework.Projectiles.Projectile;
 
 namespace Coursework.StateMachine.Projectile
 {
+    /// <summary>
+    /// Dead state for any projectiles.
+    /// Signals to the GameEventManager that the
+    /// projectile has died.
+    /// </summary>
     class Dead : State
     {
         public override void OnEnter(object owner)

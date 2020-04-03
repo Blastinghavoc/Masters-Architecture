@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Coursework.Graphics
 {
     /// <summary>
-    /// represents a static (non animated) sprite
+    /// represents a non animated sprite
     /// </summary>
     public class Sprite: Drawable
     {

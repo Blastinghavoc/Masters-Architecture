@@ -11,7 +11,7 @@ namespace Coursework.Serialization
 {
     
     /// <summary>
-    /// Class handling the serialization and deserialization of data,
+    /// Singleton class handling the serialization and deserialization of data,
     /// and providing a common interface to it.
     /// Based on lab 2
     /// </summary>
@@ -36,7 +36,6 @@ namespace Coursework.Serialization
             catch (Exception e)
             {
                 //For debugging purposes only
-                Console.WriteLine("ERROR: XML File could not be deserialized!");
                 Console.WriteLine("Exception Message: " + e.Message);
             }
             finally
@@ -44,12 +43,18 @@ namespace Coursework.Serialization
                 reader.Close();
             }
 
+            //Initialise entity specificaiton map
             foreach (var item in Instance.levelConstants.entitySpecifications)
             {
                 Instance.entitySpecificationMap.Add(item.entityName, item);
             }
         }
 
+        /// <summary>
+        /// Read the level data from the XML file with the given name
+        /// </summary>
+        /// <param name="levelName"></param>
+        /// <returns></returns>
         public static LevelData GetLevelData(string levelName)
         {
             LevelData data = null;
@@ -62,7 +67,6 @@ namespace Coursework.Serialization
             catch (Exception e)
             {
                 //For debugging purposes only
-                Console.WriteLine("ERROR: XML File could not be deserialized!");
                 Console.WriteLine("Exception Message: " + e.Message);
             }
             finally
@@ -73,6 +77,10 @@ namespace Coursework.Serialization
             return data;
         }
 
+        /// <summary>
+        /// Read the high score data
+        /// </summary>
+        /// <returns></returns>
         public static HighScoreData GetHighScoreData() {
             HighScoreData data = null;
             StreamReader reader = new StreamReader("Content/XML/HighScores.xml");
@@ -82,7 +90,7 @@ namespace Coursework.Serialization
             }
             catch (Exception e)
             {
-                Console.WriteLine("ERROR: XML File could not be deserialized!");
+                //for debugging only
                 Console.WriteLine("Exception Message: " + e.Message);
             }
             finally {
@@ -92,6 +100,10 @@ namespace Coursework.Serialization
             return data;
         }
 
+        /// <summary>
+        /// Save the high score data to an XML file
+        /// </summary>
+        /// <param name="data"></param>
         public static void SaveHighScoreData(HighScoreData data) {
             XmlSerializer ser = new XmlSerializer(typeof(HighScoreData));
             TextWriter writer = new StreamWriter("Content/XML/HighScores.xml");
@@ -99,10 +111,14 @@ namespace Coursework.Serialization
             writer.Close();
         }
 
+
+        //Constant data attributes for the player
         public PlayerData playerData;
 
+        //Constant data attributes for Levels
         public ConstantLevelData levelConstants;
 
+        //Constant data attributes for projectiles
         public ProjectileData projectileData;
 
     }

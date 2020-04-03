@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace Coursework.Entities.Projectiles
 {
+    /// <summary>
+    /// Implementation of a fireball projectile
+    /// </summary>
     class FireballProjectile : Projectile
     {
         public FireballProjectile(Drawable appearance, Vector2 position, float speed, int damage, bool isEnemy = false) : base(appearance, position, speed, damage, isEnemy)
@@ -24,8 +27,7 @@ namespace Coursework.Entities.Projectiles
         {
             behaviour = new FSM(this);
             
-            //Fireball has a simple single state behaviour
-            Fireball fireballState = new Fireball();
+            Fireball fireballState = new Fireball();//Simple movement behaviour
             Dead dead = new Dead();
 
             fireballState.AddTransition(dead, () => { return fireballState.LifeTime <= 0; });

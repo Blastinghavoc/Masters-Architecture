@@ -8,7 +8,11 @@ using System.Threading.Tasks;
 
 namespace Coursework.Graphics
 {
-    //A drawable entity that can have its position updated.
+    /// <summary>
+    /// Interface for anything that can be drawn at a particular position,
+    /// and may have some properties that change over time.
+    /// Used so that game objects don't need to care how their appearance is implemented.
+    /// </summary>
     public interface Drawable
     {
         void Update(GameTime gameTime);
@@ -16,7 +20,7 @@ namespace Coursework.Graphics
         void SetPosition(Vector2 pos);
         void Draw(SpriteBatch spriteBatch, SpriteEffects effect = SpriteEffects.None);
         
-        float Rotation { get; set; }
+        float Rotation { get; set; }//Rotation in degrees
         Vector2 RotationOrigin { get; set; }
         Vector2 PositionOffset { get;}
 
@@ -25,6 +29,7 @@ namespace Coursework.Graphics
         //Display size in world units
         Vector2 Size { get; }
 
+        //Determines rendering order
         float LayerDepth { get; set; }
 
         Drawable Clone();

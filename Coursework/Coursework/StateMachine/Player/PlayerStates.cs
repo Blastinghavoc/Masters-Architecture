@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using P = Coursework.Entities.Player;
 
+/// <summary>
+/// States used for player animation
+/// </summary>
 namespace Coursework.StateMachine.Player
 {
     //Encapsulate player update functionality common to all states (directional change of appearance)
@@ -39,7 +42,7 @@ namespace Coursework.StateMachine.Player
 
         public override void OnEnter(object owner)
         {
-            setAnimation(0);
+            setAnimation(0);//Set the animation to the idle animation
         }
 
         public override void OnExit(object owner)
@@ -59,7 +62,7 @@ namespace Coursework.StateMachine.Player
 
         public override void OnEnter(object owner)
         {
-            setAnimation(1);
+            setAnimation(1);//Set the animation to the walking animation
         }
 
         public override void OnExit(object owner)
@@ -80,7 +83,7 @@ namespace Coursework.StateMachine.Player
 
         public override void OnEnter(object owner)
         {
-            setAnimation(2);
+            setAnimation(2);//Set the animation to the jump animation
         }
 
         public override void OnExit(object owner)
@@ -91,7 +94,7 @@ namespace Coursework.StateMachine.Player
 
     /// <summary>
     /// State that does nothing.
-    /// In future it could display a corpse before ending the game.
+    /// In future it could display a corpse or play some animation before ending the game.
     /// </summary>
     class Dead : State
     {

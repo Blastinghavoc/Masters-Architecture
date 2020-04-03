@@ -80,13 +80,13 @@ namespace Coursework.Serialization
     public class LevelEntitySpecification
     {
         public string entityName;
-        public LevelEntityData entityData;
+        public LevelEntityData entityData;//polymorphic
     }
 
     [XmlInclude(typeof(TileData))]
     [XmlInclude(typeof(InteractableData))]
     [XmlInclude(typeof(EnemyData))]
-    public class LevelEntityData
+    public class LevelEntityData//Allows different types of entity to be represented compactly
     {
     }
 

@@ -75,6 +75,10 @@ namespace Coursework.Entities
             powerupManager.Reset();
         }
 
+        /// <summary>
+        /// Player update loop. Updates animation, physics and powerups.
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
             animator.Update(gameTime);     
@@ -105,6 +109,12 @@ namespace Coursework.Entities
             inputForce = Vector2.Zero;//Reset input forces for next update
         }
 
+        /// <summary>
+        /// Draw the player's current appearance, with a colour based on 
+        /// the powerups active on them, and how recently they have taken damage.
+        /// </summary>
+        /// <param name="spriteBatch"></param>
+        /// <param name="effect"></param>
         public override void Draw(SpriteBatch spriteBatch, SpriteEffects effect = SpriteEffects.None)
         {
             var damageColour = Color.Red;
@@ -121,7 +131,11 @@ namespace Coursework.Entities
             base.Draw(spriteBatch,effect | directionalEffect);
         }
 
-        //What to do while the player is colliding with something
+        /// <summary>
+        /// What to do while the player is colliding with something
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void WhileColliding(object sender, PlayerCollisionEventArgs e)
         {
             switch (e.colllidedWith)
@@ -130,6 +144,7 @@ namespace Coursework.Entities
                     {
                         if (tile.collisionMode == TileCollisionMode.solid)
                         {
+                            //Solid tiles -> solid collision response
                             SolidCollisionResponse(e.collisionDepth, tile.bounds);
                         }
                         else if (tile.collisionMode == TileCollisionMode.lava)
@@ -170,14 +185,19 @@ namespace Coursework.Entities
             //Collided from above something, therefore we are now grounded
             if (absCollY < absCollX && collisionDepth.Y < 0 && bottomAtLastUpdate >= collidedWithBounds.Top)
             {
-                jumpsRemaining = maxJumps;
+                jumpsRemaining = maxJumps;//Reset jump counter
             }
 
             //Use base class collision response that moves the player such that they are no longer colliding
             StaticCollisionResponse(collisionDepth);
         }
 
-        //What to do when the player starts colliding with something
+        /// <summary>
+        /// What to do when the player starts colliding with something.
+        /// Handles squashing enemies to death.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnCollisionEnter(object sender, PlayerCollisionEventArgs e)
         {
             Enemy enemy = e.colllidedWith as Enemy;
@@ -188,6 +208,7 @@ namespace Coursework.Entities
                 var bottom = BoundingBox.GetBottomCenter();
                 var enemyBottom = enemy.BoundingBox.GetBottomCenter();
                 var enemyHeight = enemy.BoundingBox.Size.Y;
+
                 //Must be above the enemy by at least half its height to squash it
                 if (bottom.Y <= enemyBottom.Y - enemyHeight / 2)
                 {
@@ -197,7 +218,10 @@ namespace Coursework.Entities
             }
         }
 
-        //Attempt to use weapon(s). Actual weapon code is decoupled from player
+        /// <summary>
+        /// Attempt to use weapons. Actual weapon code is decoupled from the player
+        /// </summary>
+        /// <param name="location"></param>
         public void AttemptToUseWeapon(Point location) {
             var worldPoint = Camera.mainCamera.ScreenToWorldPoint(location);
             GameEventManager.Instance.PlayerAttemptToFireWeapon(this, worldPoint.ToVector2());
@@ -250,6 +274,11 @@ namespace Coursework.Entities
             }
         }
 
+        /// <summary>
+        /// Attempt to add a powerup effect to the player.
+        /// Delegated on to the powerupManager.
+        /// </summary>
+        /// <param name="powerUpType"></param>
         public void AddPowerupEffect(PowerupType powerUpType)
         {
             powerupManager.AddPowerupEffect(powerUpType, this);
@@ -265,6 +294,9 @@ namespace Coursework.Entities
             GameEventManager.Instance.PlayerDied();            
         }
 
+        /// <summary>
+        /// Load all the animations/sprites used by the player
+        /// </summary>
         private void LoadContent()
         {
             animations = new Drawable[3];//idle, walk, jump
@@ -305,6 +337,7 @@ namespace Coursework.Entities
             var jumping = new Jumping(SetCurrentAnimation);
             var dead = new Dead();
 
+            //Utility functions for use in transitions
             Func<bool> diedFunc = () => { return !IsAlive; };
             Func<bool> jumpingFunc = () => { return isJumping; };
             Func<bool> movingFunc = () => { return inputForce.X != 0; };
@@ -325,6 +358,11 @@ namespace Coursework.Entities
             animator.Initialise("Idle");
         }
 
+        /// <summary>
+        /// Function to set the current animation. Passed to relevant
+        /// states in the animator FSM so that they can call it.
+        /// </summary>
+        /// <param name="index"></param>
         private void SetCurrentAnimation(int index)
         {            
             Appearance = animations[index];
@@ -354,16 +392,25 @@ namespace Coursework.Entities
             UnbindEvents();
         }
 
+        /// <summary>
+        /// Input function for going left
+        /// </summary>
         public void LeftHeld()
         {
             inputForce -= Vector2.UnitX;
         }
 
+        /// <summary>
+        /// Input function for going right
+        /// </summary>
         public void RightHeld()
         {
             inputForce += Vector2.UnitX;
         }
 
+        /// <summary>
+        /// Input function for jumping
+        /// </summary>
         public void Jump()
         {
             if (CanJump)
@@ -372,12 +419,7 @@ namespace Coursework.Entities
                 isJumping = true;
                 --jumpsRemaining;
             }
-        }
-
-        public void Crouch()
-        {
-            //Currently does nothing, TODO implement platforms that you crouch to go down through?
-        }                
+        }           
 
     }
 }

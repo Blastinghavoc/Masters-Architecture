@@ -8,6 +8,10 @@ using P = Coursework.Projectiles.Projectile;
 
 namespace Coursework.StateMachine.Projectile
 {
+    /// <summary>
+    /// Fireball projectile state. Simply moves forward at a constant speed,
+    /// and spins as it goes.
+    /// </summary>
     class Fireball : State
     {
         //Lifetime in seconds
@@ -35,7 +39,7 @@ namespace Coursework.StateMachine.Projectile
 
             LifeTime -= dt;
 
-            projectile.Appearance.Rotation += 10*dt;
+            projectile.Appearance.Rotation += 10*dt;//Spin
 
             projectile.SetPosition(projectile.Position + projectile.Velocity * dt);            
         }

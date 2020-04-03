@@ -9,13 +9,17 @@ using Coursework.Entities;
 
 namespace Coursework
 {
+    /// <summary>
+    /// Class managing the HUD.
+    /// </summary>
     class HUDManager
     {
         private SpriteFont font;
+        private const float fontScale = 0.5f;//Base scaling applied to font
 
         private List<HUDElement> elements = new List<HUDElement>();
 
-        private Vector2 offset;//Offset required to keep text aligned with camera
+        private Vector2 offset;//Offset required to keep text aligned with camera as the camera moves
         private Vector2 viewDimensions;//Current viewport dimensions
         private Matrix transformMatrix;//Current camera matrix
 
@@ -23,6 +27,11 @@ namespace Coursework
             this.font = font;
         }
 
+        /// <summary>
+        /// Update with the current camera properties
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="camera"></param>
         public void Update(GameTime gameTime,Camera camera)
         {
             var viewingArea = camera.VisibleArea;
@@ -32,10 +41,18 @@ namespace Coursework
             transformMatrix = camera.Transform;
         }
 
+        /// <summary>
+        /// Add a hud element
+        /// </summary>
+        /// <param name="element"></param>
         public void AddElement(HUDElement element) {
             elements.Add(element);
         }        
 
+        /// <summary>
+        /// Draw all hud elements
+        /// </summary>
+        /// <param name="graphicsDevice"></param>
         public void Draw(GraphicsDevice graphicsDevice)
         {
             //Use a separate sprite batch with Point sampling to avoid blurry text.
@@ -45,21 +62,28 @@ namespace Coursework
             
             foreach (var item in elements)
             {
-                item.Draw(myBatch, offset, viewDimensions, font);
+                item.Draw(myBatch, offset, viewDimensions, font, fontScale);
             }
 
             myBatch.End();            
         }       
     }
 
+    /// <summary>
+    /// Class representing a Hud element, consisting of some text at some position
+    /// relative to the screen.
+    /// </summary>
     public class HUDElement {
         public string text="";
-        public Vector2 relativePosition;
-        public Color color = Color.White;
-        public Vector2 relativeAnchor = Vector2.Zero;
-        private const float defaultScale = 0.5f;//Base scaling applied
+
+        public Vector2 relativeAnchor = Vector2.Zero;//Anchor position relative to the screen (top left is 0,0)
+
+        public Vector2 relativePosition;//Position relative to the anchor
+
+        public Color color = Color.White;        
+
         public float scale = 1.0f;
-        public Vector2 alignment = Vector2.Zero;
+        public Vector2 alignment = Vector2.Zero;//Alignment of text relative to the position
 
         public HUDElement()
         {
@@ -78,7 +102,7 @@ namespace Coursework
             this.scale = scale;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 offset, Vector2 viewDimensions,SpriteFont font) {
+        public void Draw(SpriteBatch spriteBatch, Vector2 offset, Vector2 viewDimensions,SpriteFont font,float fontScale) {
             var elemOff = offset;
 
             //Where to position text on screen
@@ -88,7 +112,7 @@ namespace Coursework
             var textDimensions = font.MeasureString(text);
             var relativeOrigin = textDimensions * alignment;//Allow text to be centered, or aligned left/right etc
 
-            var finalScale = scale * defaultScale;
+            var finalScale = scale * fontScale;
 
             spriteBatch.DrawString(font, text, position, color, 0, relativeOrigin, finalScale, SpriteEffects.None, 0);
         }

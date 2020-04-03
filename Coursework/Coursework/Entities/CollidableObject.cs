@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 
 namespace Coursework.Entities
 {
-
+    /// <summary>
+    /// Represents a game object with a rectangular collision shape.
+    /// </summary>
     public class CollidableObject: GameObject
     {
         //Override property so that setting the position automatically updates the bounds
@@ -151,6 +153,7 @@ namespace Coursework.Entities
                 Velocity = new Vector2(Velocity.X,arrestedVel);//Arrest velocity in colliding direction
             }
 
+            //Reposition so that this object is no longer colliding
             this.Position += adjustment;
         }
     }

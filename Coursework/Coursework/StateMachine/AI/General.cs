@@ -13,6 +13,10 @@ using System.Threading.Tasks;
 /// </summary>
 namespace Coursework.StateMachine.AI
 {
+    /// <summary>
+    /// State that when enterred, notifies the GameEventManager of the 
+    /// Enemy's death.
+    /// </summary>
     class Dead : State
     {
         public Dead()

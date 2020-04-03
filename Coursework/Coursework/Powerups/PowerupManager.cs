@@ -13,12 +13,14 @@ namespace Coursework.Powerups
         fireball,
         invincibility,
     }
+
     /// <summary>
     /// Responsible for managing the lifetime of all powerup effects
     /// on a player.
     /// </summary>
     public class PowerupManager:IDisposable {
 
+        //Map of all powerup types to their corresponding effect
         private Dictionary<PowerupType, PowerupEffect> powerupEffects = new Dictionary<PowerupType, PowerupEffect>();
 
         //Subset of powerupEffects that are active
@@ -26,6 +28,8 @@ namespace Coursework.Powerups
 
         public PowerupManager()
         {
+            //Set up all the effects
+
             FireballEffect fireballEffect = new FireballEffect();
             powerupEffects.Add(PowerupType.fireball, fireballEffect);
 
@@ -33,6 +37,11 @@ namespace Coursework.Powerups
             powerupEffects.Add(PowerupType.invincibility, invincibilityEffect);
         }
 
+        /// <summary>
+        /// Update all active powerups, and remove any that are no
+        /// longer active.
+        /// </summary>
+        /// <param name="gameTime"></param>
         public void Update(GameTime gameTime) {
             float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -60,6 +69,11 @@ namespace Coursework.Powerups
 
         }
 
+        /// <summary>
+        /// Attempt to add a powerup of the given type to the given player.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="p"></param>
         public void AddPowerupEffect(PowerupType type, Player p) {
             PowerupEffect effect;
             if (activeEffects.TryGetValue(type,out effect))
@@ -105,6 +119,8 @@ namespace Coursework.Powerups
             {
                 result /= max;
             }
+            //Result is now sum of all effect colours, normalized to be within the valid colour range.
+
             return new Color(result);
         }
 

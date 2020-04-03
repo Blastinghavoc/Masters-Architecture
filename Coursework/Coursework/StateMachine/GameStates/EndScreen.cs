@@ -57,6 +57,7 @@ namespace Coursework.StateMachine.GameStates
             highScoreData.Update(currentScore);
 
             float spacing = 40.0f;
+            //Create spaced list of high scores
             for (int i = 0; i < highScoreData.scores.Length; i++)
             {
                 var amount = highScoreData.scores[i];

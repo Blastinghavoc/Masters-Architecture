@@ -10,6 +10,11 @@ using Microsoft.Xna.Framework;
 
 namespace Coursework
 {
+    /// <summary>
+    /// Class to manage all collisions occuring in the game.
+    /// Keeps track of collisions that happend in the previous frame too, to detect
+    /// whether a collision this frame is new or continuing.
+    /// </summary>
     class CollisionManager
     {
         private Dictionary<CollidableObject, HashSet<CollidableObject>> collisionsLastFrame = new Dictionary<CollidableObject, HashSet<CollidableObject>>();
@@ -22,12 +27,13 @@ namespace Coursework
             collisionsLastFrame = new Dictionary<CollidableObject, HashSet<CollidableObject>>(collisionsThisFrame);
             collisionsThisFrame.Clear();
 
-            //Update player/level collisions
+            //Update player-level collisions
             UpdateObjectLevelCollisions(currentLevel, player);
 
             List<CollidableObject> enemyProjectiles = new List<CollidableObject>();
             List<CollidableObject> allyProjectiles = new List<CollidableObject>();
-            //Update projectile/level collisions
+
+            //Update projectile-level collisions
             foreach (var item in projectileManager.ActiveProjectiles)
             {
                 UpdateObjectLevelCollisions(currentLevel, item);
@@ -41,14 +47,14 @@ namespace Coursework
                 }
             }
 
-            //Get a combined list of all entities, including projectiles
+            //Get a combined list of all entities that can collide with the player, including projectiles
             List<CollidableObject> combinedEntities = new List<CollidableObject>(currentLevel.LevelEntities);
             combinedEntities.AddRange(enemyProjectiles);
 
             //Update player collisions with all entities (level managed ones, and projectiles)
             UpdateObjectEntityCollisions(combinedEntities, player);
 
-            //Get list of enemies
+            //Get list of just enemies
             List<CollidableObject> enemies = new List<CollidableObject>();
             foreach (var item in currentLevel.LevelEntities)
             {
@@ -65,6 +71,12 @@ namespace Coursework
             }
         }
 
+        /// <summary>
+        /// Updates the collisions between a list of entities and a particular object
+        /// by brute force iteration over all the entities.
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <param name="obj"></param>
         private void UpdateObjectEntityCollisions(List<CollidableObject> entities, CollidableObject obj)
         {
             foreach (var item in entities)
@@ -94,7 +106,11 @@ namespace Coursework
             }
         }
 
-        //Deal with collisions between an object and level (based on Lab 2)
+        /// <summary>
+        /// Deal with collisions between an object and a level (based on Lab 2)
+        /// </summary>
+        /// <param name="currentLevel"></param>
+        /// <param name="obj"></param>
         private void UpdateObjectLevelCollisions(Level currentLevel, CollidableObject obj)
         {
             Vector2 tileDimensions = new Vector2(currentLevel.tileSize.X,currentLevel.tileSize.Y);
@@ -106,6 +122,7 @@ namespace Coursework
             int top = (int)Math.Floor(playerBounds.Top / tileDimensions.Y);
             int bottom = (int)Math.Ceiling((playerBounds.Bottom / tileDimensions.Y));
 
+            //For each neighbouring tile, check whether it collides with the object
             for (int i = left; i < right; i++)
             {
                 for (int j = top; j < bottom; j++)
@@ -122,6 +139,8 @@ namespace Coursework
                     Vector2 penDepth;
                     if (obj.CheckCollision(tileBounds,out penDepth))
                     {                        
+                        //If a collision occured, fire relevant event
+
                         TileDescriptor tileDescriptor = new TileDescriptor(collisionMode, currentLevel.GetWorldPosition(i, j), new Point(i, j),tileBounds);
 
                         Player player = obj as Player;
@@ -138,7 +157,7 @@ namespace Coursework
             }
         }
 
-        //Record a collision between object 1 and object 2 (one way only at the moment)
+        //Record a collision between object 1 and object 2 (one way only)
         private void RecordCollision(CollidableObject o1, CollidableObject o2)
         {           
             if (!collisionsThisFrame.ContainsKey(o1))
@@ -148,6 +167,7 @@ namespace Coursework
             collisionsThisFrame[o1].Add(o2);
         }
 
+        //Check whether object 1 and 2 were colliding last frame
         private bool wasCollidingWith(CollidableObject o1, CollidableObject o2)
         {
             HashSet<CollidableObject> set;
@@ -160,6 +180,9 @@ namespace Coursework
 
     }
 
+    /// <summary>
+    /// Possible types of collision event.
+    /// </summary>
     public enum CollisionType
     {
         enter,

@@ -31,7 +31,7 @@ namespace Coursework.Powerups
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (Active && cooldownTimer > 0)
+            if (Active && cooldownTimer > 0)//Update cooldown
             {
                 cooldownTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
             }

@@ -13,6 +13,9 @@ using Coursework.Levels;
 /// </summary>
 namespace Coursework.StateMachine.AI.Blocker
 {
+    /// <summary>
+    /// Do nothing for 2 seconds
+    /// </summary>
     class Idle : State
     {
         public float IdleDurationSeconds { get; set; } = 2;
@@ -87,6 +90,10 @@ namespace Coursework.StateMachine.AI.Blocker
         }
     }
 
+    /// <summary>
+    /// Go up until a solid tile is encountered.
+    /// Crush the player if they get squashed.
+    /// </summary>
     class Up : State,EventSubscriber
     {
         public float Speed = 64;
@@ -126,7 +133,7 @@ namespace Coursework.StateMachine.AI.Blocker
 
                 if (currentLevel.GetCollisionModeAt(upTile) == TileCollisionMode.solid)
                 {
-                    Done = true;
+                    Done = true;//Ready to stop going up.
                 }
                 else {
                     //Update position
@@ -171,6 +178,10 @@ namespace Coursework.StateMachine.AI.Blocker
         }
     }
 
+    /// <summary>
+    /// Go down until a solid tile is encountered.
+    /// Crush the player if they get squashed.
+    /// </summary>
     class Down : State,EventSubscriber
     {
         public float Speed = 96;
@@ -209,7 +220,7 @@ namespace Coursework.StateMachine.AI.Blocker
 
                 if (currentLevel.GetCollisionModeAt(downTile) == TileCollisionMode.solid)
                 {
-                    Done = true;
+                    Done = true;//Ready to stop going down
                 }
                 else
                 {

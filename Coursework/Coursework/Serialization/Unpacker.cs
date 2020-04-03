@@ -25,15 +25,26 @@ namespace Coursework.Serialization
         readonly string enemyFilePath = GameData.Instance.levelConstants.enemyFilePath;        
         ContentManager content;
 
+        //Allows clients to pass their own content manager to put the unpacked content in
         public Unpacker(ContentManager content)
         {
             this.content = content;
         }
 
+        /// <summary>
+        /// Unpack a tile
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
         public Tile Unpack(TileData d) {
             return new Tile(content.Load<Texture2D>(tileFilePath + d.textureName), d.collisionMode);
         }
 
+        /// <summary>
+        /// Unpack an enemy
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
         public Enemy Unpack(EnemyData d)
         {
             var deadTex = content.Load<Texture2D>(enemyFilePath + d.corpseTextureName);
@@ -42,6 +53,7 @@ namespace Coursework.Serialization
             Drawable appearance;
             if (d.animationData.numFrames > 1)
             {
+                //Unpack the animation
                 appearance = Unpack(d.animationData, enemyFilePath);
             }
             else
@@ -69,6 +81,11 @@ namespace Coursework.Serialization
             }
         }
 
+        /// <summary>
+        /// Unpack an interactable
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
         public Interactable Unpack(InteractableData d)
         {
             var tex = content.Load<Texture2D>(itemFilePath + d.textureName);

@@ -78,6 +78,7 @@ namespace Coursework.StateMachine.GameStates
             BindEvents();
         }
 
+        //Allow game states to subscribe to events
         public virtual void BindEvents() { }
         public virtual void UnbindEvents() { }
 
@@ -99,15 +100,11 @@ namespace Coursework.StateMachine.GameStates
             keybindingManager.Update();//Update input events
         }
 
-        private void PostUpdate(GameTime gameTime) {
-            //Update camera and background
-            owner.camera.Update(owner.graphics.GraphicsDevice.Viewport);
-            background.SetPosition(owner.camera.Position);
-
-            //Update HUD
-            hudManager.Update(gameTime, owner.camera);
-        }
-
+        /// <summary>
+        /// Override of State.Update
+        /// </summary>
+        /// <param name="owner"></param>
+        /// <param name="gameTime"></param>
         public override void Update(object owner, GameTime gameTime)
         {
             PreUpdate(gameTime);
@@ -117,6 +114,16 @@ namespace Coursework.StateMachine.GameStates
 
         //Equivalent to Game.Update
         public abstract void Update(GameTime gameTime);
+
+        private void PostUpdate(GameTime gameTime) {
+            //Update camera and background
+            owner.camera.Update(owner.graphics.GraphicsDevice.Viewport);
+            background.SetPosition(owner.camera.Position);
+
+            //Update HUD
+            hudManager.Update(gameTime, owner.camera);
+        }
+
 
         public void Dispose()
         {

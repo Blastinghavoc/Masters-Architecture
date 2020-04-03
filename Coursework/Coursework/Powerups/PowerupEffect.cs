@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Coursework.Powerups
 {
     /// <summary>
-    /// Handles the effect of some powerup on the player
+    /// Base class handling the effect of some powerup on the player
     /// </summary>
     class PowerupEffect:EventSubscriber
     {
@@ -51,7 +51,7 @@ namespace Coursework.Powerups
             TimeRemaining = DurationSeconds;
         }
 
-
+        //Can be overriden by derived classes
         public virtual void BindEvents()
         { 
         }

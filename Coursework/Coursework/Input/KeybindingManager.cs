@@ -10,6 +10,10 @@ namespace Coursework.Input
 {
     public delegate void PointerAction(Point pointerLocation);
 
+    /// <summary>
+    /// Based on lab 3, binds keyboard or mouse events
+    /// to game action functions.
+    /// </summary>
     public class KeybindingManager
     {
         private struct KeyBinding
@@ -51,6 +55,7 @@ namespace Coursework.Input
 
         public KeybindingManager()
         {
+            //Subscribe to events
             inputManager.OnKeyDown += OnKeyDown;
             inputManager.OnKeyHeld += OnKeyHeld;
             inputManager.OnKeyUp += OnKeyUp;

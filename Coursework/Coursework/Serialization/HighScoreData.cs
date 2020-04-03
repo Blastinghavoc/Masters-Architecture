@@ -7,6 +7,9 @@ using System.Xml.Serialization;
 
 namespace Coursework.Serialization
 {
+    /// <summary>
+    /// Serialization model for high score data
+    /// </summary>
     public class HighScoreData
     {
         //Update the high scores
@@ -24,6 +27,7 @@ namespace Coursework.Serialization
             scores = new int[3];
         }
 
+        //The actual data
         [XmlArrayItem("score")]
         public int[] scores = new int[3];
     }

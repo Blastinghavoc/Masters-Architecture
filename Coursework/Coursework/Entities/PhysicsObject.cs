@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Coursework.Entities
 {
     /// <summary>
-    /// A physics object updates its position based on physics equations
+    /// A physics object that updates its position based on physics equations
     /// and forces acting on it.
     /// </summary>
     public class PhysicsObject:CollidableObject
@@ -34,6 +34,7 @@ namespace Coursework.Entities
         /// <summary>
         /// Implements basic physics based movement, but with no concept of mass,
         /// meaning that it is implicitly 1kg for all objects.
+        /// Based on Player physics from lab 2.
         /// </summary>
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)

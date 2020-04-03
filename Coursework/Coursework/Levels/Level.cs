@@ -20,7 +20,8 @@ namespace Coursework.Levels
     /// </summary>
     public class Level: EventSubscriber
     {
-        public static Level CurrentLevel;//The currently active level. NOTE not a singleton class, but only one level can be active at once
+        public static Level CurrentLevel;//The currently active level.
+        //NOTE not a singleton class, because multiple level objects could briefly exist during the transition from one level to the next
 
         ContentManager content;//The content specific to this level
 
@@ -29,7 +30,7 @@ namespace Coursework.Levels
         readonly Vector2 tileTextureScale;
         public readonly Rectangle LevelBounds;//Level bounds in world coordinates
 
-        public readonly string nextLevelName;
+        public readonly string nextLevelName;//Name of the level to load after this one is finished
 
         public readonly Point tileSize = GameData.Instance.levelConstants.tileSize;        
 
@@ -39,6 +40,7 @@ namespace Coursework.Levels
         public List<CollidableObject> LevelEntities { get; protected set; } = new List<CollidableObject>();
         private List<CollidableObject> killList = new List<CollidableObject>();//List of entities to be removed
 
+        //Corpses of slain enemies
         private List<Decal> corpses = new List<Decal>();
 
 
@@ -53,7 +55,7 @@ namespace Coursework.Levels
             content = new ContentManager(provider, contentRoot);
 
             float tileResolution = GameData.Instance.levelConstants.tileResolution;//Resolution of tile images
-            tileTextureScale = tileSize.ToVector2() / tileResolution;
+            tileTextureScale = tileSize.ToVector2() / tileResolution;//Scaling to apply to tile images
 
             var levelData = GameData.GetLevelData(levelName);
 
@@ -149,7 +151,8 @@ namespace Coursework.Levels
             int width = map.Width;
             int height = map.Height;
 
-            tiles = new Tile[width, height];
+            tiles = new Tile[width, height];//Initialise tile array
+
             Color[] mapColours = new Color[width * height];
             map.GetData(mapColours);//Get colours into 1D array
 
@@ -202,6 +205,7 @@ namespace Coursework.Levels
                 }
             }
 
+            //Unload the temporary content manager holding the map texture
             tempContent.Unload();
         }
 
@@ -228,6 +232,7 @@ namespace Coursework.Levels
                 item.Draw(spriteBatch);
             }
 
+            //Draw all corpses
             foreach (var item in corpses)
             {
                 item.Draw(spriteBatch);
@@ -247,6 +252,11 @@ namespace Coursework.Levels
             }
         }
 
+        /// <summary>
+        /// Schedule some collidable for deletion. It will be removed
+        /// from the LevelEntities the next time the Update function is called
+        /// </summary>
+        /// <param name="obj"></param>
         public void ScheduleForDeletion(CollidableObject obj)
         {
             killList.Add(obj);//Schedule for deletion next update
@@ -274,7 +284,9 @@ namespace Coursework.Levels
 
             corpses.Add(corpse);
             
-        }        
+        }
+
+        #region Utility Functions
 
         public TileCollisionMode GetCollisionModeAt(Point p)
         {
@@ -328,6 +340,8 @@ namespace Coursework.Levels
         {
             return GetTileIndices(position.ToVector2());
         }
+
+        #endregion
 
         public void BindEvents()
         {

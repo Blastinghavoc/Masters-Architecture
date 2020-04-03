@@ -9,6 +9,9 @@ using Microsoft.Xna.Framework;
 
 namespace Coursework.Entities.Interactables
 {
+    /// <summary>
+    /// Interactable that causes the transition to the next level
+    /// </summary>
     class LevelTransition : Interactable
     {
         public LevelTransition(Drawable appearance, Vector2 position) : base(appearance, position)

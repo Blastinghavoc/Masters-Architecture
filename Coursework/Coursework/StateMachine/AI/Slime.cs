@@ -13,6 +13,10 @@ using Microsoft.Xna.Framework;
 /// </summary>
 namespace Coursework.StateMachine.AI.Slime
 {
+    /// <summary>
+    /// Move sides to side, changing direction if a wall or impassable hole is
+    /// encountered
+    /// </summary>
     class Patrol : State
     {
         public float speed = -16;

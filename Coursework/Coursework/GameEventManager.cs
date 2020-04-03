@@ -10,13 +10,19 @@ using System.Threading.Tasks;
 
 namespace Coursework
 {
+    /// <summary>
+    /// Singleton class managing all game events,
+    /// and keeping track of the score.
+    /// </summary>
     class GameEventManager
     {
         public static GameEventManager Instance;
 
         public event EventHandler<ScoreEventArgs> OnScoreChanged = delegate { };
+
         //Unlike other events, this one is fire continuously as long as the player is colliding with something
         public event EventHandler<PlayerCollisionEventArgs> WhilePlayerColliding = delegate { };
+
         public event EventHandler<PlayerCollisionEventArgs> OnPlayerCollisionEnter = delegate { };
         public event EventHandler<PlayerHealthChangedEventArgs> OnPlayerHealthChanged = delegate { };
         public event EventHandler<EnemyKilledEventArgs> OnEnemyKilled = delegate { };
@@ -24,8 +30,10 @@ namespace Coursework
         public event EventHandler<EventArgs> OnPlayerDied = delegate { };
         public event EventHandler<ProjectileLaunchEventArgs> OnLaunchProjectile = delegate { };
         public event EventHandler<ProjectileKilledEventArgs> OnProjectileKilled = delegate { };
+
         //Anything other than the player collides with something (i.e, neither entity involved in the collision was the player)
         public event EventHandler<NonPlayerCollisionEventArgs> OnNonPlayerCollision = delegate { };
+
         //As above, but specifically when a projectile collides with something
         public event EventHandler<NonPlayerCollisionEventArgs> OnProjectileNonPlayerCollision = delegate { };
 
@@ -123,6 +131,8 @@ namespace Coursework
         }
     }
 
+    #region EventArgs subclasses
+
     public class PlayerUseWeaponEventArgs {
         public Vector2 targetWorldPosition;
         public Player player;
@@ -212,7 +222,7 @@ namespace Coursework
 
     public class ScoreEventArgs {
         public int newScore;
-        public int amountAdded;
+        public int amountAdded;//In case anything wants to know how much the score changed
 
         public ScoreEventArgs(int newScore, int amountAdded)
         {
@@ -220,4 +230,6 @@ namespace Coursework
             this.amountAdded = amountAdded;
         }
     }
+
+    #endregion
 }

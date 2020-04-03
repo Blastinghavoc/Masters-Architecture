@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 namespace Coursework
 {
     /// <summary>
-    /// Camera class based on example found here: http://community.monogame.net/t/simple-2d-camera/9135    /// 
+    /// Camera class based on example found here: http://community.monogame.net/t/simple-2d-camera/9135   
     /// </summary>
     public class Camera
     {
         //Not singleton (there could in principle be multiple cameras), but this is the main one.
-        //Currently, there is no need for more than one camera anyway.
         public static Camera mainCamera;
+        //Currently, there is no need for more than one camera anyway.
 
         public float Zoom { get; set; }
         public Vector2 Position { get; set; }
@@ -80,7 +80,12 @@ namespace Coursework
             return screenPoint + new Point(VisibleArea.Left, VisibleArea.Top);
         }
 
-        //Clamps the camera's view to be within the given bounds
+        /// <summary>
+        /// Clamps the camera's visible area to be within the given bounds,
+        /// or at least be as close as possible.
+        /// Used to clamp the camera view to the level bounds.
+        /// </summary>
+        /// <param name="bounds"></param>
         public void ConstrainToArea(Rectangle bounds) {
             var halfWidth = VisibleArea.Width / 2f;
             var halfHeight = VisibleArea.Height / 2f;

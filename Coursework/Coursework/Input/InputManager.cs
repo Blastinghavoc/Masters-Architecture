@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Coursework.Input
 {
     /// <summary>
-    /// Based on Lab 3
+    /// Based on Lab 3, detects user input and fires relevant events.
     /// </summary>
     class InputManager
     {

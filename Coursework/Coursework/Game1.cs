@@ -72,7 +72,7 @@ namespace Coursework
             background = new Graphics.Background(defaultBackgroundTex, Vector2.One, Color.White);
 
             GameStateMachine = new FSM();
-            //NOTE spacing doesn't seem to scale correctly, so tabs are used.
+            //NOTE spaces don't seem to scale correctly, so tabs are used.
             TextScreen startScreenState = new StartScreen(this,"Explorer","Press    enter    to    continue",Keys.Enter);
             startScreenState.Name = "Start";
 

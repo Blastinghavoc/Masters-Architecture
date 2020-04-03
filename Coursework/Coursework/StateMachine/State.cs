@@ -22,6 +22,12 @@ namespace Coursework.StateMachine
             Transitions.Add(trans);
         }
 
+        /// <summary>
+        /// Shorthand for adding a transition to the state without having to explicitly
+        /// create the Transition object first.s
+        /// </summary>
+        /// <param name="nextState"></param>
+        /// <param name="condition"></param>
         public void AddTransition(State nextState, Func<bool> condition)
         {
             Transitions.Add(new Transition(nextState, condition));

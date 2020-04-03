@@ -10,7 +10,8 @@ using Coursework.Graphics;
 namespace Coursework.Graphics
 {
     /// <summary>
-    /// Based on lab 1 animation tutorial
+    /// Based on lab 1 animation tutorial, this is the base class
+    /// for any animation
     /// </summary>
     public abstract class AbstractAnimation : Drawable
     {
@@ -35,12 +36,16 @@ namespace Coursework.Graphics
         public int FrameWidth { get; protected set; }
         public int FrameHeight { get; protected set; }
 
+        /// <summary>
+        /// Size of the animation in world coordinates
+        /// </summary>
         public Vector2 Size => new Vector2(FrameWidth*scale,FrameHeight*scale);
 
-        public float Rotation { get; set; } = 0;
+        public float Rotation { get; set; } = 0;//Rotation angle, in degrees
 
         public float LayerDepth { get; set; } = 0.5f;
 
+        //Center of rotation in texture coordinates
         private Vector2 rotationOrigin;
         public Vector2 RotationOrigin { get => rotationOrigin; set { rotationOrigin = value; PositionOffset = RotationOrigin * scale; } }
         public Vector2 PositionOffset { get; private set; }
@@ -127,6 +132,7 @@ namespace Coursework.Graphics
             //Account for potentially alterred rotation origin
             var drawPosition = position + PositionOffset;
 
+            //Destination to draw at in world coordinates
             destinationRect = new Rectangle((int)(drawPosition.X), (int)(drawPosition.Y), (int)(scaledWidth), (int)(scaledHeight));
         }
 

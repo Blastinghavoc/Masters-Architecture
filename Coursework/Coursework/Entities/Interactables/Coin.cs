@@ -9,6 +9,9 @@ using Microsoft.Xna.Framework;
 
 namespace Coursework.Entities.Interactables
 {
+    /// <summary>
+    /// Subclass of interactable to implement score-granting coins
+    /// </summary>
     class Coin : Interactable
     {
         public Coin(Drawable appearance, Vector2 position) : base(appearance, position)

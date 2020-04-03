@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Coursework.Input
 {
+    /// <summary>
+    /// State enum for some input event.
+    /// </summary>
     public enum InputState
     {
         down,

@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace Coursework.Graphics
 {
+    /// <summary>
+    /// Sprite-sheet based animation, based on Lab1.
+    /// Currently unused, as the format of assets used did not lend itself
+    /// to easy spritesheet animation.
+    /// </summary>
     class SpriteSheetAnimation: AbstractAnimation
     {
         protected override Texture2D Image { get => spriteSheet; set => spriteSheet = value; }

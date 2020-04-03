@@ -14,6 +14,7 @@ namespace Coursework.Projectiles
     /// <summary>
     /// Represents a collidable projectile object.
     /// May collide with players or enemies, depending on affiliation.
+    /// Currently only porjectiles that collide with enemies are implemented.
     /// </summary>
     public abstract class Projectile : CollidableObject
     {
@@ -24,6 +25,7 @@ namespace Coursework.Projectiles
         //The damage dealt by the projectile
         public int Damage { get; protected set; }
 
+        //Speed of projectile movement
         public float Speed { get; protected set; }
 
         //Support for potentially complex projectile behaviours
@@ -63,6 +65,9 @@ namespace Coursework.Projectiles
             isEnemyAffiliated = enemy;
         }
 
+        /// <summary>
+        /// Override of Clone to ensure that behaviour is correctly set up.
+        /// </summary>
         public virtual new Projectile Clone()
         {
             var tmp = base.Clone() as Projectile;

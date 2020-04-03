@@ -10,6 +10,9 @@ using Coursework.StateMachine.AI;
 
 namespace Coursework.Entities.Enemies
 {
+    /// <summary>
+    /// Implementation of the Fly enemy
+    /// </summary>
     class Fly : Enemy
     {
         public Fly(Drawable appearance, Decal corpseAppearance, Vector2 position, int health, int damage, bool invincible = false, bool solid = false) : 

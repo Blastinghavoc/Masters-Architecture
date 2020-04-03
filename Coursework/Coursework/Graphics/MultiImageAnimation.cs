@@ -8,6 +8,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Coursework.Graphics
 {
+    /// <summary>
+    /// Adaptation of AbstractAnimation to use an array of individual textures as
+    /// the animation frames.
+    /// </summary>
     public class MultiImageAnimation : AbstractAnimation
     {
         protected override Texture2D Image { get => frames[currentFrameIndex]; set => frames[currentFrameIndex] = value; }

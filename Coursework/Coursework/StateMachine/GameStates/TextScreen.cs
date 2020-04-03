@@ -49,6 +49,9 @@ namespace Coursework.StateMachine.GameStates
             done = false;
         }
 
+        /// <summary>
+        /// Bind the transition key to the Done function
+        /// </summary>
         public override void InitKeybindings()
         {
             base.InitKeybindings();
