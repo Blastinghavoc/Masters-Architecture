@@ -27,7 +27,7 @@ namespace Coursework
 
         FSM GameStateMachine;
 
-        //Keybindings that persist accross all game states (fullscreen control)
+        //Keybindings that persist accross all game states (e.g fullscreen control)
         private KeybindingManager globalBindings;
 
 
@@ -55,6 +55,8 @@ namespace Coursework
             globalBindings = new KeybindingManager();
             //Bind the fullscreen toggle to the global bindings
             globalBindings.BindKeyEvent(Keys.F11, InputState.down, ToggleFullScreen);
+            //Bind the escape button to the Exit action
+            globalBindings.BindKeyEvent(Keys.Escape, InputState.down, Exit);
 
             GameData.Initialise();
 
@@ -120,9 +122,6 @@ namespace Coursework
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
             globalBindings.Update();
 
             GameStateMachine.Update(gameTime);

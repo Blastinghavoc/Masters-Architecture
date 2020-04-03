@@ -29,7 +29,6 @@ namespace Coursework.Levels
         readonly Vector2 tileTextureScale;
         public readonly Rectangle LevelBounds;//Level bounds in world coordinates
 
-        public readonly string levelName;
         public readonly string nextLevelName;
 
         public readonly Point tileSize = GameData.Instance.levelConstants.tileSize;        
@@ -55,8 +54,6 @@ namespace Coursework.Levels
 
             float tileResolution = GameData.Instance.levelConstants.tileResolution;//Resolution of tile images
             tileTextureScale = tileSize.ToVector2() / tileResolution;
-
-            this.levelName = levelName;
 
             var levelData = GameData.GetLevelData(levelName);
 
